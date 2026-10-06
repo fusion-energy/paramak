@@ -221,3 +221,45 @@ def test_toroidal_build_validation(toroidal_build, error, match):
         paramak.tokamak_from_plasma(
             radial_build=TOKAMAK_RADIAL_BUILD, rotation_angle=90, toroidal_build=toroidal_build
         )
+
+
+def test_toroidal_build_rotation_angle_and_empty_sectors():
+    "rotation angles outside 0 to 360 degrees and sectors removed by their gaps raise clear errors"
+
+    with pytest.raises(ValueError, match="rotation_angle must be above 0"):
+        paramak.toroidal_arc_length(TOKAMAK_RADIAL_BUILD, rotation_angle=400)
+
+    # each sector is far narrower than the gaps either side of it at the
+    # outboard midplane and gets narrower inboard, so nothing is left of the
+    # sectors of a poloidal segment on the inboard side
+    poloidal_arc = paramak.poloidal_arc_length(TOKAMAK_RADIAL_BUILD)
+    toroidal_arc = paramak.toroidal_arc_length(TOKAMAK_RADIAL_BUILD, rotation_angle=90)
+    sector = 1
+    gap = (toroidal_arc - 2 * sector) / 2
+    with pytest.raises(ValueError, match="is empty"):
+        paramak.tokamak_from_plasma(
+            radial_build=TOKAMAK_RADIAL_BUILD,
+            rotation_angle=90,
+            poloidal_build=[
+                None,
+                [
+                    (paramak.LayerType.SOLID, poloidal_arc * 0.4, "outboard"),
+                    (paramak.LayerType.SOLID, poloidal_arc * 0.2, "inboard"),
+                    (paramak.LayerType.SOLID, poloidal_arc * 0.4, "outboard"),
+                ],
+                None,
+                None,
+            ],
+            toroidal_build=[
+                None,
+                [
+                    (paramak.LayerType.GAP, gap / 2),
+                    (paramak.LayerType.SOLID, sector),
+                    (paramak.LayerType.GAP, gap),
+                    (paramak.LayerType.SOLID, sector),
+                    (paramak.LayerType.GAP, gap / 2),
+                ],
+                None,
+                None,
+            ],
+        )

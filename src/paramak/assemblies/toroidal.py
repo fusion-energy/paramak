@@ -3,13 +3,18 @@
 from __future__ import annotations
 
 import math
-from collections import Counter
 from typing import Sequence
 
 import cadquery as cq
 
 from ..utils import LayerType, get_plasma_index
-from .poloidal import DEFAULT_SEGMENT_NAME, POLOIDAL_ARC_LENGTH_RTOL, validate_segment_build
+from .poloidal import (
+    DEFAULT_SEGMENT_NAME,
+    POLOIDAL_ARC_LENGTH_RTOL,
+    check_not_empty,
+    make_unique_names,
+    validate_segment_build,
+)
 
 # sector regions wider than this (in degrees) are split in two, as a region
 # made from two half spaces must be less than 180 degrees wide
@@ -26,6 +31,14 @@ def toroidal_reference_radius(radial_build) -> float:
             return radius
         radius += item[1]
     raise ValueError("The radial_build has no LayerType.SOLID entries after the plasma to segment.")
+
+
+def validate_rotation_angle(rotation_angle):
+    """Toroidal segments need a rotation angle above 0 and up to 360 degrees."""
+    if not 0 < rotation_angle <= 360:
+        raise ValueError(
+            f"rotation_angle must be above 0 and at most 360 degrees to use toroidal segments, not {rotation_angle}."
+        )
 
 
 def toroidal_arc_length(
@@ -50,6 +63,7 @@ def toroidal_arc_length(
     Returns:
         float: the toroidal arc length.
     """
+    validate_rotation_angle(rotation_angle)
     return toroidal_reference_radius(radial_build) * math.radians(rotation_angle)
 
 
@@ -88,8 +102,7 @@ def get_toroidal_sectors(segments, reference_radius, rotation_angle, index):
         name = (segment[2] if len(segment) == 3 else DEFAULT_SEGMENT_NAME) if segment[0] == LayerType.SOLID else None
         items.append((segment[0], start, position, name))
 
-    name_counts = Counter(item[3] for item in items if item[0] == LayerType.SOLID)
-    name_seen = Counter()
+    unique_names = make_unique_names([item[3] for item in items], f"toroidal_build entry {index}")
     tolerance = 1e-9 * total_arc_length
 
     def angle(arc_position):
@@ -99,9 +112,7 @@ def get_toroidal_sectors(segments, reference_radius, rotation_angle, index):
     for item_index, (layer_type, start, stop, name) in enumerate(items):
         if layer_type != LayerType.SOLID:
             continue
-        if name_counts[name] > 1:
-            name_seen[name] += 1
-            name = f"{name}_{name_seen[name]}"
+        name = unique_names.pop(0)
 
         previous_item = items[item_index - 1] if item_index > 0 else None
         if previous_item is None or previous_item[0] == LayerType.SOLID:
@@ -125,6 +136,7 @@ def get_toroidal_sectors(segments, reference_radius, rotation_angle, index):
 
 def get_toroidal_build_sectors(toroidal_build, pairs, radial_build, rotation_angle):
     """Validates toroidal_build and converts each entry into sectors."""
+    validate_rotation_angle(rotation_angle)
     validate_segment_build(toroidal_build, pairs, build_name="toroidal_build")
     if all(segments is None for segments in toroidal_build):
         return list(toroidal_build)
@@ -164,15 +176,25 @@ def sector_region(start_boundary, stop_boundary, size):
 def apply_toroidal_sectors(solids, sectors, rotation_angle, size):
     """Splits each solid into its toroidal sectors, named
     "<solid name>_<sector name>"."""
-    full_rotation = (len(sectors) == 1 and sectors[0][1] == (0.0, 0.0) and sectors[0][2] == (float(rotation_angle), 0.0))
+    full_rotation = (
+        len(sectors) == 1
+        and sectors[0][1] == (0.0, 0.0)
+        and math.isclose(sectors[0][2][0], rotation_angle)
+        and sectors[0][2][1] == 0.0
+    )
+    # the regions only depend on the sectors, so they are made once
+    regions = None if full_rotation else [sector_region(start, stop, size) for _, start, stop in sectors]
+
     result = []
     for solid in solids:
-        for name, start_boundary, stop_boundary in sectors:
+        for sector_index, (name, _, _) in enumerate(sectors):
             if full_rotation:
                 # a single sector covering the whole rotation is the full solid
                 piece = solid
             else:
-                piece = solid.intersect(sector_region(start_boundary, stop_boundary, size))
-            piece.name = f"{solid.name}_{name}"
+                piece = solid.intersect(regions[sector_index])
+            piece_name = f"{solid.name}_{name}"
+            check_not_empty(piece, f"Toroidal sector {piece_name}")
+            piece.name = piece_name
             result.append(piece)
     return result
