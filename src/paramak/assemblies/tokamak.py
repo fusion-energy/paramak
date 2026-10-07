@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import math
 from typing import Sequence
 
 import cadquery as cq
+import numpy as np
 
 from ..utils import (
+    get_plasma_geometry,
     smooth_profile,
     LayerType,
     get_assembly_names,
@@ -13,12 +16,24 @@ from ..utils import (
     validate_unique_assembly_names,
     validate_vertical_build_names,
 )
-from ..workplanes.blanket_from_plasma import blanket_from_plasma
+from ..workplanes.blanket_from_plasma import (
+    blanket_from_plasma,
+    offset_curve_coordinates,
+    poloidal_arc_length_table,
+)
 from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
 from ..workplanes.plasma_simplified import plasma_simplified
 from .assembly import Assembly
-from .spherical_tokamak import get_plasma_value, sum_up_to_plasma
-
+from .poloidal import (
+    SegmentBuild,
+    check_not_empty,
+    get_poloidal_segment_angles,
+    intersect_with_each_part,
+    resolve_vertical_build,
+    validate_segment_build,
+)
+from .spherical_tokamak import get_plasma_value
+from .toroidal import apply_toroidal_sectors, get_toroidal_build_sectors
 
 def count_cylinder_layers(radial_build):
     before_plasma = 0
@@ -81,106 +96,294 @@ def distance_to_plasma(radial_build, index):
     return distance
 
 
-def create_layers_from_plasma(
-    radial_build, vertical_build, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column, layer_count=0
-):
+def get_layer_pairs(radial_build, vertical_build, layer_count=0):
+    """Describes each inboard/outboard pair of layers, ordered from the plasma
+    outwards. This is the ordering used by poloidal_build.
 
+    Returns:
+        list of dict: one entry per pair with the keys "type" (the LayerType
+        of the outboard entry), "name" (None for GAP pairs), "offsets" and
+        "thicknesses". The offsets and thicknesses are tuples of values at the
+        outboard midplane, top, inboard midplane and bottom of the plasma.
+    """
     plasma_index_rb = get_plasma_index(radial_build)
     plasma_index_vb = get_plasma_index(vertical_build)
-    indexes_from_plasma_to_end = len(radial_build) - plasma_index_rb
-    layers = []
 
+    pairs = []
     cumulative_thickness_orb = 0
     cumulative_thickness_irb = 0
     cumulative_thickness_uvb = 0
     cumulative_thickness_lvb = 0
 
-    for index_delta in range(indexes_from_plasma_to_end):
-
-        if radial_build[plasma_index_rb + index_delta][0] == LayerType.PLASMA:
-            continue
-        outer_layer_thickness = radial_build[plasma_index_rb + index_delta][1]
-        inner_layer_thickness = radial_build[plasma_index_rb - index_delta][1]
+    for index_delta in range(1, len(radial_build) - plasma_index_rb):
+        outer_entry = radial_build[plasma_index_rb + index_delta]
+        inner_entry = radial_build[plasma_index_rb - index_delta]
+        outer_layer_thickness = outer_entry[1]
+        inner_layer_thickness = inner_entry[1]
         upper_layer_thickness = vertical_build[plasma_index_vb - index_delta][1]
         lower_layer_thickness = vertical_build[plasma_index_vb + index_delta][1]
 
-        if radial_build[plasma_index_rb + index_delta][0] == LayerType.GAP:
-            cumulative_thickness_orb += outer_layer_thickness
-            cumulative_thickness_irb += inner_layer_thickness
-            cumulative_thickness_uvb += upper_layer_thickness
-            cumulative_thickness_lvb += lower_layer_thickness
-            continue
-
-        layer_count += 1
-        if len(radial_build[plasma_index_rb - index_delta]) == 3:
-            layer_name = radial_build[plasma_index_rb - index_delta][2]
-        elif len(radial_build[plasma_index_rb + index_delta]) == 3:
-            layer_name = radial_build[plasma_index_rb + index_delta][2]
+        if outer_entry[0] == LayerType.GAP:
+            layer_name = None
         else:
-            layer_name = f"layer_{layer_count}"
+            layer_count += 1
+            if len(inner_entry) == 3:
+                layer_name = inner_entry[2]
+            elif len(outer_entry) == 3:
+                layer_name = outer_entry[2]
+            else:
+                layer_name = f"layer_{layer_count}"
 
-        # build outer layer
-        if radial_build[plasma_index_rb + index_delta][0] == LayerType.SOLID:
-            # smooth profiles around the poloidal loop (outboard midplane at 0
-            # degrees, top at 90, inboard midplane at 180 and bottom at 270) so
-            # the layer has no corners where the radial and vertical builds differ
-            thickness = smooth_profile(
-                [0, 90, 180, 270, 360],
-                [outer_layer_thickness, upper_layer_thickness, inner_layer_thickness, lower_layer_thickness, outer_layer_thickness],
-                period=360,
-            )
-            offset = smooth_profile(
-                [0, 90, 180, 270, 360],
-                [
+        pairs.append(
+            {
+                "type": outer_entry[0],
+                "name": layer_name,
+                "offsets": (
                     cumulative_thickness_orb,
                     cumulative_thickness_uvb,
                     cumulative_thickness_irb,
                     cumulative_thickness_lvb,
-                    cumulative_thickness_orb,
-                ],
-                period=360,
-            )
-            outer_layer = blanket_from_plasma(
-                minor_radius=minor_radius,
-                major_radius=major_radius,
-                triangularity=triangularity,
-                elongation=elongation,
-                thickness=thickness,
-                offset_from_plasma=offset,
-                start_angle=90,
-                stop_angle=-90,
-                rotation_angle=rotation_angle,
-                color=(0.5, 0.5, 0.5),
-                name=layer_name,
-                allow_overlapping_shape=True,
-            )
-            inner_layer = blanket_from_plasma(
-                minor_radius=minor_radius,
-                major_radius=major_radius,
-                triangularity=triangularity,
-                elongation=elongation,
-                thickness=thickness,
-                offset_from_plasma=offset,
-                start_angle=-90,
-                stop_angle=-270,
-                rotation_angle=rotation_angle,
-                color=(0.5, 0.5, 0.5),
-                name=layer_name,
-                allow_overlapping_shape=True,
-            )
-            layer = outer_layer.union(inner_layer)
-            layer.name = layer_name
-            layers.append(layer)
-            # layers.append(inner_layer)
+                ),
+                "thicknesses": (
+                    outer_layer_thickness,
+                    upper_layer_thickness,
+                    inner_layer_thickness,
+                    lower_layer_thickness,
+                ),
+            }
+        )
+
         cumulative_thickness_orb += outer_layer_thickness
         cumulative_thickness_irb += inner_layer_thickness
         cumulative_thickness_uvb += upper_layer_thickness
         cumulative_thickness_lvb += lower_layer_thickness
-        # build inner layer
 
-        # union layers
+    return pairs
+
+
+def poloidal_profile(outer, upper, inner, lower):
+    """Returns a function of poloidal angle (degrees, measured counter
+    clockwise from the outboard midplane) that varies smoothly between the
+    values at the outboard midplane, top, inboard midplane and bottom, so the
+    layer has no corners where the radial and vertical builds differ. Used for
+    the thickness and offset of every layer."""
+
+    return smooth_profile([0, 90, 180, 270, 360], [outer, upper, inner, lower, outer], period=360)
+
+
+def create_layer(pair, minor_radius, major_radius, triangularity, elongation, rotation_angle):
+    """Builds the full (unsegmented) solid of a layer pair from an outboard
+    and an inboard half."""
+    thickness = poloidal_profile(*pair["thicknesses"])
+    offset = poloidal_profile(*pair["offsets"])
+    outer_layer = blanket_from_plasma(
+        minor_radius=minor_radius,
+        major_radius=major_radius,
+        triangularity=triangularity,
+        elongation=elongation,
+        thickness=thickness,
+        offset_from_plasma=offset,
+        start_angle=90,
+        stop_angle=-90,
+        rotation_angle=rotation_angle,
+        color=(0.5, 0.5, 0.5),
+        name=pair["name"],
+        allow_overlapping_shape=True,
+    )
+    inner_layer = blanket_from_plasma(
+        minor_radius=minor_radius,
+        major_radius=major_radius,
+        triangularity=triangularity,
+        elongation=elongation,
+        thickness=thickness,
+        offset_from_plasma=offset,
+        start_angle=-90,
+        stop_angle=-270,
+        rotation_angle=rotation_angle,
+        color=(0.5, 0.5, 0.5),
+        name=pair["name"],
+        allow_overlapping_shape=True,
+    )
+    layer = outer_layer.union(inner_layer)
+    layer.name = pair["name"]
+    return layer
+
+
+def create_poloidal_segments(
+    pair, segment_angles, minor_radius, major_radius, triangularity, elongation, rotation_angle
+):
+    """Builds one solid per poloidal segment of a layer pair.
+
+    The full layer is built as it would be without segmentation and each
+    segment is cut out of it, so the faces of the segments are the faces of
+    the full layer. This keeps them coincident with the neighbouring layers,
+    which boolean operations (such as making a divertor) rely on.
+    """
+    layer = create_layer(pair, minor_radius, major_radius, triangularity, elongation, rotation_angle)
+
+    # a single segment covering the whole loop is the full layer
+    if len(segment_angles) == 1 and segment_angles[0][2] - segment_angles[0][1] >= 360.0 - 1e-9:
+        layer.name = f"{pair['name']}_{segment_angles[0][0]}"
+        return [layer]
+
+    offset = poloidal_profile(*pair["offsets"])
+    thickness = poloidal_profile(*pair["thicknesses"])
+    # the cutting regions extend past the inner and outer surfaces of the layer
+    margin = 0.05 * minor_radius
+
+    solids = []
+    for segment_name, start_angle, stop_angle in segment_angles:
+        # the sides of the cutting region follow the normal to the plasma surface
+        # at the start and stop angles, the same direction the layers are offset in
+        thetas = np.linspace(start_angle, stop_angle, max(10, math.ceil(400 * (stop_angle - start_angle) / 360)))
+        inner_r, inner_z = offset_curve_coordinates(
+            major_radius, minor_radius, triangularity, elongation, 0.0, thetas, offset(thetas) - margin
+        )
+        outer_r, outer_z = offset_curve_coordinates(
+            major_radius,
+            minor_radius,
+            triangularity,
+            elongation,
+            0.0,
+            thetas[::-1],
+            offset(thetas[::-1]) + thickness(thetas[::-1]) + margin,
+        )
+        # the region must not cross the axis it is revolved around
+        points = list(zip(np.maximum(np.concatenate([inner_r, outer_r]), 0.0), np.concatenate([inner_z, outer_z])))
+        cutting_region = cq.Workplane("XZ").polyline(points).close().revolve(360)
+
+        name = f"{pair['name']}_{segment_name}"
+        solid = layer.intersect(cutting_region)
+        check_not_empty(solid, f"Poloidal segment {name}")
+        solid.name = name
+        solids.append(solid)
+    return solids
+
+
+def create_layers_from_plasma(
+    radial_build,
+    vertical_build,
+    minor_radius,
+    major_radius,
+    triangularity,
+    elongation,
+    rotation_angle,
+    center_column,
+    layer_count=0,
+    poloidal_segment_angles=None,
+    toroidal_sectors=None,
+    toroidal_region_size=None,
+):
+    pairs = get_layer_pairs(radial_build, vertical_build, layer_count)
+    if poloidal_segment_angles is None:
+        poloidal_segment_angles = [None] * len(pairs)
+    if toroidal_sectors is None:
+        toroidal_sectors = [None] * len(pairs)
+
+    layers = []
+    for pair, segment_angles, sectors in zip(pairs, poloidal_segment_angles, toroidal_sectors):
+        if pair["type"] != LayerType.SOLID:
+            continue
+
+        if segment_angles is not None:
+            pair_solids = create_poloidal_segments(
+                pair, segment_angles, minor_radius, major_radius, triangularity, elongation, rotation_angle
+            )
+        else:
+            pair_solids = [create_layer(pair, minor_radius, major_radius, triangularity, elongation, rotation_angle)]
+
+        if sectors is not None:
+            pair_solids = apply_toroidal_sectors(pair_solids, sectors, rotation_angle, toroidal_region_size)
+        layers.extend(pair_solids)
 
     return layers
+
+
+def vertical_build_from_radial_build(radial_build, elongation):
+    """Makes the vertical build used by tokamak_from_plasma, where the layers
+    above and below the plasma have the same thickness as the inboard layers."""
+    minor_radius = get_plasma_value(radial_build) / 2
+
+    # make vertical build from inner radial build
+    pi = get_plasma_index(radial_build)
+    rbi = len(radial_build) - 1 - pi  # number of unique entries in outer or inner radial build
+    # drop any layer names, they are only supported in radial_build not vertical_build
+    upper_vertical_build = [(item[0], item[1]) for item in radial_build[pi - rbi : pi][::-1]]  # get the inner radial build
+
+    plasma_height = 2 * minor_radius * elongation
+    # slice operation reverses the list and removes the last value to avoid two plasmas
+    return upper_vertical_build[::-1] + [(LayerType.PLASMA, plasma_height)] + upper_vertical_build
+
+
+def get_reference_arc_length_table(radial_build, vertical_build, triangularity):
+    """Returns the (angles, cumulative arc lengths) table of the reference
+    surface that poloidal_build arc lengths are measured on. This is the
+    plasma facing surface, the inner surface of the first solid layer after
+    the plasma."""
+    for pair in get_layer_pairs(radial_build, vertical_build):
+        if pair["type"] == LayerType.SOLID:
+            major_radius, minor_radius, elongation = get_plasma_geometry(radial_build, vertical_build)
+            return poloidal_arc_length_table(
+                major_radius=major_radius,
+                minor_radius=minor_radius,
+                triangularity=triangularity,
+                elongation=elongation,
+                offset=poloidal_profile(*pair["offsets"]),
+            )
+    raise ValueError("The radial_build has no LayerType.SOLID entries after the plasma to segment.")
+
+
+def get_poloidal_build_segment_angles(
+    poloidal_build, radial_build, vertical_build, triangularity, layer_count=0
+):
+    """Validates poloidal_build and converts the segment arc lengths into
+    poloidal angles for each layer pair. All arc lengths are measured on the
+    same reference surface, so layers with the same segments line up."""
+    pairs = get_layer_pairs(radial_build, vertical_build, layer_count)
+    validate_segment_build(poloidal_build, pairs)
+    if all(segments is None for segments in poloidal_build):
+        return list(poloidal_build)
+
+    arc_thetas, arc_lengths = get_reference_arc_length_table(radial_build, vertical_build, triangularity)
+    return [
+        None if segments is None else get_poloidal_segment_angles(segments, arc_thetas, arc_lengths, index, "poloidal_arc_length")
+        for index, segments in enumerate(poloidal_build)
+    ]
+
+
+def poloidal_arc_length(
+    radial_build: Sequence[tuple[LayerType, float] | tuple[LayerType, float, str]],
+    elongation: float | None = None,
+    triangularity: float = 0.55,
+    vertical_build: Sequence[tuple[LayerType, float]] | None = None,
+) -> float:
+    """Returns the poloidal arc length that the segments in a poloidal_build
+    must sum to.
+
+    The arc length is measured around the full poloidal loop of the plasma
+    facing surface, which is the inner surface of the first solid layer after
+    the plasma. All poloidal_build entries are measured on this surface, so
+    layers given the same segments line up.
+
+    Args:
+        radial_build: the radial build of the reactor, as passed to
+            tokamak_from_plasma or tokamak.
+        elongation: the elongation of the plasma, as passed to
+            tokamak_from_plasma. Defaults to 2.0. Must not be set when a
+            vertical_build is provided, as the elongation is then calculated
+            from the builds.
+        triangularity: the triangularity of the plasma. Defaults to 0.55.
+        vertical_build: the vertical build of the reactor, as passed to
+            tokamak. Leave as None for tokamak_from_plasma.
+
+    Returns:
+        float: the poloidal arc length of the plasma facing surface.
+    """
+    vertical_build = resolve_vertical_build(
+        radial_build, elongation, vertical_build, vertical_build_from_radial_build
+    )
+    _, arc_lengths = get_reference_arc_length_table(radial_build, vertical_build, triangularity)
+    return float(arc_lengths[-1])
 
 
 def tokamak_from_plasma(
@@ -191,6 +394,8 @@ def tokamak_from_plasma(
     extra_cut_shapes: Sequence[cq.Workplane] | None = None,
     extra_intersect_shapes: Sequence[cq.Workplane] | None = None,
     colors: dict | None = None,
+    poloidal_build: SegmentBuild | None = None,
+    toroidal_build: SegmentBuild | None = None,
 ) -> Assembly:
     """
     Creates a tokamak fusion reactor from a radial build and plasma parameters.
@@ -207,6 +412,41 @@ def tokamak_from_plasma(
             Each dictionary entry should be a key that matches the assembly part name
             (e.g. 'plasma', or 'layer_1') and a tuple of 3 or 4 floats between 0 and 1
             representing the RGB or RGBA values.
+        poloidal_build: optional poloidal segmentation of the layers. A list
+            with one entry per radial_build entry after the plasma, ordered
+            from the plasma outwards, so each entry covers the matching
+            inboard and outboard layer pair. Entries are None for layers that
+            are not segmented (and must be None for LayerType.GAP entries),
+            otherwise a list of segments in the same format as radial_build
+            entries: (paramak.LayerType.SOLID, arc_length, name) for a solid
+            segment (the name is optional) or (paramak.LayerType.GAP,
+            arc_length) for a gap that produces no solid. Arc lengths are
+            measured along the plasma facing surface (the inner surface of
+            the first solid layer after the plasma) for every layer, starting
+            at the outboard midplane and proceeding counter clockwise
+            (upwards on the outboard side). Each entry must sum to the arc
+            length returned by paramak.poloidal_arc_length (within 0.1
+            percent). Cuts between segments follow the normal to the plasma
+            surface, so layers given the same segments line up. Solid
+            segments are named "<layer name>_<segment name>", unnamed solid
+            segments are called "segment", and repeated names within a layer
+            get a "_1", "_2" suffix. Defaults to None.
+        toroidal_build: optional toroidal segmentation of the layers, for
+            example into sectors separated by assembly gaps. A list with one
+            entry per radial_build entry after the plasma, ordered from the
+            plasma outwards, like poloidal_build. Entries are None for layers
+            that are not segmented (and must be None for LayerType.GAP
+            entries), otherwise a list of segments: (paramak.LayerType.SOLID,
+            arc_length, name) for a sector (the name is optional) or
+            (paramak.LayerType.GAP, width) for a gap. Arc lengths are measured
+            around the plasma facing surface at the outboard midplane,
+            starting at the XZ plane and going in the direction the reactor is
+            revolved, and each entry must sum to the arc length returned by
+            paramak.toroidal_arc_length (within 0.1 percent). Gaps are slots
+            with parallel sides, so a gap has the same width at every radius.
+            Sectors are named "<layer name>_<sector name>", or
+            "<layer name>_<poloidal segment name>_<sector name>" when the
+            layer also has a poloidal_build entry. Defaults to None.
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the tokamak fusion reactor.
@@ -219,25 +459,7 @@ def tokamak_from_plasma(
     if colors is None:
         colors = {}
 
-    inner_equatorial_point = sum_up_to_plasma(radial_build)
-    plasma_radial_thickness = get_plasma_value(radial_build)
-    outer_equatorial_point = inner_equatorial_point + plasma_radial_thickness
-
-    # sets major radius and minor radius from equatorial_points to allow a
-    # radial build. This helps avoid the plasma overlapping the center
-    # column and other components
-    major_radius = (outer_equatorial_point + inner_equatorial_point) / 2
-    minor_radius = major_radius - inner_equatorial_point
-
-    # make vertical build from inner radial build
-    pi = get_plasma_index(radial_build)
-    rbi = len(radial_build) - 1 - pi  # number of unique entries in outer or inner radial build
-    # drop any layer names, they are only supported in radial_build not vertical_build
-    upper_vertical_build = [(item[0], item[1]) for item in radial_build[pi - rbi : pi][::-1]]  # get the inner radial build
-
-    plasma_height = 2 * minor_radius * elongation
-    # slice operation reverses the list and removes the last value to avoid two plasmas
-    vertical_build = upper_vertical_build[::-1] + [(LayerType.PLASMA, plasma_height)] + upper_vertical_build
+    vertical_build = vertical_build_from_radial_build(radial_build, elongation)
 
     return tokamak(
         radial_build=radial_build,
@@ -246,7 +468,9 @@ def tokamak_from_plasma(
         rotation_angle=rotation_angle,
         extra_cut_shapes=extra_cut_shapes,
         extra_intersect_shapes=extra_intersect_shapes,
-        colors=colors
+        colors=colors,
+        poloidal_build=poloidal_build,
+        toroidal_build=toroidal_build,
     )
 
 
@@ -258,6 +482,8 @@ def tokamak(
     extra_cut_shapes: Sequence[cq.Workplane] | None = None,
     extra_intersect_shapes: Sequence[cq.Workplane] | None = None,
     colors: dict | None = None,
+    poloidal_build: SegmentBuild | None = None,
+    toroidal_build: SegmentBuild | None = None,
 ) -> Assembly:
     """
     Creates a tokamak fusion reactor from a radial and vertical build.
@@ -275,6 +501,41 @@ def tokamak(
             Each dictionary entry should be a key that matches the assembly part name
             (e.g. 'plasma', or 'layer_1') and a tuple of 3 or 4 floats between 0 and 1
             representing the RGB or RGBA values.
+        poloidal_build: optional poloidal segmentation of the layers. A list
+            with one entry per radial_build entry after the plasma, ordered
+            from the plasma outwards, so each entry covers the matching
+            inboard and outboard layer pair. Entries are None for layers that
+            are not segmented (and must be None for LayerType.GAP entries),
+            otherwise a list of segments in the same format as radial_build
+            entries: (paramak.LayerType.SOLID, arc_length, name) for a solid
+            segment (the name is optional) or (paramak.LayerType.GAP,
+            arc_length) for a gap that produces no solid. Arc lengths are
+            measured along the plasma facing surface (the inner surface of
+            the first solid layer after the plasma) for every layer, starting
+            at the outboard midplane and proceeding counter clockwise
+            (upwards on the outboard side). Each entry must sum to the arc
+            length returned by paramak.poloidal_arc_length (within 0.1
+            percent). Cuts between segments follow the normal to the plasma
+            surface, so layers given the same segments line up. Solid
+            segments are named "<layer name>_<segment name>", unnamed solid
+            segments are called "segment", and repeated names within a layer
+            get a "_1", "_2" suffix. Defaults to None.
+        toroidal_build: optional toroidal segmentation of the layers, for
+            example into sectors separated by assembly gaps. A list with one
+            entry per radial_build entry after the plasma, ordered from the
+            plasma outwards, like poloidal_build. Entries are None for layers
+            that are not segmented (and must be None for LayerType.GAP
+            entries), otherwise a list of segments: (paramak.LayerType.SOLID,
+            arc_length, name) for a sector (the name is optional) or
+            (paramak.LayerType.GAP, width) for a gap. Arc lengths are measured
+            around the plasma facing surface at the outboard midplane,
+            starting at the XZ plane and going in the direction the reactor is
+            revolved, and each entry must sum to the arc length returned by
+            paramak.toroidal_arc_length (within 0.1 percent). Gaps are slots
+            with parallel sides, so a gap has the same width at every radius.
+            Sectors are named "<layer name>_<sector name>", or
+            "<layer name>_<poloidal segment name>_<sector name>" when the
+            layer also has a poloidal_build entry. Defaults to None.
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the tokamak fusion reactor.
@@ -289,15 +550,7 @@ def tokamak(
 
     validate_vertical_build_names(vertical_build, "tokamak()")
 
-    inner_equatorial_point = sum_up_to_plasma(radial_build)
-    plasma_radial_thickness = get_plasma_value(radial_build)
-    plasma_vertical_thickness = get_plasma_value(vertical_build)
-    outer_equatorial_point = inner_equatorial_point + plasma_radial_thickness
-
-    major_radius = (outer_equatorial_point + inner_equatorial_point) / 2
-    minor_radius = major_radius - inner_equatorial_point
-
-    elongation = (plasma_vertical_thickness / 2) / minor_radius
+    major_radius, minor_radius, elongation = get_plasma_geometry(radial_build, vertical_build)
     blanket_rear_wall_end_height = sum([item[1] for item in vertical_build])
 
     plasma = plasma_simplified(
@@ -312,6 +565,18 @@ def tokamak(
         radial_build, rotation_angle, blanket_rear_wall_end_height
     )
 
+    # validated before the blanket layers are built so errors are raised quickly
+    poloidal_segment_angles = None
+    if poloidal_build is not None:
+        poloidal_segment_angles = get_poloidal_build_segment_angles(
+            poloidal_build, radial_build, vertical_build, triangularity, layer_count=len(inner_radial_build)
+        )
+    toroidal_sectors = None
+    if toroidal_build is not None:
+        toroidal_sectors = get_toroidal_build_sectors(
+            toroidal_build, get_layer_pairs(radial_build, vertical_build), radial_build, rotation_angle
+        )
+
     blanket_layers = create_layers_from_plasma(
         radial_build=radial_build,
         vertical_build=vertical_build,
@@ -321,7 +586,10 @@ def tokamak(
         elongation=elongation,
         rotation_angle=rotation_angle,
         center_column=inner_radial_build[0],  # blanket_cutting_cylinder,
-        layer_count=len(inner_radial_build)
+        layer_count=len(inner_radial_build),
+        poloidal_segment_angles=poloidal_segment_angles,
+        toroidal_sectors=toroidal_sectors,
+        toroidal_region_size=4 * max(sum(item[1] for item in radial_build), blanket_rear_wall_end_height),
     )
 
     cut_names, intersect_names, layer_names = get_assembly_names(
@@ -338,15 +606,23 @@ def tokamak(
         my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
 
     # builds up the intersect shapes
+    segmented = poloidal_build is not None or toroidal_build is not None
     if len(extra_intersect_shapes) > 0:
-        # makes a union of the the radial build to use as a base for the intersect shapes
-        reactor_compound = inner_radial_build[0]
-        for entry in inner_radial_build[1:] + blanket_layers:
-            reactor_compound = reactor_compound.union(entry)
+        if not segmented:
+            # makes a union of the the radial build to use as a base for the intersect shapes
+            reactor_compound = inner_radial_build[0]
+            for entry in inner_radial_build[1:] + blanket_layers:
+                reactor_compound = reactor_compound.union(entry)
 
         # adds the extra intersect shapes to the assembly
         for entry, name in zip(extra_intersect_shapes, intersect_names):
-            reactor_entry_intersection = entry.intersect(reactor_compound)
+            if not segmented:
+                reactor_entry_intersection = entry.intersect(reactor_compound)
+            else:
+                # segments share many faces with their neighbours, which
+                # makes fusing all the parts unreliable, so the shape is intersected
+                # with each part and the pieces are kept together in a compound
+                reactor_entry_intersection = intersect_with_each_part(entry, inner_radial_build + blanket_layers)
             my_assembly.add(reactor_entry_intersection, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
 
     # cut the core layers with any extra shapes (a no-op when there are none)

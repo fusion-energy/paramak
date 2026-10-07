@@ -1,6 +1,8 @@
 import importlib
+import math
 from pathlib import Path
 
+import cadquery as cq
 import pytest
 
 import paramak
@@ -197,3 +199,235 @@ def test_named_layers_spherical_tokamak():
         .rename("layer_4", "blanket")
     )
     assert renamed.names() == ["central column", "tf coil", "first wall", "blanket", "plasma"]
+
+SPHERICAL_RADIAL_BUILD = [
+    (paramak.LayerType.GAP, 10),
+    (paramak.LayerType.SOLID, 50),
+    (paramak.LayerType.SOLID, 15),
+    (paramak.LayerType.GAP, 50),
+    (paramak.LayerType.PLASMA, 300),
+    (paramak.LayerType.GAP, 60),
+    (paramak.LayerType.SOLID, 15),  # first wall
+    (paramak.LayerType.SOLID, 60),  # blanket
+    (paramak.LayerType.SOLID, 10),  # rear wall
+]
+
+
+def volumes(assembly):
+    return {child.name: child.toCompound().Volume() for child in assembly.children}
+
+
+def equal_segments(arc_length, number_of_segments, gap, name="module"):
+    "a poloidal_build entry of equally sized segments separated by gaps"
+    segment = (arc_length - number_of_segments * gap) / number_of_segments
+    return [(paramak.LayerType.SOLID, segment, name), (paramak.LayerType.GAP, gap)] * number_of_segments
+
+
+def test_spherical_poloidal_arc_length_circular_plasma():
+    "the path is the bottom of the layer, half a circle around the outboard side and the top of the layer"
+
+    arc_length = paramak.spherical_poloidal_arc_length(SPHERICAL_RADIAL_BUILD, elongation=1.0, triangularity=0.0)
+
+    minor_radius = 150
+    major_radius = 10 + 50 + 15 + 50 + minor_radius
+    column_radius = 10 + 50 + 15
+    gap_to_plasma = 60
+    expected = math.pi * (minor_radius + gap_to_plasma) + 2 * (major_radius - column_radius)
+    assert arc_length == pytest.approx(expected, rel=1e-6)
+
+
+def test_spherical_poloidal_arc_length_with_vertical_build():
+    "the vertical build sets the elongation"
+
+    vertical_build = [
+        (paramak.LayerType.SOLID, 10),
+        (paramak.LayerType.SOLID, 60),
+        (paramak.LayerType.SOLID, 15),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.PLASMA, 300),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.SOLID, 15),
+        (paramak.LayerType.SOLID, 60),
+        (paramak.LayerType.SOLID, 10),
+    ]
+    # the plasma height equals the plasma width so the elongation is 1
+    from_vertical_build = paramak.spherical_poloidal_arc_length(
+        SPHERICAL_RADIAL_BUILD, triangularity=0.0, vertical_build=vertical_build
+    )
+    from_elongation = paramak.spherical_poloidal_arc_length(
+        SPHERICAL_RADIAL_BUILD, elongation=1.0, triangularity=0.0
+    )
+    assert from_vertical_build == pytest.approx(from_elongation)
+
+    with pytest.raises(ValueError, match="elongation can not be set"):
+        paramak.spherical_poloidal_arc_length(SPHERICAL_RADIAL_BUILD, elongation=2.0, vertical_build=vertical_build)
+
+
+def test_spherical_poloidal_build_names_and_volumes():
+    "segments without gaps fill the same volume as the unsegmented layers"
+
+    arc_length = paramak.spherical_poloidal_arc_length(SPHERICAL_RADIAL_BUILD)
+    number_of_modules = 6
+    modules = equal_segments(arc_length, number_of_modules, gap=0)
+
+    unsegmented = paramak.spherical_tokamak_from_plasma(radial_build=SPHERICAL_RADIAL_BUILD, rotation_angle=90)
+    segmented = paramak.spherical_tokamak_from_plasma(
+        radial_build=SPHERICAL_RADIAL_BUILD, rotation_angle=90, poloidal_build=[None, modules, modules, None]
+    )
+
+    assert segmented.names() == [
+        "layer_1",
+        "layer_2",
+        *[f"layer_3_module_{i}" for i in range(1, number_of_modules + 1)],
+        *[f"layer_4_module_{i}" for i in range(1, number_of_modules + 1)],
+        "layer_5",
+        "plasma",
+    ]
+    unsegmented_volumes = volumes(unsegmented)
+    segmented_volumes = volumes(segmented)
+    for layer in ["layer_3", "layer_4"]:
+        segment_volume = sum(value for name, value in segmented_volumes.items() if name.startswith(f"{layer}_"))
+        assert segment_volume == pytest.approx(unsegmented_volumes[layer], rel=1e-6)
+    for name in ["layer_1", "layer_2", "layer_5", "plasma"]:
+        assert segmented_volumes[name] == pytest.approx(unsegmented_volumes[name])
+    for child in segmented.children:
+        assert child.toCompound().isValid()
+
+
+def test_spherical_poloidal_build_gaps_and_single_segment():
+    "gaps remove volume, and a single segment covering the whole path is the full layer"
+
+    arc_length = paramak.spherical_poloidal_arc_length(SPHERICAL_RADIAL_BUILD)
+    segmented = paramak.spherical_tokamak_from_plasma(
+        radial_build=SPHERICAL_RADIAL_BUILD,
+        rotation_angle=90,
+        poloidal_build=[None, equal_segments(arc_length, 4, gap=30), None, [(paramak.LayerType.SOLID, arc_length, "rear")]],
+    )
+    unsegmented = volumes(paramak.spherical_tokamak_from_plasma(radial_build=SPHERICAL_RADIAL_BUILD, rotation_angle=90))
+    segmented_volumes = volumes(segmented)
+    segment_volume = sum(value for name, value in segmented_volumes.items() if name.startswith("layer_3_"))
+    assert segment_volume < unsegmented["layer_3"]
+    assert segmented_volumes["layer_5_rear"] == pytest.approx(unsegmented["layer_5"], rel=1e-6)
+
+
+def test_spherical_same_segments_line_up():
+    "layers given the same segments start and stop at the same positions along the path"
+
+    from paramak.assemblies.spherical_tokamak import (
+        get_spherical_poloidal_build_segment_positions,
+        spherical_vertical_build_from_radial_build,
+    )
+
+    arc_length = paramak.spherical_poloidal_arc_length(SPHERICAL_RADIAL_BUILD)
+    modules = equal_segments(arc_length, number_of_segments=8, gap=15)
+    positions = get_spherical_poloidal_build_segment_positions(
+        [None, modules, modules, modules],
+        SPHERICAL_RADIAL_BUILD,
+        spherical_vertical_build_from_radial_build(SPHERICAL_RADIAL_BUILD, 2.0),
+        0.55,
+    )
+    assert positions[0] is None
+    assert positions[1] == positions[2] == positions[3]
+    # the first segment starts at the centre column at the bottom and the last ends at the top
+    assert positions[1][0][1] == pytest.approx(0.0)
+
+
+def test_spherical_poloidal_build_with_named_layer_and_spherical_tokamak():
+    "segment names use the layer name from the radial build, and spherical_tokamak() supports poloidal_build"
+
+    radial_build = [
+        (paramak.LayerType.GAP, 10),
+        (paramak.LayerType.SOLID, 50),
+        (paramak.LayerType.GAP, 50),
+        (paramak.LayerType.PLASMA, 300),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.SOLID, 60, "blanket"),
+    ]
+    vertical_build = [
+        (paramak.LayerType.SOLID, 60),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.PLASMA, 700),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.SOLID, 60),
+    ]
+    arc_length = paramak.spherical_poloidal_arc_length(radial_build, vertical_build=vertical_build)
+    reactor = paramak.spherical_tokamak(
+        radial_build=radial_build,
+        vertical_build=vertical_build,
+        rotation_angle=90,
+        poloidal_build=[None, [(paramak.LayerType.SOLID, arc_length / 2, "lower"), (paramak.LayerType.SOLID, arc_length / 2, "upper")]],
+    )
+    assert reactor.names() == ["layer_1", "blanket_lower", "blanket_upper", "plasma"]
+
+
+@pytest.mark.parametrize(
+    "poloidal_build, error, match",
+    [
+        ([None, None], ValueError, "expected 4 entries but got 2"),
+        ([[(paramak.LayerType.SOLID, 1)], None, None, None], ValueError, "corresponds to a LayerType.GAP"),
+        ([None, [(paramak.LayerType.SOLID, 1)], None, None], ValueError, "Use paramak.spherical_poloidal_arc_length"),
+        ([None, [(paramak.LayerType.SOLID, -1)], None, None], ValueError, "positive arc_length"),
+        ("not a list", TypeError, "must be a list"),
+    ],
+)
+def test_spherical_poloidal_build_validation(poloidal_build, error, match):
+    with pytest.raises(error, match=match):
+        paramak.spherical_tokamak_from_plasma(
+            radial_build=SPHERICAL_RADIAL_BUILD, rotation_angle=90, poloidal_build=poloidal_build
+        )
+
+
+def test_spherical_poloidal_build_with_divertor():
+    "the divertor is the same with and without segmentation and is cut out of the segments"
+
+    divertor = cq.Workplane("XZ").polyline([(200, -700), (200, 0), (300, 0), (300, -700)]).close().revolve(90)
+    arc_length = paramak.spherical_poloidal_arc_length(SPHERICAL_RADIAL_BUILD)
+    modules = equal_segments(arc_length, number_of_segments=6, gap=0)
+
+    unsegmented = volumes(
+        paramak.spherical_tokamak_from_plasma(
+            radial_build=SPHERICAL_RADIAL_BUILD, rotation_angle=90, extra_intersect_shapes=[divertor]
+        )
+    )
+    segmented = paramak.spherical_tokamak_from_plasma(
+        radial_build=SPHERICAL_RADIAL_BUILD,
+        rotation_angle=90,
+        extra_intersect_shapes=[divertor],
+        poloidal_build=[None, modules, modules, None],
+    )
+    segmented_volumes = volumes(segmented)
+    assert segmented_volumes["extra_intersect_shapes_1"] == pytest.approx(
+        unsegmented["extra_intersect_shapes_1"], rel=1e-3
+    )
+    assert segmented_volumes["extra_intersect_shapes_1"] > 0
+
+    def total(volume_dict):
+        return sum(value for name, value in volume_dict.items() if name != "plasma")
+
+    assert total(segmented_volumes) == pytest.approx(total(unsegmented), rel=1e-3)
+    for child in segmented.children:
+        assert child.toCompound().isValid()
+
+
+def test_spherical_poloidal_build_with_thin_centre_column():
+    "segments reaching a centre column thinner than the cutting margin are still built correctly"
+
+    radial_build = [
+        (paramak.LayerType.GAP, 2),
+        (paramak.LayerType.SOLID, 3),
+        (paramak.LayerType.GAP, 50),
+        (paramak.LayerType.PLASMA, 300),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.SOLID, 20),
+    ]
+    arc_length = paramak.spherical_poloidal_arc_length(radial_build)
+    modules = [(paramak.LayerType.SOLID, arc_length / 4, "module")] * 4
+    unsegmented = volumes(paramak.spherical_tokamak_from_plasma(radial_build=radial_build, rotation_angle=90))
+    segmented = paramak.spherical_tokamak_from_plasma(
+        radial_build=radial_build, rotation_angle=90, poloidal_build=[None, modules]
+    )
+    segmented_volumes = volumes(segmented)
+    segment_volume = sum(value for name, value in segmented_volumes.items() if name.startswith("layer_2_"))
+    assert segment_volume == pytest.approx(unsegmented["layer_2"], rel=1e-6)
+    for child in segmented.children:
+        assert child.toCompound().isValid()

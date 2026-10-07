@@ -127,6 +127,17 @@ def sum_up_to_plasma(radial_build):
     return total_sum
 
 
+def get_plasma_geometry(radial_build, vertical_build):
+    """Returns the major radius, minor radius and elongation of the plasma
+    defined by the radial and vertical builds."""
+    inner_equatorial_point = sum_up_to_plasma(radial_build)
+    outer_equatorial_point = inner_equatorial_point + get_plasma_value(radial_build)
+    major_radius = (outer_equatorial_point + inner_equatorial_point) / 2
+    minor_radius = major_radius - inner_equatorial_point
+    elongation = (get_plasma_value(vertical_build) / 2) / minor_radius
+    return major_radius, minor_radius, elongation
+
+
 def smooth_profile(angles, values, period=None):
     """Returns a function of poloidal angle (degrees) that passes through the
     values at the angles and eases between neighbouring angles with a cosine.

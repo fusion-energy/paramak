@@ -1,10 +1,12 @@
 from importlib.metadata import version
 
 from .assemblies.spherical_tokamak import (
+    spherical_poloidal_arc_length,
     spherical_tokamak,
     spherical_tokamak_from_plasma,
 )
-from .assemblies.tokamak import tokamak, tokamak_from_plasma
+from .assemblies.tokamak import poloidal_arc_length, tokamak, tokamak_from_plasma
+from .assemblies.toroidal import toroidal_arc_length
 from .utils import LayerType
 from .workplanes.blanket_constant_thickness_arc_h import (
     blanket_constant_thickness_arc_h,
@@ -35,13 +37,16 @@ __all__ = [
     "cutting_wedge",
     "dished_vacuum_vessel",
     "plasma_simplified",
+    "poloidal_arc_length",
     "poloidal_field_coil",
     "poloidal_field_coil_case",
     "revolved_shape",
+    "spherical_poloidal_arc_length",
     "spherical_tokamak",
     "spherical_tokamak_from_plasma",
     "tokamak",
     "tokamak_from_plasma",
+    "toroidal_arc_length",
     "toroidal_field_coil_princeton_d",
     "toroidal_field_coil_rectangle",
     "u_shaped_dome",
