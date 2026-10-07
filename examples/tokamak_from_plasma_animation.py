@@ -89,6 +89,7 @@ def create_reactor(
     divertor_thickness=original_divertor_thickness,
     n_modules=None,
     segment_blanket=False,
+    n_sectors=None,
 ):
     
     reactor_diameter = sum([layer[1] for layer in radial_build])
@@ -157,23 +158,42 @@ def create_reactor(
     # optionally splits the first wall (layer_2) into tiles, and optionally
     # the blanket (layer_3) into modules that line up with the first wall tiles
     poloidal_build = None
+    toroidal_build = None
     module_colors = {}
     plasma_color = (1., 0.7, 0.8, 0.6)
     if n_modules is not None:
-        module_gap = 15  # gap between neighbouring segments
+        module_gap = 15  # gap between neighbouring poloidal segments
         arc_length = paramak.poloidal_arc_length(radial_build, elongation=elongation, triangularity=triangularity)
         module_length = (arc_length - n_modules * module_gap) / n_modules
         modules = [(paramak.LayerType.SOLID, module_length, "module"), (paramak.LayerType.GAP, module_gap)] * n_modules
         # the same segments in the first wall and blanket line up
         poloidal_build = [None, modules, modules if segment_blanket else None, None]
+    if n_sectors is not None:
+        sector_gap = 50  # width of the gap between neighbouring toroidal sectors
+        toroidal_arc = paramak.toroidal_arc_length(radial_build, rotation_angle=180)
+        sector_length = (toroidal_arc - n_sectors * sector_gap) / n_sectors
+        sectors = [(paramak.LayerType.SOLID, sector_length, "sector"), (paramak.LayerType.GAP, sector_gap)] * n_sectors
+        # the first wall and blanket are split into the same sectors
+        toroidal_build = [None, sectors, sectors, None]
+    if poloidal_build is not None or toroidal_build is not None:
         # alternating colors so neighbouring segments can be told apart
         layer_colors = {"layer_2": [(0.75, 0.95, 0.75), (0.2, 0.5, 0.2)], "layer_3": [(0.1, 0.1, 0.9), (0.5, 0.75, 1.0)]}
-        for layer_name, colors in layer_colors.items():
-            for i in range(n_modules):
-                name = f"{layer_name}_module" if n_modules == 1 else f"{layer_name}_module_{i + 1}"
-                module_colors[name] = colors[i % 2]
-        # a more transparent plasma so the segments behind it can be seen
-        plasma_color = (1., 0.7, 0.8, 0.3)
+        for layer_index, (layer_name, colors) in enumerate(layer_colors.items()):
+            if layer_index == 1 and not segment_blanket and toroidal_build is None:
+                continue
+            layer_split_poloidally = poloidal_build is not None and (layer_index == 0 or segment_blanket)
+            poloidal_names = [""] if not layer_split_poloidally else (
+                ["_module"] if n_modules == 1 else [f"_module_{i + 1}" for i in range(n_modules)]
+            )
+            toroidal_names = [""] if toroidal_build is None else (
+                ["_sector"] if n_sectors == 1 else [f"_sector_{j + 1}" for j in range(n_sectors)]
+            )
+            for i, poloidal_name in enumerate(poloidal_names):
+                for j, toroidal_name in enumerate(toroidal_names):
+                    module_colors[f"{layer_name}{poloidal_name}{toroidal_name}"] = colors[(i + j) % 2]
+        # a more transparent plasma so the segments behind it can be seen, more
+        # so for toroidal sectors which are mostly seen through the plasma
+        plasma_color = (1., 0.7, 0.8, 0.12 if toroidal_build is not None else 0.3)
 
     return paramak.tokamak_from_plasma(
         radial_build=radial_build,
@@ -181,6 +201,7 @@ def create_reactor(
         triangularity=triangularity,
         rotation_angle=180,
         poloidal_build=poloidal_build,
+        toroidal_build=toroidal_build,
         colors={
             **module_colors,
             "layer_1": (0.4, 0.9, 0.4),
@@ -323,6 +344,24 @@ for modified_n_modules in [None, 2, 4, 6, 8, 10, 12, 14, 16, 16, 16, 14, 12, 10,
 # first wall tiles and blanket modules with the same poloidal segments
 for modified_n_modules in [None, 2, 3, 4, 5, 6, 7, 8, 8, 8, 7, 6, 5, 4, 3, 2, None]:
     reactor = create_reactor(n_modules=modified_n_modules, segment_blanket=True)
+    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png', f'tokamak_alpha_frame_{frame:03d}.png')
+    for repeat in range(1, segmentation_frame_repeats):
+        shutil.copy(f'tokamak_frame_{frame:03d}.png', f'tokamak_frame_{frame + repeat:03d}.png')
+        shutil.copy(f'tokamak_alpha_frame_{frame:03d}.png', f'tokamak_alpha_frame_{frame + repeat:03d}.png')
+    frame += segmentation_frame_repeats
+
+# first wall and blanket split into the same toroidal sectors
+for modified_n_sectors in [None, 2, 3, 4, 5, 6, 7, 8, 8, 8, 7, 6, 5, 4, 3, 2, None]:
+    reactor = create_reactor(n_sectors=modified_n_sectors)
+    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png', f'tokamak_alpha_frame_{frame:03d}.png')
+    for repeat in range(1, segmentation_frame_repeats):
+        shutil.copy(f'tokamak_frame_{frame:03d}.png', f'tokamak_frame_{frame + repeat:03d}.png')
+        shutil.copy(f'tokamak_alpha_frame_{frame:03d}.png', f'tokamak_alpha_frame_{frame + repeat:03d}.png')
+    frame += segmentation_frame_repeats
+
+# first wall and blanket split both poloidally and toroidally
+for modified_n_segments in [None, 2, 3, 4, 5, 6, 6, 6, 5, 4, 3, 2, None]:
+    reactor = create_reactor(n_modules=modified_n_segments, segment_blanket=True, n_sectors=modified_n_segments)
     export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png', f'tokamak_alpha_frame_{frame:03d}.png')
     for repeat in range(1, segmentation_frame_repeats):
         shutil.copy(f'tokamak_frame_{frame:03d}.png', f'tokamak_frame_{frame + repeat:03d}.png')

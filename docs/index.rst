@@ -25,12 +25,12 @@ The style of reactor, sizes of components, plasma shape and number of radial or 
 .. raw:: html
 
     <div style="display: flex; justify-content: center;">
-        <video width="45%" controls autoplay loop muted playsinline title="Spherical tokamak (paramak.spherical_tokamak_from_plasma and paramak.spherical_tokamak): a compact reactor with a blanket on the outboard side of the plasma and a centre column on the inboard side. The animation varies the thickness of each radial_build layer, the number of toroidal field coils, the poloidal field coil positions, the divertor size, the plasma elongation and triangularity, and the poloidal_build segmentation of the first wall and blanket.">
+        <video width="45%" controls autoplay loop muted playsinline title="Spherical tokamak (paramak.spherical_tokamak_from_plasma and paramak.spherical_tokamak): a compact reactor with a blanket on the outboard side of the plasma and a centre column on the inboard side. The animation varies the thickness of each radial_build layer, the number of toroidal field coils, the poloidal field coil positions, the divertor size, the plasma elongation and triangularity, the poloidal_build segmentation of the first wall and blanket, and their toroidal_build segmentation into sectors, on their own and together with the poloidal segments.">
             <source src="_static/spherical_tokamak_animation.webm" type="video/webm">
             <source src="_static/spherical_tokamak_animation.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
-        <video width="45%" controls autoplay loop muted playsinline title="Tokamak (paramak.tokamak_from_plasma and paramak.tokamak): a reactor with a blanket that goes around both the inboard and outboard sides of the plasma. The animation varies the thickness of each radial_build layer, the number of toroidal field coils, the poloidal field coil positions, the divertor size, the plasma elongation and triangularity, and the poloidal_build segmentation into first wall tiles and first wall and blanket modules.">
+        <video width="45%" controls autoplay loop muted playsinline title="Tokamak (paramak.tokamak_from_plasma and paramak.tokamak): a reactor with a blanket that goes around both the inboard and outboard sides of the plasma. The animation varies the thickness of each radial_build layer, the number of toroidal field coils, the poloidal field coil positions, the divertor size, the plasma elongation and triangularity, the poloidal_build segmentation into first wall tiles and first wall and blanket modules, and the toroidal_build segmentation of the first wall and blanket into sectors, on their own and together with the poloidal modules.">
             <source src="_static/tokamak_animation.webm" type="video/webm">
             <source src="_static/tokamak_animation.mp4" type="video/mp4">
             Your browser does not support the video tag.
