@@ -5,6 +5,7 @@ from typing import Sequence
 import cadquery as cq
 
 from ..utils import (
+    smooth_profile,
     LayerType,
     get_assembly_names,
     get_layer_name,
@@ -52,16 +53,14 @@ def create_blanket_layers_after_plasma(
             major_radius=major_radius,
             triangularity=triangularity,
             elongation=elongation,
-            thickness=[
-                lower_thickness,
-                radial_thickness,
-                upper_thickness,
-            ],
-            offset_from_plasma=[
-                cumulative_thickness_lvb,
-                cumulative_thickness_rb,
-                cumulative_thickness_uvb,
-            ],
+            # smooth profiles from the bottom (-90 degrees) through the outboard
+            # midplane (0) to the top (90), so the layer has no corners where the
+            # radial and vertical builds differ and meets the flat top and bottom
+            # smoothly
+            thickness=smooth_profile([-90, 0, 90], [lower_thickness, radial_thickness, upper_thickness]),
+            offset_from_plasma=smooth_profile(
+                [-90, 0, 90], [cumulative_thickness_lvb, cumulative_thickness_rb, cumulative_thickness_uvb]
+            ),
             start_angle=-90,
             stop_angle=90,
             rotation_angle=rotation_angle,

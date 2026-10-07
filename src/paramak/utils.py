@@ -2,6 +2,7 @@ import typing
 from collections import Counter
 from enum import Enum
 
+import numpy as np
 from cadquery import Workplane
 
 
@@ -124,6 +125,36 @@ def sum_up_to_plasma(radial_build):
             break
         total_sum += item[1]
     return total_sum
+
+
+def smooth_profile(angles, values, period=None):
+    """Returns a function of poloidal angle (degrees) that passes through the
+    values at the angles and eases between neighbouring angles with a cosine.
+
+    The slope is zero at each angle, so a layer whose thickness or offset is
+    set by this profile has no corners where the values change (linear
+    interpolation leaves a corner at each angle). The profile is constant
+    between neighbouring angles with equal values.
+
+    Args:
+        angles: increasing angles in degrees.
+        values: the value at each angle.
+        period: if given, angles outside the range are wrapped by this period
+            (360 for a closed loop), otherwise they are clipped to the range.
+    """
+    angles = np.asarray(angles, dtype=float)
+    values = np.asarray(values, dtype=float)
+
+    def profile(theta):
+        theta = np.asarray(theta, dtype=float)
+        if period is not None:
+            theta = angles[0] + np.mod(theta - angles[0], period)
+        theta = np.clip(theta, angles[0], angles[-1])
+        index = np.clip(np.searchsorted(angles, theta, side="right") - 1, 0, len(angles) - 2)
+        fraction = (theta - angles[index]) / (angles[index + 1] - angles[index])
+        return values[index] + (values[index + 1] - values[index]) * (1 - np.cos(np.pi * fraction)) / 2
+
+    return profile
 
 
 class ValidationError(Exception):

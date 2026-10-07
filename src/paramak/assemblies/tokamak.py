@@ -5,6 +5,7 @@ from typing import Sequence
 import cadquery as cq
 
 from ..utils import (
+    smooth_profile,
     LayerType,
     get_assembly_names,
     get_layer_name,
@@ -120,13 +121,32 @@ def create_layers_from_plasma(
 
         # build outer layer
         if radial_build[plasma_index_rb + index_delta][0] == LayerType.SOLID:
+            # smooth profiles around the poloidal loop (outboard midplane at 0
+            # degrees, top at 90, inboard midplane at 180 and bottom at 270) so
+            # the layer has no corners where the radial and vertical builds differ
+            thickness = smooth_profile(
+                [0, 90, 180, 270, 360],
+                [outer_layer_thickness, upper_layer_thickness, inner_layer_thickness, lower_layer_thickness, outer_layer_thickness],
+                period=360,
+            )
+            offset = smooth_profile(
+                [0, 90, 180, 270, 360],
+                [
+                    cumulative_thickness_orb,
+                    cumulative_thickness_uvb,
+                    cumulative_thickness_irb,
+                    cumulative_thickness_lvb,
+                    cumulative_thickness_orb,
+                ],
+                period=360,
+            )
             outer_layer = blanket_from_plasma(
                 minor_radius=minor_radius,
                 major_radius=major_radius,
                 triangularity=triangularity,
                 elongation=elongation,
-                thickness=[upper_layer_thickness, outer_layer_thickness, lower_layer_thickness],
-                offset_from_plasma=[cumulative_thickness_uvb, cumulative_thickness_orb, cumulative_thickness_lvb],
+                thickness=thickness,
+                offset_from_plasma=offset,
                 start_angle=90,
                 stop_angle=-90,
                 rotation_angle=rotation_angle,
@@ -139,16 +159,8 @@ def create_layers_from_plasma(
                 major_radius=major_radius,
                 triangularity=triangularity,
                 elongation=elongation,
-                thickness=[
-                    lower_layer_thickness,
-                    inner_layer_thickness,
-                    upper_layer_thickness,
-                ],
-                offset_from_plasma=[
-                    cumulative_thickness_lvb,
-                    cumulative_thickness_irb,
-                    cumulative_thickness_uvb,
-                ],
+                thickness=thickness,
+                offset_from_plasma=offset,
                 start_angle=-90,
                 stop_angle=-270,
                 rotation_angle=rotation_angle,

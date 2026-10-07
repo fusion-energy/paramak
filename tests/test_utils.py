@@ -1054,3 +1054,39 @@ def test_sum_after_gap_following_plasma_not_found():
     ]
     with pytest.raises(ValueError, match="LayerType.PLASMA entry not found"):
         sum_after_gap_following_plasma(radial_build)
+
+
+def test_smooth_profile_passes_through_values_without_corners():
+    "the profile matches the values at each angle and has zero slope there, so there are no corners"
+
+    import numpy as np
+
+    from paramak.utils import smooth_profile
+
+    profile = smooth_profile([0, 90, 180, 270, 360], [210, 155, 210, 125, 210], period=360)
+    for angle, value in [(0, 210), (90, 155), (180, 210), (270, 125), (360, 210), (-90, 125), (450, 155)]:
+        assert float(profile(angle)) == pytest.approx(value)
+    # the slope either side of each angle is the same (zero), unlike linear interpolation
+    for angle in [0, 90, 180, 270]:
+        before = (profile(angle) - profile(angle - 0.01)) / 0.01
+        after = (profile(angle + 0.01) - profile(angle)) / 0.01
+        assert float(before) == pytest.approx(0, abs=1e-2)
+        assert float(after) == pytest.approx(0, abs=1e-2)
+    # values in between stay within the range of the neighbouring values
+    thetas = np.linspace(0, 360, 721)
+    assert profile(thetas).min() >= 125 and profile(thetas).max() <= 210
+
+
+def test_smooth_profile_is_constant_between_equal_values():
+    "a side of the loop where neighbouring values are equal keeps that value"
+
+    import numpy as np
+
+    from paramak.utils import smooth_profile
+
+    profile = smooth_profile([0, 90, 180, 270, 360], [40, 20, 20, 20, 40], period=360)
+    assert np.allclose(profile(np.linspace(90, 270, 50)), 20)
+
+    open_profile = smooth_profile([-90, 0, 90], [10, 30, 10])
+    assert float(open_profile(-120)) == pytest.approx(10)  # clipped outside the range
+    assert float(open_profile(0)) == pytest.approx(30)
