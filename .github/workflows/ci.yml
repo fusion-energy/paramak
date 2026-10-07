@@ -1,10 +1,8 @@
 name: CI testing
 
 on:
+  # runs on every pull request, including ones based on other branches (stacked PRs)
   pull_request:
-    branches:
-      - develop
-      - main
   push:
     branches:
       - main
