@@ -1,9 +1,9 @@
 name: documentation release
 
 on:
+  # builds the docs on every pull request, including ones based on other branches
+  # (stacked PRs), they are only deployed on pushes to main and tags
   pull_request:
-    branches:
-      - main
   push:
     branches:
       - main
