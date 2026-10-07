@@ -384,6 +384,62 @@ Spherical tokamak with poloidal segments
     ).remove("plasma").toCompound()
 
 
+Spherical tokamak with toroidal sectors
+---------------------------------------
+
+- The toroidal_build argument splits layers into toroidal sectors, for example sectors separated by assembly gaps.
+- toroidal_build has one entry per radial_build entry after the plasma, ordered from the plasma outwards, like poloidal_build. Entries are None for layers that are not segmented, otherwise a list of segments: (paramak.LayerType.SOLID, arc_length, name) for a sector (the name is optional) or (paramak.LayerType.GAP, width) for a gap.
+- Arc lengths are measured around the plasma facing surface at the outboard midplane, starting at the XZ plane, and each entry must sum to the arc length returned by paramak.toroidal_arc_length.
+- Gaps are slots with parallel sides, so a gap has the same width at every radius.
+- Sectors are named "<layer name>_<sector name>". toroidal_build can be combined with poloidal_build, in which case each poloidal segment is split into sectors.
+- This example splits the first wall and blanket into the same six sectors, so the gaps run straight through them, and leaves the rear wall as a continuous ring.
+
+.. cadquery::
+    :select: result
+    :width: 100%
+    :height: 600px
+
+    import paramak
+
+    radial_build = [
+        (paramak.LayerType.GAP, 10),
+        (paramak.LayerType.SOLID, 50),
+        (paramak.LayerType.SOLID, 15),
+        (paramak.LayerType.GAP, 50),
+        (paramak.LayerType.PLASMA, 300),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.SOLID, 15),  # first wall
+        (paramak.LayerType.SOLID, 60),  # blanket
+        (paramak.LayerType.SOLID, 10),  # rear wall
+    ]
+
+    rotation_angle = 180
+
+    # arc length that the sectors of each layer must sum to
+    arc_length = paramak.toroidal_arc_length(radial_build, rotation_angle=rotation_angle)
+
+    number_of_sectors = 6
+    sector_gap = 20  # width of the gap between neighbouring sectors
+    sector_length = (arc_length - number_of_sectors * sector_gap) / number_of_sectors
+    sectors = [
+        (paramak.LayerType.SOLID, sector_length, "sector"),
+        (paramak.LayerType.GAP, sector_gap),
+    ] * number_of_sectors
+
+    result = paramak.spherical_tokamak_from_plasma(
+        radial_build=radial_build,
+        toroidal_build=[
+            None,  # gap after the plasma
+            sectors,  # first wall
+            sectors,  # blanket
+            None,  # rear wall, not split so it stays a continuous ring
+        ],
+        elongation=2.0,
+        triangularity=0.55,
+        rotation_angle=rotation_angle,
+    ).toCompound()
+
+
 Naming spherical tokamak parts
 ------------------------------
 

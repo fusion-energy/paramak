@@ -17,6 +17,7 @@ Utilities
 
 .. autofunction:: poloidal_arc_length
 .. autofunction:: spherical_poloidal_arc_length
+.. autofunction:: toroidal_arc_length
 
 Workplanes
 ----------

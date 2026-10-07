@@ -424,10 +424,130 @@ Tokamak with first wall and blanket segments
     ).remove("plasma").toCompound()
 
 
+Tokamak with toroidal sectors
+-----------------------------
+
+- The toroidal_build argument splits layers into toroidal sectors, for example sectors separated by assembly gaps.
+- toroidal_build has one entry per radial_build entry after the plasma, ordered from the plasma outwards, like poloidal_build. Entries are None for layers that are not segmented, otherwise a list of segments: (paramak.LayerType.SOLID, arc_length, name) for a sector (the name is optional) or (paramak.LayerType.GAP, width) for a gap.
+- Arc lengths are measured around the plasma facing surface at the outboard midplane, starting at the XZ plane, and each entry must sum to the arc length returned by paramak.toroidal_arc_length.
+- Gaps are slots with parallel sides, so a gap has the same width at every radius.
+- Sectors are named "<layer name>_<sector name>". toroidal_build can be combined with poloidal_build, in which case each poloidal segment is split into sectors.
+- This example splits the first wall and blanket into the same eight sectors, so the gaps run straight through them, and leaves the rear wall as a continuous ring. The plasma is removed from the result so the sectors can be seen.
+
+.. cadquery::
+    :select: result
+    :width: 100%
+    :height: 600px
+
+    import paramak
+
+    radial_build = [
+        (paramak.LayerType.GAP, 10),
+        (paramak.LayerType.SOLID, 30),
+        (paramak.LayerType.SOLID, 50),
+        (paramak.LayerType.SOLID, 10),
+        (paramak.LayerType.SOLID, 120),
+        (paramak.LayerType.SOLID, 20),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.PLASMA, 300),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.SOLID, 20),  # first wall
+        (paramak.LayerType.SOLID, 120),  # blanket
+        (paramak.LayerType.SOLID, 10),  # rear wall
+    ]
+
+    rotation_angle = 180
+
+    # arc length that the sectors of each layer must sum to
+    arc_length = paramak.toroidal_arc_length(radial_build, rotation_angle=rotation_angle)
+
+    number_of_sectors = 8
+    sector_gap = 20  # width of the gap between neighbouring sectors
+    sector_length = (arc_length - number_of_sectors * sector_gap) / number_of_sectors
+    sectors = [
+        (paramak.LayerType.SOLID, sector_length, "sector"),
+        (paramak.LayerType.GAP, sector_gap),
+    ] * number_of_sectors
+
+    result = paramak.tokamak_from_plasma(
+        radial_build=radial_build,
+        toroidal_build=[
+            None,  # gap after the plasma
+            sectors,  # first wall
+            sectors,  # blanket
+            None,  # rear wall, not split so it stays a continuous ring
+        ],
+        elongation=2.0,
+        triangularity=0.55,
+        rotation_angle=rotation_angle,
+    ).remove("plasma").toCompound()  # plasma removed so the sectors can be seen
+
+
+Tokamak with first wall tiles in both directions
+------------------------------------------------
+
+- poloidal_build and toroidal_build can be used together on the same layer. Each poloidal segment is split into the toroidal sectors, giving a grid of tiles.
+- This example splits the first wall into rows of tiles poloidally and columns of tiles toroidally. Tiles are named "<layer name>_<poloidal name>_<toroidal name>", for example layer_3_tile_row_2_tile_column_5.
+- The plasma is removed from the result so the tiles can be seen.
+
+.. cadquery::
+    :select: result
+    :width: 100%
+    :height: 600px
+
+    import paramak
+
+    radial_build = [
+        (paramak.LayerType.GAP, 10),
+        (paramak.LayerType.SOLID, 30),
+        (paramak.LayerType.SOLID, 50),
+        (paramak.LayerType.SOLID, 10),
+        (paramak.LayerType.SOLID, 120),
+        (paramak.LayerType.SOLID, 20),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.PLASMA, 300),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.SOLID, 20),  # first wall
+        (paramak.LayerType.SOLID, 120),  # blanket
+        (paramak.LayerType.SOLID, 10),  # rear wall
+    ]
+    rotation_angle = 180
+
+    # rows of tiles going poloidally around the plasma
+    poloidal_arc = paramak.poloidal_arc_length(radial_build, elongation=2.0, triangularity=0.55)
+    number_of_rows = 12
+    row_gap = 5  # gap between neighbouring rows of tiles
+    row_length = (poloidal_arc - number_of_rows * row_gap) / number_of_rows
+    tile_rows = [
+        (paramak.LayerType.SOLID, row_length, "tile_row"),
+        (paramak.LayerType.GAP, row_gap),
+    ] * number_of_rows
+
+    # columns of tiles going toroidally around the reactor
+    toroidal_arc = paramak.toroidal_arc_length(radial_build, rotation_angle=rotation_angle)
+    number_of_columns = 10
+    column_gap = 5  # width of the gap between neighbouring columns of tiles
+    column_length = (toroidal_arc - number_of_columns * column_gap) / number_of_columns
+    tile_columns = [
+        (paramak.LayerType.SOLID, column_length, "tile_column"),
+        (paramak.LayerType.GAP, column_gap),
+    ] * number_of_columns
+
+    result = paramak.tokamak_from_plasma(
+        radial_build=radial_build,
+        poloidal_build=[None, tile_rows, None, None],  # only the first wall is split
+        toroidal_build=[None, tile_columns, None, None],
+        elongation=2.0,
+        triangularity=0.55,
+        rotation_angle=rotation_angle,
+    ).remove("plasma").toCompound()  # plasma removed so the tiles can be seen
+
+
 Tokamak with several customizations
 -----------------------------------
 
 - Combining many of the examples together to produce a Tokamak with extra blanket layers, a lower divertor, PF and TF coils.
+- The first wall and the layer behind it are split into modules both poloidally and toroidally, with the same segments so the gaps line up through both layers.
 
 .. cadquery::
     :select: result
@@ -475,40 +595,66 @@ Tokamak with several customizations
             )
         )
 
+    radial_build = [
+        (paramak.LayerType.GAP, 10),
+        (paramak.LayerType.SOLID, 30),
+        (paramak.LayerType.SOLID, 50),
+        (paramak.LayerType.SOLID, 10),
+        (paramak.LayerType.SOLID, 60),
+        (paramak.LayerType.SOLID, 60),
+        (paramak.LayerType.SOLID, 20),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.PLASMA, 300),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.SOLID, 20),  # first wall
+        (paramak.LayerType.SOLID, 60),  # second layer
+        (paramak.LayerType.SOLID, 60),
+        (paramak.LayerType.SOLID, 10),
+    ]
+    vertical_build = [
+        (paramak.LayerType.SOLID, 10),
+        (paramak.LayerType.SOLID, 50),
+        (paramak.LayerType.SOLID, 50),
+        (paramak.LayerType.SOLID, 20),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.PLASMA, 650),
+        (paramak.LayerType.GAP, 60),
+        (paramak.LayerType.SOLID, 20),
+        (paramak.LayerType.SOLID, 50),
+        (paramak.LayerType.SOLID, 50),
+        (paramak.LayerType.SOLID, 10),
+    ]
+    rotation_angle = 180
+
+    # modules going poloidally around the plasma
+    poloidal_arc = paramak.poloidal_arc_length(radial_build, vertical_build=vertical_build, triangularity=0.55)
+    number_of_poloidal_modules = 6
+    poloidal_gap = 15  # gap between neighbouring modules
+    poloidal_module_length = (poloidal_arc - number_of_poloidal_modules * poloidal_gap) / number_of_poloidal_modules
+    poloidal_modules = [
+        (paramak.LayerType.SOLID, poloidal_module_length, "module"),
+        (paramak.LayerType.GAP, poloidal_gap),
+    ] * number_of_poloidal_modules
+
+    # sectors going toroidally around the reactor
+    toroidal_arc = paramak.toroidal_arc_length(radial_build, rotation_angle=rotation_angle)
+    number_of_sectors = 6
+    sector_gap = 15  # width of the gap between neighbouring sectors
+    sector_length = (toroidal_arc - number_of_sectors * sector_gap) / number_of_sectors
+    sectors = [
+        (paramak.LayerType.SOLID, sector_length, "sector"),
+        (paramak.LayerType.GAP, sector_gap),
+    ] * number_of_sectors
+
     result = paramak.tokamak(
-        radial_build=[
-            (paramak.LayerType.GAP, 10),
-            (paramak.LayerType.SOLID, 30),
-            (paramak.LayerType.SOLID, 50),
-            (paramak.LayerType.SOLID, 10),
-            (paramak.LayerType.SOLID, 60),
-            (paramak.LayerType.SOLID, 60),
-            (paramak.LayerType.SOLID, 20),
-            (paramak.LayerType.GAP, 60),
-            (paramak.LayerType.PLASMA, 300),
-            (paramak.LayerType.GAP, 60),
-            (paramak.LayerType.SOLID, 20),
-            (paramak.LayerType.SOLID, 60),
-            (paramak.LayerType.SOLID, 60),
-            (paramak.LayerType.SOLID, 10),
-        ],
-        vertical_build=[
-            (paramak.LayerType.SOLID, 10),
-            (paramak.LayerType.SOLID, 50),
-            (paramak.LayerType.SOLID, 50),
-            (paramak.LayerType.SOLID, 20),
-            (paramak.LayerType.GAP, 60),
-            (paramak.LayerType.PLASMA, 650),
-            (paramak.LayerType.GAP, 60),
-            (paramak.LayerType.SOLID, 20),
-            (paramak.LayerType.SOLID, 50),
-            (paramak.LayerType.SOLID, 50),
-            (paramak.LayerType.SOLID, 10),
-        ],
+        radial_build=radial_build,
+        vertical_build=vertical_build,
         triangularity=0.55,
-        rotation_angle=180,
+        rotation_angle=rotation_angle,
         extra_cut_shapes=extra_cut_shapes,
-        extra_intersect_shapes=[divertor_lower]
+        extra_intersect_shapes=[divertor_lower],
+        poloidal_build=[None, poloidal_modules, poloidal_modules, None, None],
+        toroidal_build=[None, sectors, sectors, None, None],
     ).toCompound()
 
 
