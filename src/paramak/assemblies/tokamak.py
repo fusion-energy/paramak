@@ -8,6 +8,7 @@ import numpy as np
 
 from ..utils import (
     get_plasma_geometry,
+    smooth_profile,
     LayerType,
     get_assembly_names,
     get_layer_name,
@@ -162,32 +163,26 @@ def get_layer_pairs(radial_build, vertical_build, layer_count=0):
 
 def poloidal_profile(outer, upper, inner, lower):
     """Returns a function of poloidal angle (degrees, measured counter
-    clockwise from the outboard midplane) that varies linearly between the
-    values at the outboard midplane, top, inboard midplane and bottom. This
-    matches the interpolation used when a layer is built without poloidal
-    segments."""
+    clockwise from the outboard midplane) that varies smoothly between the
+    values at the outboard midplane, top, inboard midplane and bottom, so the
+    layer has no corners where the radial and vertical builds differ. Used for
+    the thickness and offset of every layer."""
 
-    angles = [0.0, 90.0, 180.0, 270.0, 360.0]
-    values = [outer, upper, inner, lower, outer]
-
-    def profile(theta):
-        return np.interp(np.mod(theta, 360.0), angles, values)
-
-    return profile
+    return smooth_profile([0, 90, 180, 270, 360], [outer, upper, inner, lower, outer], period=360)
 
 
 def create_layer(pair, minor_radius, major_radius, triangularity, elongation, rotation_angle):
     """Builds the full (unsegmented) solid of a layer pair from an outboard
     and an inboard half."""
-    outer_offset, upper_offset, inner_offset, lower_offset = pair["offsets"]
-    outer_thickness, upper_thickness, inner_thickness, lower_thickness = pair["thicknesses"]
+    thickness = poloidal_profile(*pair["thicknesses"])
+    offset = poloidal_profile(*pair["offsets"])
     outer_layer = blanket_from_plasma(
         minor_radius=minor_radius,
         major_radius=major_radius,
         triangularity=triangularity,
         elongation=elongation,
-        thickness=[upper_thickness, outer_thickness, lower_thickness],
-        offset_from_plasma=[upper_offset, outer_offset, lower_offset],
+        thickness=thickness,
+        offset_from_plasma=offset,
         start_angle=90,
         stop_angle=-90,
         rotation_angle=rotation_angle,
@@ -200,8 +195,8 @@ def create_layer(pair, minor_radius, major_radius, triangularity, elongation, ro
         major_radius=major_radius,
         triangularity=triangularity,
         elongation=elongation,
-        thickness=[lower_thickness, inner_thickness, upper_thickness],
-        offset_from_plasma=[lower_offset, inner_offset, upper_offset],
+        thickness=thickness,
+        offset_from_plasma=offset,
         start_angle=-90,
         stop_angle=-270,
         rotation_angle=rotation_angle,

@@ -8,6 +8,7 @@ import numpy as np
 
 from ..utils import (
     get_plasma_geometry,
+    smooth_profile,
     LayerType,
     get_assembly_names,
     get_layer_name,
@@ -80,13 +81,11 @@ def get_spherical_layer_pairs(radial_build, vertical_build, layer_count=0):
 
 def spherical_profile(lower, outboard, upper):
     """Returns a function of poloidal angle (degrees, -90 to 90) that varies
-    linearly between the values at -90, 0 and 90 degrees. This matches the
-    interpolation used when a layer is built without poloidal segments."""
-
-    def profile(theta):
-        return np.interp(theta, [-90.0, 0.0, 90.0], [lower, outboard, upper])
-
-    return profile
+    smoothly between the values at -90, 0 and 90 degrees, so the layer has no
+    corners where the radial and vertical builds differ and meets the flat
+    top and bottom smoothly. Used for the thickness and offset of every
+    layer."""
+    return smooth_profile([-90, 0, 90], [lower, outboard, upper])
 
 
 def spherical_path_coordinates(path_positions, offset, geometry):
@@ -136,15 +135,13 @@ def spherical_arc_length_table(offset, geometry):
 
 def create_spherical_layer(pair, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column):
     """Builds the full (unsegmented) solid of a spherical tokamak layer."""
-    lower_offset, outboard_offset, upper_offset = pair["offsets"]
-    lower_thickness, radial_thickness, upper_thickness = pair["thicknesses"]
     layer = blanket_from_plasma(
         minor_radius=minor_radius,
         major_radius=major_radius,
         triangularity=triangularity,
         elongation=elongation,
-        thickness=[lower_thickness, radial_thickness, upper_thickness],
-        offset_from_plasma=[lower_offset, outboard_offset, upper_offset],
+        thickness=spherical_profile(*pair["thicknesses"]),
+        offset_from_plasma=spherical_profile(*pair["offsets"]),
         start_angle=-90,
         stop_angle=90,
         rotation_angle=rotation_angle,
