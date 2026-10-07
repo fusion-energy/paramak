@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.assemblies.tokamak &#8212; Paramak 0.1.dev1+g17a567054 documentation</title>
+    <title>paramak.assemblies.tokamak &#8212; Paramak 0.1.dev1+gbc5c369ab documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../../_static/documentation_options.js?v=72dbfd04"></script>
+    <script src="../../../_static/documentation_options.js?v=7dd4ebec"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -218,7 +218,7 @@ function render(data, parent_element, ratio){
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g17a567054" />
+  <meta name="docsearch:version" content="0.1.dev1+gbc5c369ab" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -558,6 +558,7 @@ function render(data, parent_element, ratio){
 <span class="kn">import</span><span class="w"> </span><span class="nn">cadquery</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cq</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">smooth_profile</span><span class="p">,</span>
     <span class="n">LayerType</span><span class="p">,</span>
     <span class="n">get_assembly_names</span><span class="p">,</span>
     <span class="n">get_layer_name</span><span class="p">,</span>
@@ -673,13 +674,32 @@ function render(data, parent_element, ratio){
 
         <span class="c1"># build outer layer</span>
         <span class="k">if</span> <span class="n">radial_build</span><span class="p">[</span><span class="n">plasma_index_rb</span> <span class="o">+</span> <span class="n">index_delta</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">:</span>
+            <span class="c1"># smooth profiles around the poloidal loop (outboard midplane at 0</span>
+            <span class="c1"># degrees, top at 90, inboard midplane at 180 and bottom at 270) so</span>
+            <span class="c1"># the layer has no corners where the radial and vertical builds differ</span>
+            <span class="n">thickness</span> <span class="o">=</span> <span class="n">smooth_profile</span><span class="p">(</span>
+                <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">270</span><span class="p">,</span> <span class="mi">360</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">outer_layer_thickness</span><span class="p">,</span> <span class="n">upper_layer_thickness</span><span class="p">,</span> <span class="n">inner_layer_thickness</span><span class="p">,</span> <span class="n">lower_layer_thickness</span><span class="p">,</span> <span class="n">outer_layer_thickness</span><span class="p">],</span>
+                <span class="n">period</span><span class="o">=</span><span class="mi">360</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">smooth_profile</span><span class="p">(</span>
+                <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">270</span><span class="p">,</span> <span class="mi">360</span><span class="p">],</span>
+                <span class="p">[</span>
+                    <span class="n">cumulative_thickness_orb</span><span class="p">,</span>
+                    <span class="n">cumulative_thickness_uvb</span><span class="p">,</span>
+                    <span class="n">cumulative_thickness_irb</span><span class="p">,</span>
+                    <span class="n">cumulative_thickness_lvb</span><span class="p">,</span>
+                    <span class="n">cumulative_thickness_orb</span><span class="p">,</span>
+                <span class="p">],</span>
+                <span class="n">period</span><span class="o">=</span><span class="mi">360</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="n">outer_layer</span> <span class="o">=</span> <span class="n">blanket_from_plasma</span><span class="p">(</span>
                 <span class="n">minor_radius</span><span class="o">=</span><span class="n">minor_radius</span><span class="p">,</span>
                 <span class="n">major_radius</span><span class="o">=</span><span class="n">major_radius</span><span class="p">,</span>
                 <span class="n">triangularity</span><span class="o">=</span><span class="n">triangularity</span><span class="p">,</span>
                 <span class="n">elongation</span><span class="o">=</span><span class="n">elongation</span><span class="p">,</span>
-                <span class="n">thickness</span><span class="o">=</span><span class="p">[</span><span class="n">upper_layer_thickness</span><span class="p">,</span> <span class="n">outer_layer_thickness</span><span class="p">,</span> <span class="n">lower_layer_thickness</span><span class="p">],</span>
-                <span class="n">offset_from_plasma</span><span class="o">=</span><span class="p">[</span><span class="n">cumulative_thickness_uvb</span><span class="p">,</span> <span class="n">cumulative_thickness_orb</span><span class="p">,</span> <span class="n">cumulative_thickness_lvb</span><span class="p">],</span>
+                <span class="n">thickness</span><span class="o">=</span><span class="n">thickness</span><span class="p">,</span>
+                <span class="n">offset_from_plasma</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
                 <span class="n">start_angle</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
                 <span class="n">stop_angle</span><span class="o">=-</span><span class="mi">90</span><span class="p">,</span>
                 <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
@@ -692,16 +712,8 @@ function render(data, parent_element, ratio){
                 <span class="n">major_radius</span><span class="o">=</span><span class="n">major_radius</span><span class="p">,</span>
                 <span class="n">triangularity</span><span class="o">=</span><span class="n">triangularity</span><span class="p">,</span>
                 <span class="n">elongation</span><span class="o">=</span><span class="n">elongation</span><span class="p">,</span>
-                <span class="n">thickness</span><span class="o">=</span><span class="p">[</span>
-                    <span class="n">lower_layer_thickness</span><span class="p">,</span>
-                    <span class="n">inner_layer_thickness</span><span class="p">,</span>
-                    <span class="n">upper_layer_thickness</span><span class="p">,</span>
-                <span class="p">],</span>
-                <span class="n">offset_from_plasma</span><span class="o">=</span><span class="p">[</span>
-                    <span class="n">cumulative_thickness_lvb</span><span class="p">,</span>
-                    <span class="n">cumulative_thickness_irb</span><span class="p">,</span>
-                    <span class="n">cumulative_thickness_uvb</span><span class="p">,</span>
-                <span class="p">],</span>
+                <span class="n">thickness</span><span class="o">=</span><span class="n">thickness</span><span class="p">,</span>
+                <span class="n">offset_from_plasma</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
                 <span class="n">start_angle</span><span class="o">=-</span><span class="mi">90</span><span class="p">,</span>
                 <span class="n">stop_angle</span><span class="o">=-</span><span class="mi">270</span><span class="p">,</span>
                 <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
