@@ -12,6 +12,13 @@ Assemblies
 .. autofunction:: spherical_tokamak
 .. autofunction:: spherical_tokamak_from_plasma
 
+Utilities
+---------
+
+.. autofunction:: poloidal_arc_length
+.. autofunction:: spherical_poloidal_arc_length
+.. autofunction:: toroidal_arc_length
+
 Workplanes
 ----------
 

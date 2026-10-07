@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Python API reference &#8212; Paramak 0.1.dev1+gc0efbdee7 documentation</title>
+    <title>Python API reference &#8212; Paramak 0.1.dev1+g9b765857a documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="_static/documentation_options.js?v=f13e1daf"></script>
+    <script src="_static/documentation_options.js?v=77822ed7"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/vtk.js?v=415cc427"></script>
@@ -220,7 +220,7 @@ function render(data, parent_element, ratio){
     <link rel="prev" title="Spherical Tokamak" href="examples_spherical_tokamak.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+gc0efbdee7" />
+  <meta name="docsearch:version" content="0.1.dev1+g9b765857a" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -567,7 +567,7 @@ function render(data, parent_element, ratio){
 <h2>Assemblies<a class="headerlink" href="#assemblies" title="Link to this heading">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="paramak.tokamak">
-<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">tokamak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/tokamak.html#tokamak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.tokamak" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">tokamak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poloidal_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toroidal_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/tokamak.html#tokamak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.tokamak" title="Link to this definition">#</a></dt>
 <dd><p>Creates a tokamak fusion reactor from a radial and vertical build.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -587,6 +587,41 @@ reactor. Each tuple should contain a LayerType, a float and the string is option
 Each dictionary entry should be a key that matches the assembly part name
 (e.g. ‘plasma’, or ‘layer_1’) and a tuple of 3 or 4 floats between 0 and 1
 representing the RGB or RGBA values.</p></li>
+<li><p><strong>poloidal_build</strong> – optional poloidal segmentation of the layers. A list
+with one entry per radial_build entry after the plasma, ordered
+from the plasma outwards, so each entry covers the matching
+inboard and outboard layer pair. Entries are None for layers that
+are not segmented (and must be None for LayerType.GAP entries),
+otherwise a list of segments in the same format as radial_build
+entries: (paramak.LayerType.SOLID, arc_length, name) for a solid
+segment (the name is optional) or (paramak.LayerType.GAP,
+arc_length) for a gap that produces no solid. Arc lengths are
+measured along the plasma facing surface (the inner surface of
+the first solid layer after the plasma) for every layer, starting
+at the outboard midplane and proceeding counter clockwise
+(upwards on the outboard side). Each entry must sum to the arc
+length returned by paramak.poloidal_arc_length (within 0.1
+percent). Cuts between segments follow the normal to the plasma
+surface, so layers given the same segments line up. Solid
+segments are named “&lt;layer name&gt;_&lt;segment name&gt;”, unnamed solid
+segments are called “segment”, and repeated names within a layer
+get a “_1”, “_2” suffix. Defaults to None.</p></li>
+<li><p><strong>toroidal_build</strong> – optional toroidal segmentation of the layers, for
+example into sectors separated by assembly gaps. A list with one
+entry per radial_build entry after the plasma, ordered from the
+plasma outwards, like poloidal_build. Entries are None for layers
+that are not segmented (and must be None for LayerType.GAP
+entries), otherwise a list of segments: (paramak.LayerType.SOLID,
+arc_length, name) for a sector (the name is optional) or
+(paramak.LayerType.GAP, width) for a gap. Arc lengths are measured
+around the plasma facing surface at the outboard midplane,
+starting at the XZ plane and going in the direction the reactor is
+revolved, and each entry must sum to the arc length returned by
+paramak.toroidal_arc_length (within 0.1 percent). Gaps are slots
+with parallel sides, so a gap has the same width at every radius.
+Sectors are named “&lt;layer name&gt;_&lt;sector name&gt;”, or
+“&lt;layer name&gt;_&lt;poloidal segment name&gt;_&lt;sector name&gt;” when the
+layer also has a poloidal_build entry. Defaults to None.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -600,7 +635,7 @@ representing the RGB or RGBA values.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="paramak.tokamak_from_plasma">
-<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">tokamak_from_plasma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/tokamak.html#tokamak_from_plasma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.tokamak_from_plasma" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">tokamak_from_plasma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poloidal_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toroidal_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/tokamak.html#tokamak_from_plasma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.tokamak_from_plasma" title="Link to this definition">#</a></dt>
 <dd><p>Creates a tokamak fusion reactor from a radial build and plasma parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -619,6 +654,41 @@ reactor. Each tuple should contain a LayerType, a float and a string.</p></li>
 Each dictionary entry should be a key that matches the assembly part name
 (e.g. ‘plasma’, or ‘layer_1’) and a tuple of 3 or 4 floats between 0 and 1
 representing the RGB or RGBA values.</p></li>
+<li><p><strong>poloidal_build</strong> – optional poloidal segmentation of the layers. A list
+with one entry per radial_build entry after the plasma, ordered
+from the plasma outwards, so each entry covers the matching
+inboard and outboard layer pair. Entries are None for layers that
+are not segmented (and must be None for LayerType.GAP entries),
+otherwise a list of segments in the same format as radial_build
+entries: (paramak.LayerType.SOLID, arc_length, name) for a solid
+segment (the name is optional) or (paramak.LayerType.GAP,
+arc_length) for a gap that produces no solid. Arc lengths are
+measured along the plasma facing surface (the inner surface of
+the first solid layer after the plasma) for every layer, starting
+at the outboard midplane and proceeding counter clockwise
+(upwards on the outboard side). Each entry must sum to the arc
+length returned by paramak.poloidal_arc_length (within 0.1
+percent). Cuts between segments follow the normal to the plasma
+surface, so layers given the same segments line up. Solid
+segments are named “&lt;layer name&gt;_&lt;segment name&gt;”, unnamed solid
+segments are called “segment”, and repeated names within a layer
+get a “_1”, “_2” suffix. Defaults to None.</p></li>
+<li><p><strong>toroidal_build</strong> – optional toroidal segmentation of the layers, for
+example into sectors separated by assembly gaps. A list with one
+entry per radial_build entry after the plasma, ordered from the
+plasma outwards, like poloidal_build. Entries are None for layers
+that are not segmented (and must be None for LayerType.GAP
+entries), otherwise a list of segments: (paramak.LayerType.SOLID,
+arc_length, name) for a sector (the name is optional) or
+(paramak.LayerType.GAP, width) for a gap. Arc lengths are measured
+around the plasma facing surface at the outboard midplane,
+starting at the XZ plane and going in the direction the reactor is
+revolved, and each entry must sum to the arc length returned by
+paramak.toroidal_arc_length (within 0.1 percent). Gaps are slots
+with parallel sides, so a gap has the same width at every radius.
+Sectors are named “&lt;layer name&gt;_&lt;sector name&gt;”, or
+“&lt;layer name&gt;_&lt;poloidal segment name&gt;_&lt;sector name&gt;” when the
+layer also has a poloidal_build entry. Defaults to None.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -632,7 +702,7 @@ representing the RGB or RGBA values.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="paramak.spherical_tokamak">
-<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">spherical_tokamak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/spherical_tokamak.html#spherical_tokamak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.spherical_tokamak" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">spherical_tokamak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poloidal_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toroidal_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/spherical_tokamak.html#spherical_tokamak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.spherical_tokamak" title="Link to this definition">#</a></dt>
 <dd><p>Creates a spherical tokamak fusion reactor from a radial build and vertical build.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -652,6 +722,42 @@ reactor. Each tuple should contain a LayerType, a float and the string is option
 Each dictionary entry should be a key that matches the assembly part name
 (e.g. ‘plasma’, or ‘layer_1’) and a tuple of 3 or 4 floats between 0 and 1
 representing the RGB or RGBA values.</p></li>
+<li><p><strong>poloidal_build</strong> – optional poloidal segmentation of the layers after
+the plasma. A list with one entry per radial_build entry after the
+plasma, ordered from the plasma outwards. Entries are None for
+layers that are not segmented (and must be None for
+LayerType.GAP entries), otherwise a list of segments in the same
+format as radial_build entries: (paramak.LayerType.SOLID,
+arc_length, name) for a solid segment (the name is optional) or
+(paramak.LayerType.GAP, arc_length) for a gap that produces no
+solid. Arc lengths are measured along the plasma facing surface
+(the inner surface of the first solid layer after the plasma) for
+every layer, starting where the layer meets the centre column at
+the bottom and going along the bottom, up the outboard side and
+along the top back to the centre column. Each entry must sum to
+the arc length returned by paramak.spherical_poloidal_arc_length
+(within 0.1 percent). Cuts between segments are vertical along the
+top and bottom and follow the normal to the plasma surface on the
+outboard side, so layers given the same segments line up. Solid
+segments are named “&lt;layer name&gt;_&lt;segment name&gt;”, unnamed solid
+segments are called “segment”, and repeated names within a layer
+get a “_1”, “_2” suffix. Defaults to None.</p></li>
+<li><p><strong>toroidal_build</strong> – optional toroidal segmentation of the layers, for
+example into sectors separated by assembly gaps. A list with one
+entry per radial_build entry after the plasma, ordered from the
+plasma outwards, like poloidal_build. Entries are None for layers
+that are not segmented (and must be None for LayerType.GAP
+entries), otherwise a list of segments: (paramak.LayerType.SOLID,
+arc_length, name) for a sector (the name is optional) or
+(paramak.LayerType.GAP, width) for a gap. Arc lengths are measured
+around the plasma facing surface at the outboard midplane,
+starting at the XZ plane and going in the direction the reactor is
+revolved, and each entry must sum to the arc length returned by
+paramak.toroidal_arc_length (within 0.1 percent). Gaps are slots
+with parallel sides, so a gap has the same width at every radius.
+Sectors are named “&lt;layer name&gt;_&lt;sector name&gt;”, or
+“&lt;layer name&gt;_&lt;poloidal segment name&gt;_&lt;sector name&gt;” when the
+layer also has a poloidal_build entry. Defaults to None.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -665,7 +771,7 @@ representing the RGB or RGBA values.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="paramak.spherical_tokamak_from_plasma">
-<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">spherical_tokamak_from_plasma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/spherical_tokamak.html#spherical_tokamak_from_plasma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.spherical_tokamak_from_plasma" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">spherical_tokamak_from_plasma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poloidal_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toroidal_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/spherical_tokamak.html#spherical_tokamak_from_plasma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.spherical_tokamak_from_plasma" title="Link to this definition">#</a></dt>
 <dd><p>Creates a spherical tokamak fusion reactor from a radial build and plasma parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -683,6 +789,42 @@ reactor. Each tuple should contain a LayerType, a float and the string is option
 Each dictionary entry should be a key that matches the assembly part name
 (e.g. ‘plasma’, or ‘layer_1’) and a tuple of 3 or 4 floats between 0 and 1
 representing the RGB or RGBA values.</p></li>
+<li><p><strong>poloidal_build</strong> – optional poloidal segmentation of the layers after
+the plasma. A list with one entry per radial_build entry after the
+plasma, ordered from the plasma outwards. Entries are None for
+layers that are not segmented (and must be None for
+LayerType.GAP entries), otherwise a list of segments in the same
+format as radial_build entries: (paramak.LayerType.SOLID,
+arc_length, name) for a solid segment (the name is optional) or
+(paramak.LayerType.GAP, arc_length) for a gap that produces no
+solid. Arc lengths are measured along the plasma facing surface
+(the inner surface of the first solid layer after the plasma) for
+every layer, starting where the layer meets the centre column at
+the bottom and going along the bottom, up the outboard side and
+along the top back to the centre column. Each entry must sum to
+the arc length returned by paramak.spherical_poloidal_arc_length
+(within 0.1 percent). Cuts between segments are vertical along the
+top and bottom and follow the normal to the plasma surface on the
+outboard side, so layers given the same segments line up. Solid
+segments are named “&lt;layer name&gt;_&lt;segment name&gt;”, unnamed solid
+segments are called “segment”, and repeated names within a layer
+get a “_1”, “_2” suffix. Defaults to None.</p></li>
+<li><p><strong>toroidal_build</strong> – optional toroidal segmentation of the layers, for
+example into sectors separated by assembly gaps. A list with one
+entry per radial_build entry after the plasma, ordered from the
+plasma outwards, like poloidal_build. Entries are None for layers
+that are not segmented (and must be None for LayerType.GAP
+entries), otherwise a list of segments: (paramak.LayerType.SOLID,
+arc_length, name) for a sector (the name is optional) or
+(paramak.LayerType.GAP, width) for a gap. Arc lengths are measured
+around the plasma facing surface at the outboard midplane,
+starting at the XZ plane and going in the direction the reactor is
+revolved, and each entry must sum to the arc length returned by
+paramak.toroidal_arc_length (within 0.1 percent). Gaps are slots
+with parallel sides, so a gap has the same width at every radius.
+Sectors are named “&lt;layer name&gt;_&lt;sector name&gt;”, or
+“&lt;layer name&gt;_&lt;poloidal segment name&gt;_&lt;sector name&gt;” when the
+layer also has a poloidal_build entry. Defaults to None.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -690,6 +832,112 @@ representing the RGB or RGBA values.</p></li>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>CadQuery.Assembly</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.poloidal_arc_length">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">poloidal_arc_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/tokamak.html#poloidal_arc_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.poloidal_arc_length" title="Link to this definition">#</a></dt>
+<dd><p>Returns the poloidal arc length that the segments in a poloidal_build
+must sum to.</p>
+<p>The arc length is measured around the full poloidal loop of the plasma
+facing surface, which is the inner surface of the first solid layer after
+the plasma. All poloidal_build entries are measured on this surface, so
+layers given the same segments line up.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>radial_build</strong> – the radial build of the reactor, as passed to
+tokamak_from_plasma or tokamak.</p></li>
+<li><p><strong>elongation</strong> – the elongation of the plasma, as passed to
+tokamak_from_plasma. Defaults to 2.0. Must not be set when a
+vertical_build is provided, as the elongation is then calculated
+from the builds.</p></li>
+<li><p><strong>triangularity</strong> – the triangularity of the plasma. Defaults to 0.55.</p></li>
+<li><p><strong>vertical_build</strong> – the vertical build of the reactor, as passed to
+tokamak. Leave as None for tokamak_from_plasma.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the poloidal arc length of the plasma facing surface.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.spherical_poloidal_arc_length">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">spherical_poloidal_arc_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/spherical_tokamak.html#spherical_poloidal_arc_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.spherical_poloidal_arc_length" title="Link to this definition">#</a></dt>
+<dd><p>Returns the arc length that the segments in a spherical tokamak
+poloidal_build must sum to.</p>
+<p>The arc length is measured along the plasma facing surface, which is the
+inner surface of the first solid layer after the plasma. This surface runs
+from the centre column along the bottom of the layer, around the outboard
+side of the plasma and back along the top of the layer to the centre
+column. All poloidal_build entries are measured on this surface, so layers
+given the same segments line up.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>radial_build</strong> – the radial build of the reactor, as passed to
+spherical_tokamak_from_plasma or spherical_tokamak.</p></li>
+<li><p><strong>elongation</strong> – the elongation of the plasma, as passed to
+spherical_tokamak_from_plasma. Defaults to 2.0. Must not be set
+when a vertical_build is provided, as the elongation is then
+calculated from the builds.</p></li>
+<li><p><strong>triangularity</strong> – the triangularity of the plasma. Defaults to 0.55.</p></li>
+<li><p><strong>vertical_build</strong> – the vertical build of the reactor, as passed to
+spherical_tokamak. Leave as None for spherical_tokamak_from_plasma.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the arc length of the plasma facing surface.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.toroidal_arc_length">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">toroidal_arc_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/toroidal.html#toroidal_arc_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.toroidal_arc_length" title="Link to this definition">#</a></dt>
+<dd><p>Returns the toroidal arc length that the segments in a toroidal_build
+must sum to.</p>
+<p>The arc length is measured around the plasma facing surface (the inner
+surface of the first solid layer after the plasma) at the outboard
+midplane, over the rotation_angle of the reactor. This works for all the
+reactor types, as the outboard midplane radius only depends on the
+radial_build.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>radial_build</strong> – the radial build of the reactor, as passed to the
+reactor function.</p></li>
+<li><p><strong>rotation_angle</strong> – the rotation angle of the reactor in degrees, as
+passed to the reactor function. Defaults to 180.0.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the toroidal arc length.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -994,6 +1242,12 @@ vessel.</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.tokamak_from_plasma"><code class="docutils literal notranslate"><span class="pre">tokamak_from_plasma()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.spherical_tokamak"><code class="docutils literal notranslate"><span class="pre">spherical_tokamak()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.spherical_tokamak_from_plasma"><code class="docutils literal notranslate"><span class="pre">spherical_tokamak_from_plasma()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utilities">Utilities</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.poloidal_arc_length"><code class="docutils literal notranslate"><span class="pre">poloidal_arc_length()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.spherical_poloidal_arc_length"><code class="docutils literal notranslate"><span class="pre">spherical_poloidal_arc_length()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.toroidal_arc_length"><code class="docutils literal notranslate"><span class="pre">toroidal_arc_length()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workplanes">Workplanes</a><ul class="nav section-nav flex-column">

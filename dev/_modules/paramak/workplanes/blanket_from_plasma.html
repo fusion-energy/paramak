@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.workplanes.blanket_from_plasma &#8212; Paramak 0.1.dev1+gc0efbdee7 documentation</title>
+    <title>paramak.workplanes.blanket_from_plasma &#8212; Paramak 0.1.dev1+g9b765857a documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../../_static/documentation_options.js?v=f13e1daf"></script>
+    <script src="../../../_static/documentation_options.js?v=77822ed7"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -218,7 +218,7 @@ function render(data, parent_element, ratio){
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+gc0efbdee7" />
+  <meta name="docsearch:version" content="0.1.dev1+g9b765857a" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -752,6 +752,71 @@ function render(data, parent_element, ratio){
         <span class="k">else</span><span class="p">:</span>
             <span class="n">overlapping_shape</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="n">points</span><span class="p">,</span> <span class="n">overlapping_shape</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">offset_curve_coordinates</span><span class="p">(</span>
+    <span class="n">major_radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">minor_radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">triangularity</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">elongation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">vertical_displacement</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">thetas</span><span class="p">,</span>
+    <span class="n">offsets</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Vectorised equivalent of create_offset_points. Returns the R and Z</span>
+<span class="sd">    coordinates of the plasma surface offset along its outward normal.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        thetas (np.array): the angles in degrees.</span>
+<span class="sd">        offsets (float or np.array): the offset distance at each angle.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        (np.array, np.array): the R and Z coordinates.</span>
+<span class="sd">    """</span>
+    <span class="n">R</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">distribution</span><span class="p">(</span><span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">vertical_displacement</span><span class="p">,</span> <span class="n">thetas</span><span class="p">)</span>
+    <span class="n">thetas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">thetas</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="c1"># derivatives with respect to theta, the scale factor between degrees</span>
+    <span class="c1"># and radians cancels when the normal is normalised</span>
+    <span class="n">R_derivative</span> <span class="o">=</span> <span class="o">-</span><span class="n">minor_radius</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span> <span class="o">+</span> <span class="n">triangularity</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span>
+        <span class="mi">1</span> <span class="o">+</span> <span class="n">triangularity</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">Z_derivative</span> <span class="o">=</span> <span class="n">elongation</span> <span class="o">*</span> <span class="n">minor_radius</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+    <span class="n">normal_vector_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">Z_derivative</span><span class="p">,</span> <span class="n">R_derivative</span><span class="p">)</span>
+    <span class="n">nx</span> <span class="o">=</span> <span class="n">Z_derivative</span> <span class="o">/</span> <span class="n">normal_vector_norm</span>
+    <span class="n">ny</span> <span class="o">=</span> <span class="o">-</span><span class="n">R_derivative</span> <span class="o">/</span> <span class="n">normal_vector_norm</span>
+    <span class="k">return</span> <span class="n">R</span> <span class="o">+</span> <span class="n">offsets</span> <span class="o">*</span> <span class="n">nx</span><span class="p">,</span> <span class="n">Z</span> <span class="o">+</span> <span class="n">offsets</span> <span class="o">*</span> <span class="n">ny</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">poloidal_arc_length_table</span><span class="p">(</span>
+    <span class="n">major_radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">minor_radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">triangularity</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">elongation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">offset</span><span class="p">,</span>
+    <span class="n">vertical_displacement</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">num_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">7201</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Computes the cumulative arc length around a full poloidal loop of the</span>
+<span class="sd">    plasma surface offset by a distance that can vary with poloidal angle.</span>
+
+<span class="sd">    The loop starts at the outboard midplane (theta = 0) and proceeds counter</span>
+<span class="sd">    clockwise (upwards on the outboard side) to theta = 360.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        offset (callable): the offset from the plasma surface as a function of</span>
+<span class="sd">            poloidal angle in degrees. Must accept a np.array of angles.</span>
+<span class="sd">        num_points: number of points used to discretise the loop.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        (np.array, np.array): the angles in degrees and the cumulative arc</span>
+<span class="sd">        length at each angle. The last arc length value is the total.</span>
+<span class="sd">    """</span>
+    <span class="n">thetas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">360.0</span><span class="p">,</span> <span class="n">num_points</span><span class="p">)</span>
+    <span class="n">R</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">offset_curve_coordinates</span><span class="p">(</span>
+        <span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">vertical_displacement</span><span class="p">,</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">offset</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">arc_lengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">R</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">Z</span><span class="p">)))])</span>
+    <span class="k">return</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">arc_lengths</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">distribution</span><span class="p">(</span><span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">vertical_displacement</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">pkg</span><span class="o">=</span><span class="n">np</span><span class="p">):</span>

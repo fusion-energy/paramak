@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.assemblies.spherical_tokamak &#8212; Paramak 0.1.dev1+gc0efbdee7 documentation</title>
+    <title>paramak.assemblies.spherical_tokamak &#8212; Paramak 0.1.dev1+g9b765857a documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../../_static/documentation_options.js?v=f13e1daf"></script>
+    <script src="../../../_static/documentation_options.js?v=77822ed7"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -218,7 +218,7 @@ function render(data, parent_element, ratio){
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+gc0efbdee7" />
+  <meta name="docsearch:version" content="0.1.dev1+g9b765857a" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -553,11 +553,14 @@ function render(data, parent_element, ratio){
   <h1>Source code for paramak.assemblies.spherical_tokamak</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">cadquery</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cq</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_plasma_geometry</span><span class="p">,</span>
     <span class="n">smooth_profile</span><span class="p">,</span>
     <span class="n">LayerType</span><span class="p">,</span>
     <span class="n">get_assembly_names</span><span class="p">,</span>
@@ -566,26 +569,41 @@ function render(data, parent_element, ratio){
     <span class="n">get_plasma_value</span><span class="p">,</span>
     <span class="n">sum_before_after_plasma</span><span class="p">,</span>
     <span class="n">sum_up_to_gap_before_plasma</span><span class="p">,</span>
-    <span class="n">sum_up_to_plasma</span><span class="p">,</span>
     <span class="n">validate_unique_assembly_names</span><span class="p">,</span>
     <span class="n">validate_vertical_build_names</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..workplanes.blanket_from_plasma</span><span class="w"> </span><span class="kn">import</span> <span class="n">blanket_from_plasma</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..workplanes.blanket_from_plasma</span><span class="w"> </span><span class="kn">import</span> <span class="n">blanket_from_plasma</span><span class="p">,</span> <span class="n">offset_curve_coordinates</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..workplanes.center_column_shield_cylinder</span><span class="w"> </span><span class="kn">import</span> <span class="n">center_column_shield_cylinder</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..workplanes.plasma_simplified</span><span class="w"> </span><span class="kn">import</span> <span class="n">plasma_simplified</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.assembly</span><span class="w"> </span><span class="kn">import</span> <span class="n">Assembly</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.poloidal</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SegmentBuild</span><span class="p">,</span>
+    <span class="n">check_not_empty</span><span class="p">,</span>
+    <span class="n">get_poloidal_segment_angles</span><span class="p">,</span>
+    <span class="n">intersect_with_each_part</span><span class="p">,</span>
+    <span class="n">resolve_vertical_build</span><span class="p">,</span>
+    <span class="n">validate_segment_build</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.toroidal</span><span class="w"> </span><span class="kn">import</span> <span class="n">apply_toroidal_sectors</span><span class="p">,</span> <span class="n">get_toroidal_build_sectors</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">create_blanket_layers_after_plasma</span><span class="p">(</span>
-    <span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">major_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">,</span> <span class="n">center_column</span><span class="p">,</span> <span class="n">layer_count</span><span class="o">=</span><span class="mi">0</span>
-<span class="p">):</span>
-    <span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_spherical_layer_pairs</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">,</span> <span class="n">layer_count</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Describes each layer after the plasma, ordered from the plasma outwards.</span>
+<span class="sd">    This is the ordering used by poloidal_build.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list of dict: one entry per radial_build entry after the plasma with the</span>
+<span class="sd">        keys "type", "name" (None for GAP entries), "offsets" and "thicknesses".</span>
+<span class="sd">        The offsets and thicknesses are tuples of values at poloidal angles of</span>
+<span class="sd">        -90, 0 and 90 degrees.</span>
+<span class="sd">    """</span>
+    <span class="n">plasma_index_radial</span> <span class="o">=</span> <span class="n">get_plasma_index</span><span class="p">(</span><span class="n">radial_build</span><span class="p">)</span>
+    <span class="n">plasma_index_vertical</span> <span class="o">=</span> <span class="n">get_plasma_index</span><span class="p">(</span><span class="n">vertical_build</span><span class="p">)</span>
+
+    <span class="n">pairs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">cumulative_thickness_rb</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">cumulative_thickness_uvb</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">cumulative_thickness_lvb</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="n">plasma_index_radial</span> <span class="o">=</span> <span class="n">get_plasma_index</span><span class="p">(</span><span class="n">radial_build</span><span class="p">)</span>
-    <span class="n">plasma_index_vertical</span> <span class="o">=</span> <span class="n">get_plasma_index</span><span class="p">(</span><span class="n">vertical_build</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">radial_build</span><span class="p">[</span><span class="n">plasma_index_radial</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]):</span>
         <span class="n">upper_thickness</span> <span class="o">=</span> <span class="n">vertical_build</span><span class="p">[</span><span class="n">plasma_index_vertical</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
@@ -593,43 +611,279 @@ function render(data, parent_element, ratio){
         <span class="n">radial_thickness</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">:</span>
-            <span class="n">cumulative_thickness_rb</span> <span class="o">+=</span> <span class="n">radial_thickness</span>
-            <span class="n">cumulative_thickness_uvb</span> <span class="o">+=</span> <span class="n">upper_thickness</span>
-            <span class="n">cumulative_thickness_lvb</span> <span class="o">+=</span> <span class="n">lower_thickness</span>
-            <span class="k">continue</span>
+            <span class="n">layer_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">layer_count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">layer_name</span> <span class="o">=</span> <span class="n">get_layer_name</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">layer_count</span><span class="p">)</span>
 
-        <span class="n">layer_count</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="n">layer_name</span> <span class="o">=</span> <span class="n">get_layer_name</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">layer_count</span><span class="p">)</span>
-
-        <span class="n">layer</span> <span class="o">=</span> <span class="n">blanket_from_plasma</span><span class="p">(</span>
-            <span class="n">minor_radius</span><span class="o">=</span><span class="n">minor_radius</span><span class="p">,</span>
-            <span class="n">major_radius</span><span class="o">=</span><span class="n">major_radius</span><span class="p">,</span>
-            <span class="n">triangularity</span><span class="o">=</span><span class="n">triangularity</span><span class="p">,</span>
-            <span class="n">elongation</span><span class="o">=</span><span class="n">elongation</span><span class="p">,</span>
-            <span class="c1"># smooth profiles from the bottom (-90 degrees) through the outboard</span>
-            <span class="c1"># midplane (0) to the top (90), so the layer has no corners where the</span>
-            <span class="c1"># radial and vertical builds differ and meets the flat top and bottom</span>
-            <span class="c1"># smoothly</span>
-            <span class="n">thickness</span><span class="o">=</span><span class="n">smooth_profile</span><span class="p">([</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span> <span class="p">[</span><span class="n">lower_thickness</span><span class="p">,</span> <span class="n">radial_thickness</span><span class="p">,</span> <span class="n">upper_thickness</span><span class="p">]),</span>
-            <span class="n">offset_from_plasma</span><span class="o">=</span><span class="n">smooth_profile</span><span class="p">(</span>
-                <span class="p">[</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span> <span class="p">[</span><span class="n">cumulative_thickness_lvb</span><span class="p">,</span> <span class="n">cumulative_thickness_rb</span><span class="p">,</span> <span class="n">cumulative_thickness_uvb</span><span class="p">]</span>
-            <span class="p">),</span>
-            <span class="n">start_angle</span><span class="o">=-</span><span class="mi">90</span><span class="p">,</span>
-            <span class="n">stop_angle</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
-            <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
-            <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
-            <span class="n">name</span><span class="o">=</span><span class="n">layer_name</span><span class="p">,</span>
-            <span class="n">allow_overlapping_shape</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">connect_to_center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">pairs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">"type"</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="n">layer_name</span><span class="p">,</span>
+                <span class="s2">"offsets"</span><span class="p">:</span> <span class="p">(</span><span class="n">cumulative_thickness_lvb</span><span class="p">,</span> <span class="n">cumulative_thickness_rb</span><span class="p">,</span> <span class="n">cumulative_thickness_uvb</span><span class="p">),</span>
+                <span class="s2">"thicknesses"</span><span class="p">:</span> <span class="p">(</span><span class="n">lower_thickness</span><span class="p">,</span> <span class="n">radial_thickness</span><span class="p">,</span> <span class="n">upper_thickness</span><span class="p">),</span>
+            <span class="p">}</span>
         <span class="p">)</span>
-        <span class="n">layer</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">center_column</span><span class="p">)</span>
-        <span class="n">layer</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">layer_name</span>
+
         <span class="n">cumulative_thickness_rb</span> <span class="o">+=</span> <span class="n">radial_thickness</span>
         <span class="n">cumulative_thickness_uvb</span> <span class="o">+=</span> <span class="n">upper_thickness</span>
         <span class="n">cumulative_thickness_lvb</span> <span class="o">+=</span> <span class="n">lower_thickness</span>
-        <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pairs</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">spherical_profile</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">outboard</span><span class="p">,</span> <span class="n">upper</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Returns a function of poloidal angle (degrees, -90 to 90) that varies</span>
+<span class="sd">    smoothly between the values at -90, 0 and 90 degrees, so the layer has no</span>
+<span class="sd">    corners where the radial and vertical builds differ and meets the flat</span>
+<span class="sd">    top and bottom smoothly. Used for the thickness and offset of every</span>
+<span class="sd">    layer."""</span>
+    <span class="k">return</span> <span class="n">smooth_profile</span><span class="p">([</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span> <span class="p">[</span><span class="n">lower</span><span class="p">,</span> <span class="n">outboard</span><span class="p">,</span> <span class="n">upper</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">spherical_path_coordinates</span><span class="p">(</span><span class="n">path_positions</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">geometry</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""R and Z coordinates along the open path followed by a spherical tokamak</span>
+<span class="sd">    layer, offset from the plasma by the offset function of poloidal angle.</span>
+
+<span class="sd">    The path runs from the centre column along the bottom of the layer</span>
+<span class="sd">    (positions 0 to 1), around the outboard side of the plasma from -90 to 90</span>
+<span class="sd">    degrees (positions 1 to 2) and back along the top to the centre column</span>
+<span class="sd">    (positions 2 to 3). The top and bottom are flat, so the radius at a given</span>
+<span class="sd">    position is the same for every layer, which keeps segments with the same</span>
+<span class="sd">    boundaries lined up.</span>
+<span class="sd">    """</span>
+    <span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">column_radius</span> <span class="o">=</span> <span class="n">geometry</span>
+    <span class="n">path_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">path_positions</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">thetas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="o">-</span><span class="mf">90.0</span> <span class="o">+</span> <span class="mf">180.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">path_positions</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">),</span> <span class="o">-</span><span class="mf">90.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">)</span>
+    <span class="n">offsets</span> <span class="o">=</span> <span class="n">offset</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+    <span class="n">curve_r</span><span class="p">,</span> <span class="n">curve_z</span> <span class="o">=</span> <span class="n">offset_curve_coordinates</span><span class="p">(</span>
+        <span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">offsets</span>
+    <span class="p">)</span>
+    <span class="c1"># radius of the plasma surface at the top and bottom, where the normal is vertical</span>
+    <span class="n">edge_radius</span> <span class="o">=</span> <span class="n">major_radius</span> <span class="o">+</span> <span class="n">minor_radius</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">triangularity</span><span class="p">)</span>
+    <span class="n">flat_length</span> <span class="o">=</span> <span class="n">edge_radius</span> <span class="o">-</span> <span class="n">column_radius</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">path_positions</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">column_radius</span> <span class="o">+</span> <span class="n">path_positions</span> <span class="o">*</span> <span class="n">flat_length</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">path_positions</span> <span class="o">&gt;</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">edge_radius</span> <span class="o">-</span> <span class="p">(</span><span class="n">path_positions</span> <span class="o">-</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">flat_length</span><span class="p">,</span> <span class="n">curve_r</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">path_positions</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="o">-</span><span class="n">elongation</span> <span class="o">*</span> <span class="n">minor_radius</span> <span class="o">-</span> <span class="n">offsets</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">path_positions</span> <span class="o">&gt;</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">elongation</span> <span class="o">*</span> <span class="n">minor_radius</span> <span class="o">+</span> <span class="n">offsets</span><span class="p">,</span> <span class="n">curve_z</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">z</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">spherical_arc_length_table</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">geometry</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Positions along the spherical tokamak layer path and the cumulative arc</span>
+<span class="sd">    length at each position."""</span>
+    <span class="n">path_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">51</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">3601</span><span class="p">)[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mi">51</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]]</span>
+    <span class="p">)</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">spherical_path_coordinates</span><span class="p">(</span><span class="n">path_positions</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">geometry</span><span class="p">)</span>
+    <span class="n">arc_lengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">z</span><span class="p">)))])</span>
+    <span class="k">return</span> <span class="n">path_positions</span><span class="p">,</span> <span class="n">arc_lengths</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_spherical_layer</span><span class="p">(</span><span class="n">pair</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">major_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">,</span> <span class="n">center_column</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Builds the full (unsegmented) solid of a spherical tokamak layer."""</span>
+    <span class="n">layer</span> <span class="o">=</span> <span class="n">blanket_from_plasma</span><span class="p">(</span>
+        <span class="n">minor_radius</span><span class="o">=</span><span class="n">minor_radius</span><span class="p">,</span>
+        <span class="n">major_radius</span><span class="o">=</span><span class="n">major_radius</span><span class="p">,</span>
+        <span class="n">triangularity</span><span class="o">=</span><span class="n">triangularity</span><span class="p">,</span>
+        <span class="n">elongation</span><span class="o">=</span><span class="n">elongation</span><span class="p">,</span>
+        <span class="n">thickness</span><span class="o">=</span><span class="n">spherical_profile</span><span class="p">(</span><span class="o">*</span><span class="n">pair</span><span class="p">[</span><span class="s2">"thicknesses"</span><span class="p">]),</span>
+        <span class="n">offset_from_plasma</span><span class="o">=</span><span class="n">spherical_profile</span><span class="p">(</span><span class="o">*</span><span class="n">pair</span><span class="p">[</span><span class="s2">"offsets"</span><span class="p">]),</span>
+        <span class="n">start_angle</span><span class="o">=-</span><span class="mi">90</span><span class="p">,</span>
+        <span class="n">stop_angle</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
+        <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">pair</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span>
+        <span class="n">allow_overlapping_shape</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">connect_to_center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">layer</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">center_column</span><span class="p">)</span>
+    <span class="n">layer</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">pair</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">layer</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_spherical_poloidal_segments</span><span class="p">(</span><span class="n">pair</span><span class="p">,</span> <span class="n">segment_positions</span><span class="p">,</span> <span class="n">geometry</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">,</span> <span class="n">center_column</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Builds one solid per poloidal segment of a spherical tokamak layer by</span>
+<span class="sd">    cutting each segment out of the full layer, so the faces of the segments</span>
+<span class="sd">    are the faces of the full layer."""</span>
+    <span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">column_radius</span> <span class="o">=</span> <span class="n">geometry</span>
+    <span class="n">layer</span> <span class="o">=</span> <span class="n">create_spherical_layer</span><span class="p">(</span>
+        <span class="n">pair</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">major_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">,</span> <span class="n">center_column</span>
+    <span class="p">)</span>
+
+    <span class="c1"># a single segment covering the whole path is the full layer</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment_positions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">segment_positions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">segment_positions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">3.0</span> <span class="o">-</span> <span class="mf">1e-9</span><span class="p">:</span>
+        <span class="n">layer</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">pair</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">segment_positions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">layer</span><span class="p">]</span>
+
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">spherical_profile</span><span class="p">(</span><span class="o">*</span><span class="n">pair</span><span class="p">[</span><span class="s2">"offsets"</span><span class="p">])</span>
+    <span class="n">thickness</span> <span class="o">=</span> <span class="n">spherical_profile</span><span class="p">(</span><span class="o">*</span><span class="n">pair</span><span class="p">[</span><span class="s2">"thicknesses"</span><span class="p">])</span>
+    <span class="c1"># the cutting regions extend past the surfaces of the layer</span>
+    <span class="n">margin</span> <span class="o">=</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">minor_radius</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">inner_offset</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">offset</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span> <span class="n">margin</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">outer_offset</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">offset</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">thickness</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">margin</span>
+
+    <span class="n">solids</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">segment_name</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span> <span class="ow">in</span> <span class="n">segment_positions</span><span class="p">:</span>
+        <span class="n">path_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="mi">400</span> <span class="o">*</span> <span class="p">(</span><span class="n">stop</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)))</span>
+        <span class="n">inner_r</span><span class="p">,</span> <span class="n">inner_z</span> <span class="o">=</span> <span class="n">spherical_path_coordinates</span><span class="p">(</span><span class="n">path_positions</span><span class="p">,</span> <span class="n">inner_offset</span><span class="p">,</span> <span class="n">geometry</span><span class="p">)</span>
+        <span class="n">outer_r</span><span class="p">,</span> <span class="n">outer_z</span> <span class="o">=</span> <span class="n">spherical_path_coordinates</span><span class="p">(</span><span class="n">path_positions</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">outer_offset</span><span class="p">,</span> <span class="n">geometry</span><span class="p">)</span>
+        <span class="c1"># segments that reach the centre column extend past it so the layer end is included</span>
+        <span class="c1"># the region must not cross the axis it is revolved around</span>
+        <span class="n">column_end</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">column_radius</span> <span class="o">-</span> <span class="n">margin</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="mf">1e-9</span><span class="p">:</span>
+            <span class="n">inner_r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">column_end</span>
+            <span class="n">outer_r</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">column_end</span>
+        <span class="k">if</span> <span class="n">stop</span> <span class="o">&gt;=</span> <span class="mf">3.0</span> <span class="o">-</span> <span class="mf">1e-9</span><span class="p">:</span>
+            <span class="n">inner_r</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">column_end</span>
+            <span class="n">outer_r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">column_end</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">inner_r</span><span class="p">,</span> <span class="n">outer_r</span><span class="p">]),</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">inner_z</span><span class="p">,</span> <span class="n">outer_z</span><span class="p">])))</span>
+        <span class="n">cutting_region</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">(</span><span class="s2">"XZ"</span><span class="p">)</span><span class="o">.</span><span class="n">polyline</span><span class="p">(</span><span class="n">points</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span><span class="o">.</span><span class="n">revolve</span><span class="p">(</span><span class="mi">360</span><span class="p">)</span>
+
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">pair</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">segment_name</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">solid</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">cutting_region</span><span class="p">)</span>
+        <span class="n">check_not_empty</span><span class="p">(</span><span class="n">solid</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Poloidal segment </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">solid</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="n">solids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">solid</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">solids</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_blanket_layers_after_plasma</span><span class="p">(</span>
+    <span class="n">radial_build</span><span class="p">,</span>
+    <span class="n">vertical_build</span><span class="p">,</span>
+    <span class="n">minor_radius</span><span class="p">,</span>
+    <span class="n">major_radius</span><span class="p">,</span>
+    <span class="n">triangularity</span><span class="p">,</span>
+    <span class="n">elongation</span><span class="p">,</span>
+    <span class="n">rotation_angle</span><span class="p">,</span>
+    <span class="n">center_column</span><span class="p">,</span>
+    <span class="n">layer_count</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">poloidal_segment_positions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">toroidal_sectors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">toroidal_region_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">pairs</span> <span class="o">=</span> <span class="n">get_spherical_layer_pairs</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">,</span> <span class="n">layer_count</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">poloidal_segment_positions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">poloidal_segment_positions</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">toroidal_sectors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">toroidal_sectors</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span>
+    <span class="n">geometry</span> <span class="o">=</span> <span class="p">(</span><span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">sum_up_to_gap_before_plasma</span><span class="p">(</span><span class="n">radial_build</span><span class="p">))</span>
+
+    <span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">pair</span><span class="p">,</span> <span class="n">segment_positions</span><span class="p">,</span> <span class="n">sectors</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="n">poloidal_segment_positions</span><span class="p">,</span> <span class="n">toroidal_sectors</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">pair</span><span class="p">[</span><span class="s2">"type"</span><span class="p">]</span> <span class="o">==</span> <span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">segment_positions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">pair_solids</span> <span class="o">=</span> <span class="n">create_spherical_poloidal_segments</span><span class="p">(</span>
+                <span class="n">pair</span><span class="p">,</span> <span class="n">segment_positions</span><span class="p">,</span> <span class="n">geometry</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">,</span> <span class="n">center_column</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pair_solids</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">create_spherical_layer</span><span class="p">(</span>
+                    <span class="n">pair</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">major_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">,</span> <span class="n">center_column</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+        <span class="k">if</span> <span class="n">sectors</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">pair_solids</span> <span class="o">=</span> <span class="n">apply_toroidal_sectors</span><span class="p">(</span><span class="n">pair_solids</span><span class="p">,</span> <span class="n">sectors</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">,</span> <span class="n">toroidal_region_size</span><span class="p">)</span>
+        <span class="n">layers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">pair_solids</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">layers</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">spherical_vertical_build_from_radial_build</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">elongation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Makes the vertical build used by spherical_tokamak_from_plasma, where</span>
+<span class="sd">    the layers above and below the plasma have the same thickness as the</span>
+<span class="sd">    outboard layers."""</span>
+    <span class="n">minor_radius</span> <span class="o">=</span> <span class="n">get_plasma_value</span><span class="p">(</span><span class="n">radial_build</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">pi</span> <span class="o">=</span> <span class="n">get_plasma_index</span><span class="p">(</span><span class="n">radial_build</span><span class="p">)</span>
+    <span class="c1"># drop any layer names, they are only supported in radial_build not vertical_build</span>
+    <span class="n">upper_vertical_build</span> <span class="o">=</span> <span class="p">[(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">radial_build</span><span class="p">[</span><span class="n">pi</span><span class="p">:]]</span>
+    <span class="n">plasma_height</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">minor_radius</span> <span class="o">*</span> <span class="n">elongation</span>
+    <span class="c1"># slice operation reverses the list and removes the last value to avoid two plasmas</span>
+    <span class="k">return</span> <span class="n">upper_vertical_build</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[(</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="n">plasma_height</span><span class="p">)]</span> <span class="o">+</span> <span class="n">upper_vertical_build</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_spherical_reference_arc_length_table</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Returns the (path positions, cumulative arc lengths) table of the plasma</span>
+<span class="sd">    facing surface, the inner surface of the first solid layer after the</span>
+<span class="sd">    plasma, which poloidal_build arc lengths are measured on."""</span>
+    <span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">elongation</span> <span class="o">=</span> <span class="n">get_plasma_geometry</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">)</span>
+    <span class="n">geometry</span> <span class="o">=</span> <span class="p">(</span><span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">sum_up_to_gap_before_plasma</span><span class="p">(</span><span class="n">radial_build</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">get_spherical_layer_pairs</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">pair</span><span class="p">[</span><span class="s2">"type"</span><span class="p">]</span> <span class="o">==</span> <span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">spherical_arc_length_table</span><span class="p">(</span><span class="n">spherical_profile</span><span class="p">(</span><span class="o">*</span><span class="n">pair</span><span class="p">[</span><span class="s2">"offsets"</span><span class="p">]),</span> <span class="n">geometry</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The radial_build has no LayerType.SOLID entries after the plasma to segment."</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_spherical_poloidal_build_segment_positions</span><span class="p">(</span>
+    <span class="n">poloidal_build</span><span class="p">,</span> <span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">layer_count</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Validates poloidal_build and converts the segment arc lengths into</span>
+<span class="sd">    positions along the layer path for each layer."""</span>
+    <span class="n">pairs</span> <span class="o">=</span> <span class="n">get_spherical_layer_pairs</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">,</span> <span class="n">layer_count</span><span class="p">)</span>
+    <span class="n">validate_segment_build</span><span class="p">(</span><span class="n">poloidal_build</span><span class="p">,</span> <span class="n">pairs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">segments</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">segments</span> <span class="ow">in</span> <span class="n">poloidal_build</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">poloidal_build</span><span class="p">)</span>
+
+    <span class="n">path_positions</span><span class="p">,</span> <span class="n">arc_lengths</span> <span class="o">=</span> <span class="n">get_spherical_reference_arc_length_table</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">segments</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="k">else</span> <span class="n">get_poloidal_segment_angles</span><span class="p">(</span>
+            <span class="n">segments</span><span class="p">,</span> <span class="n">path_positions</span><span class="p">,</span> <span class="n">arc_lengths</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="s2">"spherical_poloidal_arc_length"</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">segments</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">poloidal_build</span><span class="p">)</span>
+    <span class="p">]</span>
+
+
+<div class="viewcode-block" id="spherical_poloidal_arc_length">
+<a class="viewcode-back" href="../../../python_api.html#paramak.spherical_poloidal_arc_length">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">spherical_poloidal_arc_length</span><span class="p">(</span>
+    <span class="n">radial_build</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">LayerType</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">LayerType</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+    <span class="n">elongation</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">triangularity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.55</span><span class="p">,</span>
+    <span class="n">vertical_build</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">LayerType</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Returns the arc length that the segments in a spherical tokamak</span>
+<span class="sd">    poloidal_build must sum to.</span>
+
+<span class="sd">    The arc length is measured along the plasma facing surface, which is the</span>
+<span class="sd">    inner surface of the first solid layer after the plasma. This surface runs</span>
+<span class="sd">    from the centre column along the bottom of the layer, around the outboard</span>
+<span class="sd">    side of the plasma and back along the top of the layer to the centre</span>
+<span class="sd">    column. All poloidal_build entries are measured on this surface, so layers</span>
+<span class="sd">    given the same segments line up.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        radial_build: the radial build of the reactor, as passed to</span>
+<span class="sd">            spherical_tokamak_from_plasma or spherical_tokamak.</span>
+<span class="sd">        elongation: the elongation of the plasma, as passed to</span>
+<span class="sd">            spherical_tokamak_from_plasma. Defaults to 2.0. Must not be set</span>
+<span class="sd">            when a vertical_build is provided, as the elongation is then</span>
+<span class="sd">            calculated from the builds.</span>
+<span class="sd">        triangularity: the triangularity of the plasma. Defaults to 0.55.</span>
+<span class="sd">        vertical_build: the vertical build of the reactor, as passed to</span>
+<span class="sd">            spherical_tokamak. Leave as None for spherical_tokamak_from_plasma.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: the arc length of the plasma facing surface.</span>
+<span class="sd">    """</span>
+    <span class="n">vertical_build</span> <span class="o">=</span> <span class="n">resolve_vertical_build</span><span class="p">(</span>
+        <span class="n">radial_build</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">,</span> <span class="n">spherical_vertical_build_from_radial_build</span>
+    <span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">arc_lengths</span> <span class="o">=</span> <span class="n">get_spherical_reference_arc_length_table</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">arc_lengths</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div>
+
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">create_center_column_shield_cylinders</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">):</span>
@@ -676,6 +930,8 @@ function render(data, parent_element, ratio){
     <span class="n">extra_cut_shapes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">extra_intersect_shapes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">colors</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">poloidal_build</span><span class="p">:</span> <span class="n">SegmentBuild</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">toroidal_build</span><span class="p">:</span> <span class="n">SegmentBuild</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Assembly</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Creates a spherical tokamak fusion reactor from a radial build and plasma parameters.</span>
 
@@ -690,6 +946,42 @@ function render(data, parent_element, ratio){
 <span class="sd">            Each dictionary entry should be a key that matches the assembly part name</span>
 <span class="sd">            (e.g. 'plasma', or 'layer_1') and a tuple of 3 or 4 floats between 0 and 1</span>
 <span class="sd">            representing the RGB or RGBA values.</span>
+<span class="sd">        poloidal_build: optional poloidal segmentation of the layers after</span>
+<span class="sd">            the plasma. A list with one entry per radial_build entry after the</span>
+<span class="sd">            plasma, ordered from the plasma outwards. Entries are None for</span>
+<span class="sd">            layers that are not segmented (and must be None for</span>
+<span class="sd">            LayerType.GAP entries), otherwise a list of segments in the same</span>
+<span class="sd">            format as radial_build entries: (paramak.LayerType.SOLID,</span>
+<span class="sd">            arc_length, name) for a solid segment (the name is optional) or</span>
+<span class="sd">            (paramak.LayerType.GAP, arc_length) for a gap that produces no</span>
+<span class="sd">            solid. Arc lengths are measured along the plasma facing surface</span>
+<span class="sd">            (the inner surface of the first solid layer after the plasma) for</span>
+<span class="sd">            every layer, starting where the layer meets the centre column at</span>
+<span class="sd">            the bottom and going along the bottom, up the outboard side and</span>
+<span class="sd">            along the top back to the centre column. Each entry must sum to</span>
+<span class="sd">            the arc length returned by paramak.spherical_poloidal_arc_length</span>
+<span class="sd">            (within 0.1 percent). Cuts between segments are vertical along the</span>
+<span class="sd">            top and bottom and follow the normal to the plasma surface on the</span>
+<span class="sd">            outboard side, so layers given the same segments line up. Solid</span>
+<span class="sd">            segments are named "&lt;layer name&gt;_&lt;segment name&gt;", unnamed solid</span>
+<span class="sd">            segments are called "segment", and repeated names within a layer</span>
+<span class="sd">            get a "_1", "_2" suffix. Defaults to None.</span>
+<span class="sd">        toroidal_build: optional toroidal segmentation of the layers, for</span>
+<span class="sd">            example into sectors separated by assembly gaps. A list with one</span>
+<span class="sd">            entry per radial_build entry after the plasma, ordered from the</span>
+<span class="sd">            plasma outwards, like poloidal_build. Entries are None for layers</span>
+<span class="sd">            that are not segmented (and must be None for LayerType.GAP</span>
+<span class="sd">            entries), otherwise a list of segments: (paramak.LayerType.SOLID,</span>
+<span class="sd">            arc_length, name) for a sector (the name is optional) or</span>
+<span class="sd">            (paramak.LayerType.GAP, width) for a gap. Arc lengths are measured</span>
+<span class="sd">            around the plasma facing surface at the outboard midplane,</span>
+<span class="sd">            starting at the XZ plane and going in the direction the reactor is</span>
+<span class="sd">            revolved, and each entry must sum to the arc length returned by</span>
+<span class="sd">            paramak.toroidal_arc_length (within 0.1 percent). Gaps are slots</span>
+<span class="sd">            with parallel sides, so a gap has the same width at every radius.</span>
+<span class="sd">            Sectors are named "&lt;layer name&gt;_&lt;sector name&gt;", or</span>
+<span class="sd">            "&lt;layer name&gt;_&lt;poloidal segment name&gt;_&lt;sector name&gt;" when the</span>
+<span class="sd">            layer also has a poloidal_build entry. Defaults to None.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        CadQuery.Assembly: A CadQuery Assembly object representing the spherical tokamak fusion reactor.</span>
@@ -702,24 +994,7 @@ function render(data, parent_element, ratio){
     <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">colors</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="n">inner_equatorial_point</span> <span class="o">=</span> <span class="n">sum_up_to_plasma</span><span class="p">(</span><span class="n">radial_build</span><span class="p">)</span>
-    <span class="n">plasma_radial_thickness</span> <span class="o">=</span> <span class="n">get_plasma_value</span><span class="p">(</span><span class="n">radial_build</span><span class="p">)</span>
-    <span class="n">outer_equatorial_point</span> <span class="o">=</span> <span class="n">inner_equatorial_point</span> <span class="o">+</span> <span class="n">plasma_radial_thickness</span>
-
-    <span class="c1"># sets major radius and minor radius from equatorial_points to allow a</span>
-    <span class="c1"># radial build. This helps avoid the plasma overlapping the center</span>
-    <span class="c1"># column and other components</span>
-    <span class="n">major_radius</span> <span class="o">=</span> <span class="p">(</span><span class="n">outer_equatorial_point</span> <span class="o">+</span> <span class="n">inner_equatorial_point</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
-    <span class="n">minor_radius</span> <span class="o">=</span> <span class="n">major_radius</span> <span class="o">-</span> <span class="n">inner_equatorial_point</span>
-
-    <span class="c1"># make vertical build from outer radial build</span>
-    <span class="n">pi</span> <span class="o">=</span> <span class="n">get_plasma_index</span><span class="p">(</span><span class="n">radial_build</span><span class="p">)</span>
-    <span class="c1"># drop any layer names, they are only supported in radial_build not vertical_build</span>
-    <span class="n">upper_vertical_build</span> <span class="o">=</span> <span class="p">[(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">radial_build</span><span class="p">[</span><span class="n">pi</span><span class="p">:]]</span>
-
-    <span class="n">plasma_height</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">minor_radius</span> <span class="o">*</span> <span class="n">elongation</span>
-    <span class="c1"># slice operation reverses the list and removes the last value to avoid two plasmas</span>
-    <span class="n">vertical_build</span> <span class="o">=</span> <span class="n">upper_vertical_build</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[(</span><span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">,</span> <span class="n">plasma_height</span><span class="p">)]</span> <span class="o">+</span> <span class="n">upper_vertical_build</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">vertical_build</span> <span class="o">=</span> <span class="n">spherical_vertical_build_from_radial_build</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">elongation</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">spherical_tokamak</span><span class="p">(</span>
         <span class="n">radial_build</span><span class="o">=</span><span class="n">radial_build</span><span class="p">,</span>
@@ -729,6 +1004,8 @@ function render(data, parent_element, ratio){
         <span class="n">extra_cut_shapes</span><span class="o">=</span><span class="n">extra_cut_shapes</span><span class="p">,</span>
         <span class="n">extra_intersect_shapes</span><span class="o">=</span><span class="n">extra_intersect_shapes</span><span class="p">,</span>
         <span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span>
+        <span class="n">poloidal_build</span><span class="o">=</span><span class="n">poloidal_build</span><span class="p">,</span>
+        <span class="n">toroidal_build</span><span class="o">=</span><span class="n">toroidal_build</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
@@ -743,6 +1020,8 @@ function render(data, parent_element, ratio){
     <span class="n">extra_cut_shapes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">extra_intersect_shapes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">colors</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">poloidal_build</span><span class="p">:</span> <span class="n">SegmentBuild</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">toroidal_build</span><span class="p">:</span> <span class="n">SegmentBuild</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Assembly</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Creates a spherical tokamak fusion reactor from a radial build and vertical build.</span>
 
@@ -759,6 +1038,42 @@ function render(data, parent_element, ratio){
 <span class="sd">            Each dictionary entry should be a key that matches the assembly part name</span>
 <span class="sd">            (e.g. 'plasma', or 'layer_1') and a tuple of 3 or 4 floats between 0 and 1</span>
 <span class="sd">            representing the RGB or RGBA values.</span>
+<span class="sd">        poloidal_build: optional poloidal segmentation of the layers after</span>
+<span class="sd">            the plasma. A list with one entry per radial_build entry after the</span>
+<span class="sd">            plasma, ordered from the plasma outwards. Entries are None for</span>
+<span class="sd">            layers that are not segmented (and must be None for</span>
+<span class="sd">            LayerType.GAP entries), otherwise a list of segments in the same</span>
+<span class="sd">            format as radial_build entries: (paramak.LayerType.SOLID,</span>
+<span class="sd">            arc_length, name) for a solid segment (the name is optional) or</span>
+<span class="sd">            (paramak.LayerType.GAP, arc_length) for a gap that produces no</span>
+<span class="sd">            solid. Arc lengths are measured along the plasma facing surface</span>
+<span class="sd">            (the inner surface of the first solid layer after the plasma) for</span>
+<span class="sd">            every layer, starting where the layer meets the centre column at</span>
+<span class="sd">            the bottom and going along the bottom, up the outboard side and</span>
+<span class="sd">            along the top back to the centre column. Each entry must sum to</span>
+<span class="sd">            the arc length returned by paramak.spherical_poloidal_arc_length</span>
+<span class="sd">            (within 0.1 percent). Cuts between segments are vertical along the</span>
+<span class="sd">            top and bottom and follow the normal to the plasma surface on the</span>
+<span class="sd">            outboard side, so layers given the same segments line up. Solid</span>
+<span class="sd">            segments are named "&lt;layer name&gt;_&lt;segment name&gt;", unnamed solid</span>
+<span class="sd">            segments are called "segment", and repeated names within a layer</span>
+<span class="sd">            get a "_1", "_2" suffix. Defaults to None.</span>
+<span class="sd">        toroidal_build: optional toroidal segmentation of the layers, for</span>
+<span class="sd">            example into sectors separated by assembly gaps. A list with one</span>
+<span class="sd">            entry per radial_build entry after the plasma, ordered from the</span>
+<span class="sd">            plasma outwards, like poloidal_build. Entries are None for layers</span>
+<span class="sd">            that are not segmented (and must be None for LayerType.GAP</span>
+<span class="sd">            entries), otherwise a list of segments: (paramak.LayerType.SOLID,</span>
+<span class="sd">            arc_length, name) for a sector (the name is optional) or</span>
+<span class="sd">            (paramak.LayerType.GAP, width) for a gap. Arc lengths are measured</span>
+<span class="sd">            around the plasma facing surface at the outboard midplane,</span>
+<span class="sd">            starting at the XZ plane and going in the direction the reactor is</span>
+<span class="sd">            revolved, and each entry must sum to the arc length returned by</span>
+<span class="sd">            paramak.toroidal_arc_length (within 0.1 percent). Gaps are slots</span>
+<span class="sd">            with parallel sides, so a gap has the same width at every radius.</span>
+<span class="sd">            Sectors are named "&lt;layer name&gt;_&lt;sector name&gt;", or</span>
+<span class="sd">            "&lt;layer name&gt;_&lt;poloidal segment name&gt;_&lt;sector name&gt;" when the</span>
+<span class="sd">            layer also has a poloidal_build entry. Defaults to None.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        CadQuery.Assembly: A CadQuery Assembly object representing the spherical tokamak fusion reactor.</span>
@@ -773,19 +1088,7 @@ function render(data, parent_element, ratio){
 
     <span class="n">validate_vertical_build_names</span><span class="p">(</span><span class="n">vertical_build</span><span class="p">,</span> <span class="s2">"spherical_tokamak()"</span><span class="p">)</span>
 
-    <span class="n">inner_equatorial_point</span> <span class="o">=</span> <span class="n">sum_up_to_plasma</span><span class="p">(</span><span class="n">radial_build</span><span class="p">)</span>
-    <span class="n">plasma_radial_thickness</span> <span class="o">=</span> <span class="n">get_plasma_value</span><span class="p">(</span><span class="n">radial_build</span><span class="p">)</span>
-    <span class="n">plasma_vertical_thickness</span> <span class="o">=</span> <span class="n">get_plasma_value</span><span class="p">(</span><span class="n">vertical_build</span><span class="p">)</span>
-    <span class="n">outer_equatorial_point</span> <span class="o">=</span> <span class="n">inner_equatorial_point</span> <span class="o">+</span> <span class="n">plasma_radial_thickness</span>
-
-    <span class="c1"># sets major radius and minor radius from equatorial_points to allow a</span>
-    <span class="c1"># radial build. This helps avoid the plasma overlapping the center</span>
-    <span class="c1"># column and other components</span>
-    <span class="n">major_radius</span> <span class="o">=</span> <span class="p">(</span><span class="n">outer_equatorial_point</span> <span class="o">+</span> <span class="n">inner_equatorial_point</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
-    <span class="n">minor_radius</span> <span class="o">=</span> <span class="n">major_radius</span> <span class="o">-</span> <span class="n">inner_equatorial_point</span>
-
-    <span class="c1"># vertical build</span>
-    <span class="n">elongation</span> <span class="o">=</span> <span class="p">(</span><span class="n">plasma_vertical_thickness</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">minor_radius</span>
+    <span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">elongation</span> <span class="o">=</span> <span class="n">get_plasma_geometry</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">)</span>
     <span class="n">blanket_rear_wall_end_height</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">vertical_build</span><span class="p">])</span>
 
     <span class="n">plasma</span> <span class="o">=</span> <span class="n">plasma_simplified</span><span class="p">(</span>
@@ -809,6 +1112,18 @@ function render(data, parent_element, ratio){
         <span class="n">height</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">blanket_rear_wall_end_height</span><span class="p">,</span>
     <span class="p">)</span>
 
+    <span class="c1"># validated before the blanket layers are built so errors are raised quickly</span>
+    <span class="n">poloidal_segment_positions</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">poloidal_build</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">poloidal_segment_positions</span> <span class="o">=</span> <span class="n">get_spherical_poloidal_build_segment_positions</span><span class="p">(</span>
+            <span class="n">poloidal_build</span><span class="p">,</span> <span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">layer_count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">inner_radial_build</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="n">toroidal_sectors</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">toroidal_build</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">toroidal_sectors</span> <span class="o">=</span> <span class="n">get_toroidal_build_sectors</span><span class="p">(</span>
+            <span class="n">toroidal_build</span><span class="p">,</span> <span class="n">get_spherical_layer_pairs</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">),</span> <span class="n">radial_build</span><span class="p">,</span> <span class="n">rotation_angle</span>
+        <span class="p">)</span>
+
     <span class="n">blanket_layers</span> <span class="o">=</span> <span class="n">create_blanket_layers_after_plasma</span><span class="p">(</span>
         <span class="n">radial_build</span><span class="o">=</span><span class="n">radial_build</span><span class="p">,</span>
         <span class="n">vertical_build</span><span class="o">=</span><span class="n">vertical_build</span><span class="p">,</span>
@@ -818,7 +1133,10 @@ function render(data, parent_element, ratio){
         <span class="n">elongation</span><span class="o">=</span><span class="n">elongation</span><span class="p">,</span>
         <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
         <span class="n">center_column</span><span class="o">=</span><span class="n">blanket_cutting_cylinder</span><span class="p">,</span>
-        <span class="n">layer_count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">inner_radial_build</span><span class="p">)</span>
+        <span class="n">layer_count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">inner_radial_build</span><span class="p">),</span>
+        <span class="n">poloidal_segment_positions</span><span class="o">=</span><span class="n">poloidal_segment_positions</span><span class="p">,</span>
+        <span class="n">toroidal_sectors</span><span class="o">=</span><span class="n">toroidal_sectors</span><span class="p">,</span>
+        <span class="n">toroidal_region_size</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">radial_build</span><span class="p">),</span> <span class="n">blanket_rear_wall_end_height</span><span class="p">),</span>
     <span class="p">)</span>
 
     <span class="n">cut_names</span><span class="p">,</span> <span class="n">intersect_names</span><span class="p">,</span> <span class="n">layer_names</span> <span class="o">=</span> <span class="n">get_assembly_names</span><span class="p">(</span>
@@ -835,15 +1153,23 @@ function render(data, parent_element, ratio){
         <span class="n">my_assembly</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cq</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="o">*</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))))</span>
 
     <span class="c1"># builds up the intersect shapes</span>
+    <span class="n">segmented</span> <span class="o">=</span> <span class="n">poloidal_build</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">toroidal_build</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">extra_intersect_shapes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="c1"># makes a union of the the radial build to use as a base for the intersect shapes</span>
-        <span class="n">reactor_compound</span> <span class="o">=</span> <span class="n">inner_radial_build</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">inner_radial_build</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">blanket_layers</span><span class="p">:</span>
-            <span class="n">reactor_compound</span> <span class="o">=</span> <span class="n">reactor_compound</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">segmented</span><span class="p">:</span>
+            <span class="c1"># makes a union of the the radial build to use as a base for the intersect shapes</span>
+            <span class="n">reactor_compound</span> <span class="o">=</span> <span class="n">inner_radial_build</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">inner_radial_build</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">blanket_layers</span><span class="p">:</span>
+                <span class="n">reactor_compound</span> <span class="o">=</span> <span class="n">reactor_compound</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
 
         <span class="c1"># adds the extra intersect shapes to the assembly</span>
         <span class="k">for</span> <span class="n">entry</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">extra_intersect_shapes</span><span class="p">,</span> <span class="n">intersect_names</span><span class="p">):</span>
-            <span class="n">reactor_entry_intersection</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">reactor_compound</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">segmented</span><span class="p">:</span>
+                <span class="n">reactor_entry_intersection</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">reactor_compound</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># segments share many faces with their neighbours, which</span>
+                <span class="c1"># makes fusing all the parts unreliable, so the shape is intersected</span>
+                <span class="c1"># with each part and the pieces are kept together in a compound</span>
+                <span class="n">reactor_entry_intersection</span> <span class="o">=</span> <span class="n">intersect_with_each_part</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">inner_radial_build</span> <span class="o">+</span> <span class="n">blanket_layers</span><span class="p">)</span>
             <span class="n">my_assembly</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">reactor_entry_intersection</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cq</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="o">*</span><span class="n">colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">))))</span>
 
     <span class="c1"># cut the core layers with any extra shapes (a no-op when there are none)</span>
