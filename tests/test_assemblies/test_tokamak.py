@@ -169,6 +169,34 @@ def test_add_divertor_replaces_plasma_facing_blanket_with_named_layers():
     assert result_parts["layer_3"].intersect(armor).Volume() == pytest.approx(0, abs=1e-4)
 
 
+def test_opposed_divertors_name_only_the_fully_split_blanket_layer():
+    model = paramak.tokamak_from_plasma(radial_build=POLOIDAL_RADIAL_BUILD, rotation_angle=90)
+    upper = model.add_divertor(
+        poloidal_start_angle=75,
+        poloidal_extent_angle=30,
+        divertor_layer_names=["upper_armor"],
+        divertor_layer_thicknesses=[90],
+    )
+    result = upper.add_divertor(
+        poloidal_start_angle=255,
+        poloidal_extent_angle=30,
+        divertor_layer_names=["lower_armor"],
+        divertor_layer_thicknesses=[90],
+    )
+
+    names = result.names()
+    assert "layer_3_inboard" in names
+    assert "layer_3_outboard" in names
+    assert "layer_3" not in names
+    assert "layer_4" in names
+    assert "layer_4_inboard" not in names
+    assert "layer_4_outboard" not in names
+    parts = {child.name: child.toCompound() for child in result.children}
+    inboard_center = parts["layer_3_inboard"].Center()
+    outboard_center = parts["layer_3_outboard"].Center()
+    assert math.hypot(inboard_center.x, inboard_center.y) < math.hypot(outboard_center.x, outboard_center.y)
+
+
 def equal_segments(arc_length, number_of_segments, gap, name="module"):
     "a poloidal_build entry of equally sized segments separated by gaps"
     segment = (arc_length - number_of_segments * gap) / number_of_segments

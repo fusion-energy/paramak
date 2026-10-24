@@ -1,6 +1,7 @@
 # Creates an assembly class that inherits from cadquery's assembly class
 # and adds a few convenience methods remove() and names()
 
+import math
 import warnings
 
 import cadquery as cq
@@ -86,16 +87,35 @@ class Assembly(cq.Assembly):
             raise ValueError(f"Divertor layer names already exist in the model: {sorted(duplicates)}")
 
         result = Assembly()
+        cuttable_layer_names = list(self.blanket_layer_names)
         for obj, full_path, loc, color in self:
             name = full_path.split("/")[-1]
             if name in self.blanket_layer_names and isinstance(obj, cq.Shape):
+                original_solid_count = len(obj.Solids())
                 for layer in layers:
                     obj = obj.cut(layer.val())
+                solids = obj.Solids()
+                if original_solid_count == 1 and len(solids) == 2:
+                    radial_order = sorted(
+                        solids,
+                        key=lambda solid: math.hypot(solid.Center().x, solid.Center().y),
+                    )
+                    inboard_name = f"{name}_inboard"
+                    outboard_name = f"{name}_outboard"
+                    result.add(radial_order[0], name=inboard_name, color=color, loc=loc)
+                    result.add(radial_order[1], name=outboard_name, color=color, loc=loc)
+                    cuttable_layer_names = [
+                        layer_name
+                        for layer_name in cuttable_layer_names
+                        if layer_name != name
+                    ] + [inboard_name, outboard_name]
+                    continue
             result.add(obj, name=name, color=color, loc=loc)
         for layer in layers:
             color = cq.Color(*layer.color) if isinstance(layer.color, tuple) else layer.color
             result.add(layer, name=layer.name, color=color)
         self._copy_metadata(result)
+        result.blanket_layer_names = tuple(cuttable_layer_names)
         return result
 
     def rename(self, old: str, new: str):
