@@ -48,6 +48,10 @@ docs = [
     "ipython",
     "sphinx_design",
 ]
+mesh = [
+    "netCDF4",
+    "gmsh>=4.11",
+]
 
 [tool.black]
 line-length = 120

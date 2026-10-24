@@ -52,37 +52,44 @@ def count_cylinder_layers(radial_build):
     return before_plasma - after_plasma
 
 
-def create_center_column_shield_cylinders(radial_build, rotation_angle, center_column_shield_height):
-    cylinders = []
+def center_column_layer_specs(radial_build):
+    """Returns the annular center-column layers represented by radial_build."""
+    layers = []
     total_sum = 0
     layer_count = 0
-
     number_of_cylinder_layers = count_cylinder_layers(radial_build)
 
-    for _, item in enumerate(radial_build):
+    for item in radial_build:
         if item[0] == LayerType.PLASMA:
             break
-
         if item[0] == LayerType.GAP:
             total_sum += item[1]
             continue
-
         thickness = item[1]
         layer_count += 1
-
         if layer_count > number_of_cylinder_layers:
             break
+        layers.append(
+            {
+                "name": get_layer_name(item, layer_count),
+                "inner_radius": total_sum,
+                "outer_radius": total_sum + thickness,
+            }
+        )
+        total_sum += thickness
+    return layers
 
-        layer_name = get_layer_name(item, layer_count)
 
+def create_center_column_shield_cylinders(radial_build, rotation_angle, center_column_shield_height):
+    cylinders = []
+    for layer in center_column_layer_specs(radial_build):
         cylinder = center_column_shield_cylinder(
-            inner_radius=total_sum,
-            thickness=item[1],
-            name=layer_name,
+            inner_radius=layer["inner_radius"],
+            thickness=layer["outer_radius"] - layer["inner_radius"],
+            name=layer["name"],
             rotation_angle=rotation_angle,
             height=center_column_shield_height,
         )
-        total_sum += thickness
         cylinders.append(cylinder)
     return cylinders
 
@@ -627,10 +634,15 @@ def tokamak(
 
     # cut the core layers with any extra shapes (a no-op when there are none)
     cutters = extra_cut_shapes + extra_intersect_shapes
+    has_cut_intersection = False
     for entry, name in zip(inner_radial_build + blanket_layers, layer_names):
         # TODO track the names of shapes, even when extra shapes are made due to splitting
         for cutter in cutters:
+            volume_before_cut = entry.val().Volume()
             entry = entry.cut(cutter)
+            volume_after_cut = entry.val().Volume()
+            if volume_before_cut - volume_after_cut > max(1e-8, volume_before_cut * 1e-10):
+                has_cut_intersection = True
         my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
 
     my_assembly.add(plasma, name="plasma", color=cq.Color(*colors.get("plasma", (0.5,0.5,0.5))))
@@ -639,5 +651,36 @@ def tokamak(
     my_assembly.triangularity = triangularity
     my_assembly.major_radius = major_radius
     my_assembly.minor_radius = minor_radius
+    first_blanket_pair = next(
+        pair for pair in get_layer_pairs(radial_build, vertical_build) if pair["type"] == LayerType.SOLID
+    )
+    my_assembly.plasma_facing_offset = poloidal_profile(*first_blanket_pair["offsets"])
+    my_assembly.blanket_layer_names = tuple(layer.name for layer in blanket_layers)
+    my_assembly.rotation_angle = rotation_angle
+    if not extra_intersect_shapes and not has_cut_intersection:
+        mesh_layer_pairs = get_layer_pairs(radial_build, vertical_build, layer_count=len(inner_radial_build))
+        my_assembly.structured_layer_data = {
+            "major_radius": major_radius,
+            "minor_radius": minor_radius,
+            "triangularity": triangularity,
+            "elongation": elongation,
+            "rotation_angle": rotation_angle,
+            "layer_pairs": mesh_layer_pairs,
+            "center_column_layers": [
+                {
+                    **layer,
+                    "height": blanket_rear_wall_end_height,
+                }
+                for layer in center_column_layer_specs(radial_build)
+            ],
+            "plasma_facing_offset": poloidal_profile(*first_blanket_pair["offsets"]),
+            "segment_angles": poloidal_segment_angles
+            if poloidal_segment_angles is not None
+            else [None] * len(mesh_layer_pairs),
+            "toroidal_sectors": toroidal_sectors
+            if toroidal_sectors is not None
+            else [None] * len(mesh_layer_pairs),
+            "solid_type": LayerType.SOLID,
+        }
 
     return my_assembly

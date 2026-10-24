@@ -33,3 +33,16 @@ Workplanes
 .. autofunction:: revolved_shape
 .. autofunction:: toroidal_field_coil_rectangle
 .. autofunction:: u_shaped_dome
+
+Structured meshing
+------------------
+
+.. automethod:: paramak.assemblies.assembly.Assembly.mesh_structured_layers
+.. automethod:: paramak.assemblies.assembly.Assembly.mesh_structured_layer_volumes
+.. automethod:: paramak.assemblies.assembly.Assembly.create_structured_layer_dagmc_model
+.. automethod:: paramak.assemblies.assembly.Assembly.export_structured_layers_exodus
+
+.. autofunction:: paramak.workplanes.structured_mesh.mesh_revolved_layer
+.. autofunction:: paramak.workplanes.structured_mesh.mesh_cad_solid_surface
+.. autofunction:: paramak.workplanes.structured_mesh.tetrahedralize_center_column_layer
+.. autofunction:: paramak.workplanes.structured_mesh.tetrahedralize_cad_solid
