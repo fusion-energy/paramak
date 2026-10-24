@@ -22,11 +22,42 @@ def divertor(
     plasma_facing_offset,
     rotation_angle: float,
 ) -> list[cq.Workplane]:
-    """Builds the layered solids for a poloidal divertor.
+    """Builds named divertor layers over a poloidal angle range.
 
-    The new divertor starts at the model's plasma-facing surface and extends
-    outward. The returned solids define both the replacement layers and the
-    volume removed from existing reactor layers.
+    The first divertor layer starts at the reactor's plasma-facing surface.
+    Further layers are stacked outward in the order given by
+    ``divertor_layer_names`` and ``divertor_layer_thicknesses``. Each thickness
+    is the radial thickness of its corresponding layer, in the same units as
+    the blanket dimensions. The generated layer solids are also used to cut
+    their occupied volumes out of the blanket layers.
+
+    Poloidal angles are measured in degrees counter-clockwise from the
+    outboard midplane: 0 degrees is outboard, 90 is top, 180 is inboard, and
+    270 is bottom. The divertor covers the range beginning at
+    ``poloidal_start_angle`` and continuing counter-clockwise for
+    ``poloidal_extent_angle`` degrees.
+
+    Args:
+        poloidal_start_angle: Start of the divertor's poloidal range, in
+            degrees.
+        poloidal_extent_angle: Angular width of the divertor, greater than 0
+            and at most 360 degrees.
+        divertor_layer_names: Non-empty names for the divertor layers. Each
+            name must be unique in the reactor assembly.
+        divertor_layer_thicknesses: Positive thickness for each corresponding
+            divertor layer. Must have the same length as
+            ``divertor_layer_names``.
+        major_radius: Major radius of plasma.
+        minor_radius: Minor radius of plasma.
+        triangularity: Plasma triangularity.
+        elongation: Plasma elongation.
+        plasma_facing_offset: Offset profile from the plasma to the
+            plasma-facing surface of the blanket layers.
+        rotation_angle: Toroidal rotation angle used for the reactor.
+
+    Returns:
+        A list of CadQuery Workplanes, one named solid per divertor layer, in
+        the same order as ``divertor_layer_names``.
     """
     if not isinstance(poloidal_start_angle, (int, float)):
         raise TypeError("poloidal_start_angle must be a number")
