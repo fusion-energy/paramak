@@ -421,15 +421,21 @@ class Assembly(cq.Assembly):
         for curve in radial_curves:
             if not any(np.allclose(curve, existing, rtol=0.0, atol=1e-8) for existing in unique_curves):
                 unique_curves.append(np.asarray(curve, dtype=float))
-        unique_curves.sort(key=lambda curve: float(np.mean(curve)))
         if len(unique_curves) < 2:
             raise ValueError("could not build radial interfaces for the structured divertor mesh")
-        for lower, upper in zip(unique_curves[:-1], unique_curves[1:]):
-            if np.any(upper - lower <= 1e-8):
-                raise ValueError(
-                    "divertor and blanket radial interfaces cross or touch; "
-                    "the structured mesh requires a consistent radial ordering"
-                )
+        # Blanket interfaces can change order around the poloidal profile
+        # when inboard and outboard layer thicknesses differ. Divertor
+        # interfaces can cross those blanket interfaces by design, since
+        # divertor cells replace the blanket locally. Sort the offsets at
+        # each poloidal node instead of imposing one global radial ordering.
+        ordered_offsets = np.sort(np.stack(unique_curves), axis=0)
+        # Curves that meet exactly at a sampled node would otherwise create
+        # zero-volume tetrahedra there. Keep a negligible positive spacing at
+        # that node; away from crossings the original offsets are unchanged.
+        for index in range(1, len(ordered_offsets)):
+            ordered_offsets[index] = np.maximum(
+                ordered_offsets[index], ordered_offsets[index - 1] + 1e-9
+            )
 
         def as_profile(offsets):
             radius, z = offset_curve_coordinates(
@@ -443,9 +449,12 @@ class Assembly(cq.Assembly):
             )
             return np.column_stack((radius, z))
 
-        radial_profiles = [as_profile(curve) for curve in unique_curves]
+        radial_profiles = [as_profile(curve) for curve in ordered_offsets]
         theta_centres = 0.5 * (theta[:-1] + theta[1:])
-        radial_centres = [0.5 * (lower + upper) for lower, upper in zip(unique_curves[:-1], unique_curves[1:])]
+        radial_centres = [
+            0.5 * (lower + upper)
+            for lower, upper in zip(ordered_offsets[:-1], ordered_offsets[1:])
+        ]
 
         def angle_in_range(angle, start, extent):
             if extent >= 360.0:

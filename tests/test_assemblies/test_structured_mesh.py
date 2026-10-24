@@ -621,6 +621,56 @@ def test_assembly_divertor_mesh_replaces_blanket_cells():
     assert_closed_surface(divertor_surface_meshes[0])
 
 
+def test_divertor_mesh_handles_crossing_inboard_and_outboard_interfaces():
+    radial_build = [
+        (paramak.LayerType.GAP, 412.1),
+        (paramak.LayerType.SOLID, 90, "cs_coil"),
+        (paramak.LayerType.GAP, 4),
+        (paramak.LayerType.SOLID, 10, "bss"),
+        (paramak.LayerType.SOLID, 15.5, "water_manifold"),
+        (paramak.LayerType.SOLID, 17.4, "pbli_manifold"),
+        (paramak.LayerType.SOLID, 33.02, "bz"),
+        (paramak.LayerType.SOLID, 2.5, "fw"),
+        (paramak.LayerType.SOLID, 0.2, "armor"),
+        (paramak.LayerType.GAP, 22.5),
+        (paramak.LayerType.PLASMA, 576.6),
+        (paramak.LayerType.GAP, 22.5),
+        (paramak.LayerType.SOLID, 0.2),
+        (paramak.LayerType.SOLID, 2.5),
+        (paramak.LayerType.SOLID, 53.8),
+        (paramak.LayerType.SOLID, 17.4),
+        (paramak.LayerType.SOLID, 15.5),
+        (paramak.LayerType.SOLID, 10),
+    ]
+    reactor = paramak.tokamak_from_plasma(
+        radial_build,
+        elongation=1.65,
+        triangularity=0.33,
+        rotation_angle=180,
+    )
+    reactor = reactor.add_divertor(
+        75, 30,
+        ["upper_divertor_armor", "upper_divertor_heatsink", "upper_divertor_shield"],
+        [0.2, 2.5, 40],
+    )
+    reactor = reactor.add_divertor(
+        255, 30,
+        ["lower_divertor_armor", "lower_divertor_heatsink", "lower_divertor_shield"],
+        [0.2, 2.5, 40],
+    )
+
+    meshes = reactor.mesh_structured_layer_volumes(n_poloidal=32, n_toroidal=5, n_axial=2)
+
+    assert {mesh["name"] for mesh in meshes} >= {
+        "upper_divertor_armor",
+        "upper_divertor_heatsink",
+        "upper_divertor_shield",
+        "lower_divertor_armor",
+        "lower_divertor_heatsink",
+        "lower_divertor_shield",
+    }
+
+
 def test_assembly_dagmc_and_exodus_methods_delegate_to_mesh_converters(monkeypatch, partial_tokamak, tmp_path):
     from paramak.workplanes import structured_mesh
 
