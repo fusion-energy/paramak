@@ -4,6 +4,8 @@ import cadquery as cq
 import pytest
 
 import paramak
+from paramak.assemblies.assembly import Assembly
+from paramak.workplanes.blanket_from_plasma import blanket_from_plasma
 
 
 def test_colors():
@@ -167,6 +169,49 @@ def test_add_divertor_replaces_plasma_facing_blanket_with_named_layers():
     assert original_parts["layer_3"].intersect(armor).Volume() > 0
     assert result_parts["layer_3"].Volume() < original_parts["layer_3"].Volume()
     assert result_parts["layer_3"].intersect(armor).Volume() == pytest.approx(0, abs=1e-4)
+
+
+def test_add_divertor_cuts_armor_with_coincident_wcll_surfaces():
+    geometry = dict(
+        major_radius=893.8,
+        minor_radius=288.3,
+        triangularity=0.33,
+        elongation=1.65,
+        rotation_angle=180,
+        allow_overlapping_shape=True,
+    )
+    outer_half = blanket_from_plasma(
+        thickness=0.2,
+        offset_from_plasma=22.5,
+        start_angle=90,
+        stop_angle=-90,
+        name="armor",
+        **geometry,
+    )
+    inner_half = blanket_from_plasma(
+        thickness=0.2,
+        offset_from_plasma=22.5,
+        start_angle=-90,
+        stop_angle=-270,
+        name="armor",
+        **geometry,
+    )
+    armor = outer_half.union(inner_half)
+    model = Assembly()
+    model.add(armor, name="armor")
+    model.major_radius = geometry["major_radius"]
+    model.minor_radius = geometry["minor_radius"]
+    model.triangularity = geometry["triangularity"]
+    model.elongation = geometry["elongation"]
+    model.rotation_angle = geometry["rotation_angle"]
+    model.plasma_facing_offset = 22.5
+    model.blanket_layer_names = ("armor",)
+
+    result = model.add_divertor(250, 40, ["lower_pfu"], [0.8])
+    result_armor = next(obj for obj, path, loc, color in result if path.endswith("/armor"))
+
+    assert result_armor.isValid()
+    assert result_armor.Volume() < armor.val().Volume()
 
 
 def test_lower_divertor_with_39_degree_extent_skips_tangent_layer_cuts():

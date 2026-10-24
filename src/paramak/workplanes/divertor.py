@@ -21,6 +21,7 @@ def divertor(
     elongation: float,
     plasma_facing_offset,
     rotation_angle: float,
+    _cut_overlap: float = 0.0,
 ) -> list[cq.Workplane]:
     """Builds named divertor layers over a poloidal angle range.
 
@@ -69,6 +70,8 @@ def divertor(
         raise ValueError("each divertor layer name must be a non-empty string")
     if any(not isinstance(value, (int, float)) or value <= 0 for value in divertor_layer_thicknesses):
         raise ValueError("each divertor layer thickness must be a positive number")
+    if not isinstance(_cut_overlap, (int, float)) or _cut_overlap < 0:
+        raise ValueError("_cut_overlap must be a non-negative number")
 
     start = float(poloidal_start_angle)
     stop = start + float(poloidal_extent_angle)
@@ -122,12 +125,12 @@ def divertor(
         if callable(plasma_facing_offset):
 
             def layer_offset(theta, base=plasma_facing_offset, extra=cumulative_thickness):
-                return base(theta) + extra
+                return base(theta) + extra - _cut_overlap
 
         else:
-            layer_offset = plasma_facing_offset + cumulative_thickness
+            layer_offset = plasma_facing_offset + cumulative_thickness - _cut_overlap
         outer_half = blanket_from_plasma(
-            thickness=thickness,
+            thickness=thickness + _cut_overlap,
             offset_from_plasma=layer_offset,
             start_angle=90,
             stop_angle=-90,
@@ -135,7 +138,7 @@ def divertor(
             **common,
         )
         inner_half = blanket_from_plasma(
-            thickness=thickness,
+            thickness=thickness + _cut_overlap,
             offset_from_plasma=layer_offset,
             start_angle=-90,
             stop_angle=-270,

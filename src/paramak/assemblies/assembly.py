@@ -80,6 +80,19 @@ class Assembly(cq.Assembly):
             plasma_facing_offset=self.plasma_facing_offset,
             rotation_angle=self.rotation_angle,
         )
+        cut_layers = divertor(
+            poloidal_start_angle=poloidal_start_angle,
+            poloidal_extent_angle=poloidal_extent_angle,
+            divertor_layer_names=divertor_layer_names,
+            divertor_layer_thicknesses=divertor_layer_thicknesses,
+            major_radius=self.major_radius,
+            minor_radius=self.minor_radius,
+            triangularity=self.triangularity,
+            elongation=self.elongation,
+            plasma_facing_offset=self.plasma_facing_offset,
+            rotation_angle=self.rotation_angle,
+            _cut_overlap=1e-3,
+        )
         names = self.names()
         new_names = list(divertor_layer_names)
         duplicates = set(names).intersection(new_names)
@@ -92,7 +105,7 @@ class Assembly(cq.Assembly):
             name = full_path.split("/")[-1]
             if name in self.blanket_layer_names and isinstance(obj, cq.Shape):
                 original_solid_count = len(obj.Solids())
-                for layer in layers:
+                for layer in cut_layers:
                     cutter = layer.val()
                     try:
                         overlap_volume = obj.intersect(cutter).Volume()
