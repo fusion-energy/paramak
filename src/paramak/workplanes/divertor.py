@@ -120,7 +120,10 @@ def divertor(
     cumulative_thickness = 0.0
     for name, thickness in zip(divertor_layer_names, divertor_layer_thicknesses):
         if callable(plasma_facing_offset):
-            layer_offset = lambda theta, base=plasma_facing_offset, extra=cumulative_thickness: base(theta) + extra
+
+            def layer_offset(theta, base=plasma_facing_offset, extra=cumulative_thickness):
+                return base(theta) + extra
+
         else:
             layer_offset = plasma_facing_offset + cumulative_thickness
         outer_half = blanket_from_plasma(
