@@ -4,6 +4,8 @@ import cadquery as cq
 import pytest
 
 import paramak
+from paramak.assemblies.assembly import Assembly
+from paramak.workplanes.blanket_from_plasma import blanket_from_plasma
 
 
 def test_colors():
@@ -145,6 +147,134 @@ def lower_divertor_shape(rotation_angle):
     "a shape overlapping the layers under the plasma, intersected with the layers to make a divertor"
     points = [(300, -700), (300, 0), (400, 0), (400, -700)]
     return cq.Workplane("XZ").polyline(points).close().revolve(rotation_angle)
+
+
+def test_add_divertor_replaces_plasma_facing_blanket_with_named_layers():
+    model = paramak.tokamak_from_plasma(radial_build=POLOIDAL_RADIAL_BUILD, rotation_angle=90)
+    divertor_names = ["lower_divertor_armor", "lower_divertor_heatsink", "lower_divertor_shield"]
+    result = model.add_divertor(
+        poloidal_start_angle=85,
+        poloidal_extent_angle=30,
+        divertor_layer_names=divertor_names,
+        divertor_layer_thicknesses=[0.2, 10, 50],
+    )
+
+    assert all(name in result.names() for name in divertor_names)
+    original_parts = {child.name: child.toCompound() for child in model.children}
+    result_parts = {child.name: child.toCompound() for child in result.children}
+    armor = result_parts[divertor_names[0]]
+
+    assert armor.isValid()
+    assert armor.Volume() > 0
+    assert original_parts["layer_3"].intersect(armor).Volume() > 0
+    assert result_parts["layer_3"].Volume() < original_parts["layer_3"].Volume()
+    assert result_parts["layer_3"].intersect(armor).Volume() == pytest.approx(0, abs=1e-4)
+
+
+def test_add_divertor_cuts_armor_with_coincident_wcll_surfaces():
+    geometry = dict(
+        major_radius=893.8,
+        minor_radius=288.3,
+        triangularity=0.33,
+        elongation=1.65,
+        rotation_angle=180,
+        allow_overlapping_shape=True,
+    )
+    outer_half = blanket_from_plasma(
+        thickness=0.2,
+        offset_from_plasma=22.5,
+        start_angle=90,
+        stop_angle=-90,
+        name="armor",
+        **geometry,
+    )
+    inner_half = blanket_from_plasma(
+        thickness=0.2,
+        offset_from_plasma=22.5,
+        start_angle=-90,
+        stop_angle=-270,
+        name="armor",
+        **geometry,
+    )
+    armor = outer_half.union(inner_half)
+    model = Assembly()
+    model.add(armor, name="armor")
+    model.major_radius = geometry["major_radius"]
+    model.minor_radius = geometry["minor_radius"]
+    model.triangularity = geometry["triangularity"]
+    model.elongation = geometry["elongation"]
+    model.rotation_angle = geometry["rotation_angle"]
+    model.plasma_facing_offset = 22.5
+    model.blanket_layer_names = ("armor",)
+
+    result = model.add_divertor(250, 40, ["lower_pfu"], [0.8])
+    result_armor = next(obj for obj, path, loc, color in result if path.endswith("/armor"))
+
+    assert result_armor.isValid()
+    assert result_armor.Volume() < armor.val().Volume()
+
+
+def test_lower_divertor_with_39_degree_extent_skips_tangent_layer_cuts():
+    model = paramak.tokamak_from_plasma(radial_build=POLOIDAL_RADIAL_BUILD, rotation_angle=180)
+    result = model.add_divertor(
+        poloidal_start_angle=250,
+        poloidal_extent_angle=39,
+        divertor_layer_names=["lower_armor", "lower_heatsink", "lower_shield"],
+        divertor_layer_thicknesses=[0.2, 10, 50],
+    )
+
+    parts = {child.name: child.toCompound() for child in result.children}
+    assert all(parts[name].isValid() and parts[name].Volume() > 0 for name in result.names())
+    assert parts["layer_3"].Volume() < volumes(model)["layer_3"]
+
+
+def test_opposed_divertors_name_only_the_fully_split_blanket_layer():
+    model = paramak.tokamak_from_plasma(radial_build=POLOIDAL_RADIAL_BUILD, rotation_angle=90)
+    upper = model.add_divertor(
+        poloidal_start_angle=75,
+        poloidal_extent_angle=30,
+        divertor_layer_names=["upper_armor"],
+        divertor_layer_thicknesses=[90],
+    )
+    result = upper.add_divertor(
+        poloidal_start_angle=255,
+        poloidal_extent_angle=30,
+        divertor_layer_names=["lower_armor"],
+        divertor_layer_thicknesses=[90],
+    )
+
+    names = result.names()
+    assert "layer_3_inboard" in names
+    assert "layer_3_outboard" in names
+    assert "layer_3" not in names
+    assert "layer_4" in names
+    assert "layer_4_inboard" not in names
+    assert "layer_4_outboard" not in names
+    parts = {child.name: child.toCompound() for child in result.children}
+    inboard_center = parts["layer_3_inboard"].Center()
+    outboard_center = parts["layer_3_outboard"].Center()
+    assert math.hypot(inboard_center.x, inboard_center.y) < math.hypot(outboard_center.x, outboard_center.y)
+
+
+def test_sequential_divertors_preserve_parts_in_a_poloidally_segmented_model():
+    arc_length = paramak.poloidal_arc_length(POLOIDAL_RADIAL_BUILD)
+    segment = (arc_length - 4 * 5) / 4
+    first_wall_tiles = [
+        (paramak.LayerType.SOLID, segment, "tile"),
+        (paramak.LayerType.GAP, 5),
+    ] * 4
+    model = paramak.tokamak_from_plasma(
+        radial_build=POLOIDAL_RADIAL_BUILD,
+        poloidal_build=[None, first_wall_tiles, None, None],
+        rotation_angle=90,
+    )
+
+    upper = model.add_divertor(75, 30, ["upper_armor"], [90])
+    result = upper.add_divertor(255, 30, ["lower_armor"], [90])
+
+    assert "upper_armor" in result.names()
+    assert "lower_armor" in result.names()
+    assert all(f"layer_3_tile_{index}" in result.names() for index in range(1, 5))
 
 
 def equal_segments(arc_length, number_of_segments, gap, name="module"):
