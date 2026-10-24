@@ -169,6 +169,20 @@ def test_add_divertor_replaces_plasma_facing_blanket_with_named_layers():
     assert result_parts["layer_3"].intersect(armor).Volume() == pytest.approx(0, abs=1e-4)
 
 
+def test_lower_divertor_with_39_degree_extent_skips_tangent_layer_cuts():
+    model = paramak.tokamak_from_plasma(radial_build=POLOIDAL_RADIAL_BUILD, rotation_angle=180)
+    result = model.add_divertor(
+        poloidal_start_angle=250,
+        poloidal_extent_angle=39,
+        divertor_layer_names=["lower_armor", "lower_heatsink", "lower_shield"],
+        divertor_layer_thicknesses=[0.2, 10, 50],
+    )
+
+    parts = {child.name: child.toCompound() for child in result.children}
+    assert all(parts[name].isValid() and parts[name].Volume() > 0 for name in result.names())
+    assert parts["layer_3"].Volume() < volumes(model)["layer_3"]
+
+
 def test_opposed_divertors_name_only_the_fully_split_blanket_layer():
     model = paramak.tokamak_from_plasma(radial_build=POLOIDAL_RADIAL_BUILD, rotation_angle=90)
     upper = model.add_divertor(

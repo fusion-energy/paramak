@@ -93,7 +93,18 @@ class Assembly(cq.Assembly):
             if name in self.blanket_layer_names and isinstance(obj, cq.Shape):
                 original_solid_count = len(obj.Solids())
                 for layer in layers:
-                    obj = obj.cut(layer.val())
+                    cutter = layer.val()
+                    try:
+                        overlap_volume = obj.intersect(cutter).Volume()
+                    except ValueError as error:
+                        # CadQuery/OCC returns a null shape when disjoint solids
+                        # are intersected. Such a pair has nothing to subtract.
+                        if "Null TopoDS_Shape object" not in str(error):
+                            raise
+                        continue
+                    if overlap_volume <= 1e-8:
+                        continue
+                    obj = obj.cut(cutter)
                 solids = obj.Solids()
                 if original_solid_count == 1 and len(solids) == 2:
                     radial_order = sorted(
