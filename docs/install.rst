@@ -84,3 +84,18 @@ package and the dependencies using pip with -e (developer option).
 
    cd paramak
    python -m pip install -e .
+
+Optional mesh dependencies
+--------------------------
+
+For Exodus export and tetrahedral meshing of added CAD components such as
+coils, install the optional mesh dependencies:
+
+.. code-block:: bash
+
+   python -m pip install "paramak[mesh]"
+
+When working from a source checkout, install the project with
+``python -m pip install -e ".[mesh]"``. Gmsh may require system shared
+libraries in addition to its Python package. See :doc:`structured_mesh` for
+DAGMC dependencies and usage details.

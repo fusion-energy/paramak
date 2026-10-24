@@ -20,6 +20,8 @@ It is also easy to add additional components such as:
 * your own CadQuery shapes / workplanes
 
 These examples show how to make various reactors with different options.
+For structured surface and volume meshing, including divertors, central-column
+layers, and coils, see :doc:`structured_mesh`.
 
 
 .. toctree::
@@ -28,4 +30,5 @@ These examples show how to make various reactors with different options.
    examples_vis
    examples_tokamak
    examples_spherical_tokamak
+   structured_mesh
 
