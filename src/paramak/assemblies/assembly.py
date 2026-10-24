@@ -5,6 +5,8 @@ import warnings
 
 import cadquery as cq
 
+from ..workplanes.divertor import divertor
+
 
 class Assembly(cq.Assembly):
     """Nested assembly of Workplane and Shape objects defining their relative positions."""
@@ -13,6 +15,9 @@ class Assembly(cq.Assembly):
     triangularity = None
     major_radius = None
     minor_radius = None
+    rotation_angle = 180.0
+    plasma_facing_offset = 0.0
+    blanket_layer_names = ()
 
     def _copy_metadata(self, target):
         """Copies tokamak geometry metadata to another Assembly instance."""
@@ -20,6 +25,9 @@ class Assembly(cq.Assembly):
         target.triangularity = self.triangularity
         target.major_radius = self.major_radius
         target.minor_radius = self.minor_radius
+        target.rotation_angle = self.rotation_angle
+        target.plasma_facing_offset = self.plasma_facing_offset
+        target.blanket_layer_names = self.blanket_layer_names
 
     def remove(self, name: str):
         new_assembly = Assembly()
@@ -39,6 +47,56 @@ class Assembly(cq.Assembly):
         for part in self:
             names.append(part[1].split('/')[-1])
         return names
+
+    def add_divertor(
+        self,
+        poloidal_start_angle: float,
+        poloidal_extent_angle: float,
+        divertor_layer_names,
+        divertor_layer_thicknesses,
+    ):
+        """Returns a copy of this model with a layered poloidal divertor.
+
+        The divertor begins at the plasma-facing surface and extends outward.
+        Existing blanket geometry in the divertor region is removed and
+        replaced with the supplied layers. Poloidal angles are measured
+        counter-clockwise from the outboard midplane, in degrees.
+        """
+        if self.major_radius is None or self.minor_radius is None:
+            raise ValueError("add_divertor() requires a Paramak tokamak model")
+        if self.plasma_facing_offset is None:
+            raise ValueError("This model does not contain plasma-facing surface metadata")
+
+        layers = divertor(
+            poloidal_start_angle=poloidal_start_angle,
+            poloidal_extent_angle=poloidal_extent_angle,
+            divertor_layer_names=divertor_layer_names,
+            divertor_layer_thicknesses=divertor_layer_thicknesses,
+            major_radius=self.major_radius,
+            minor_radius=self.minor_radius,
+            triangularity=self.triangularity,
+            elongation=self.elongation,
+            plasma_facing_offset=self.plasma_facing_offset,
+            rotation_angle=self.rotation_angle,
+        )
+        names = self.names()
+        new_names = list(divertor_layer_names)
+        duplicates = set(names).intersection(new_names)
+        if duplicates:
+            raise ValueError(f"Divertor layer names already exist in the model: {sorted(duplicates)}")
+
+        result = Assembly()
+        for obj, full_path, loc, color in self:
+            name = full_path.split("/")[-1]
+            if name in self.blanket_layer_names and isinstance(obj, cq.Shape):
+                for layer in layers:
+                    obj = obj.cut(layer.val())
+            result.add(obj, name=name, color=color, loc=loc)
+        for layer in layers:
+            color = cq.Color(*layer.color) if isinstance(layer.color, tuple) else layer.color
+            result.add(layer, name=layer.name, color=color)
+        self._copy_metadata(result)
+        return result
 
     def rename(self, old: str, new: str):
         """Returns a new Assembly with the part(s) named ``old`` renamed to ``new``.

@@ -147,6 +147,28 @@ def lower_divertor_shape(rotation_angle):
     return cq.Workplane("XZ").polyline(points).close().revolve(rotation_angle)
 
 
+def test_add_divertor_replaces_plasma_facing_blanket_with_named_layers():
+    model = paramak.tokamak_from_plasma(radial_build=POLOIDAL_RADIAL_BUILD, rotation_angle=90)
+    divertor_names = ["lower_divertor_armor", "lower_divertor_heatsink", "lower_divertor_shield"]
+    result = model.add_divertor(
+        poloidal_start_angle=85,
+        poloidal_extent_angle=30,
+        divertor_layer_names=divertor_names,
+        divertor_layer_thicknesses=[0.2, 10, 50],
+    )
+
+    assert all(name in result.names() for name in divertor_names)
+    original_parts = {child.name: child.toCompound() for child in model.children}
+    result_parts = {child.name: child.toCompound() for child in result.children}
+    armor = result_parts[divertor_names[0]]
+
+    assert armor.isValid()
+    assert armor.Volume() > 0
+    assert original_parts["layer_3"].intersect(armor).Volume() > 0
+    assert result_parts["layer_3"].Volume() < original_parts["layer_3"].Volume()
+    assert result_parts["layer_3"].intersect(armor).Volume() == pytest.approx(0, abs=1e-4)
+
+
 def equal_segments(arc_length, number_of_segments, gap, name="module"):
     "a poloidal_build entry of equally sized segments separated by gaps"
     segment = (arc_length - number_of_segments * gap) / number_of_segments

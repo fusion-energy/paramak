@@ -160,9 +160,7 @@ def create_spherical_poloidal_segments(pair, segment_positions, geometry, rotati
     cutting each segment out of the full layer, so the faces of the segments
     are the faces of the full layer."""
     major_radius, minor_radius, triangularity, elongation, column_radius = geometry
-    layer = create_spherical_layer(
-        pair, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column
-    )
+    layer = create_spherical_layer(pair, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column)
 
     # a single segment covering the whole path is the full layer
     if len(segment_positions) == 1 and segment_positions[0][2] - segment_positions[0][1] >= 3.0 - 1e-9:
@@ -625,5 +623,11 @@ def spherical_tokamak(
     my_assembly.triangularity = triangularity
     my_assembly.major_radius = major_radius
     my_assembly.minor_radius = minor_radius
+    first_blanket_pair = next(
+        pair for pair in get_spherical_layer_pairs(radial_build, vertical_build) if pair["type"] == LayerType.SOLID
+    )
+    my_assembly.plasma_facing_offset = spherical_profile(*first_blanket_pair["offsets"])
+    my_assembly.blanket_layer_names = tuple(layer.name for layer in blanket_layers)
+    my_assembly.rotation_angle = rotation_angle
 
     return my_assembly
