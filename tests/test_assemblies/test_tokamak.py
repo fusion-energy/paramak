@@ -197,6 +197,27 @@ def test_opposed_divertors_name_only_the_fully_split_blanket_layer():
     assert math.hypot(inboard_center.x, inboard_center.y) < math.hypot(outboard_center.x, outboard_center.y)
 
 
+def test_sequential_divertors_preserve_parts_in_a_poloidally_segmented_model():
+    arc_length = paramak.poloidal_arc_length(POLOIDAL_RADIAL_BUILD)
+    segment = (arc_length - 4 * 5) / 4
+    first_wall_tiles = [
+        (paramak.LayerType.SOLID, segment, "tile"),
+        (paramak.LayerType.GAP, 5),
+    ] * 4
+    model = paramak.tokamak_from_plasma(
+        radial_build=POLOIDAL_RADIAL_BUILD,
+        poloidal_build=[None, first_wall_tiles, None, None],
+        rotation_angle=90,
+    )
+
+    upper = model.add_divertor(75, 30, ["upper_armor"], [90])
+    result = upper.add_divertor(255, 30, ["lower_armor"], [90])
+
+    assert "upper_armor" in result.names()
+    assert "lower_armor" in result.names()
+    assert all(f"layer_3_tile_{index}" in result.names() for index in range(1, 5))
+
+
 def equal_segments(arc_length, number_of_segments, gap, name="module"):
     "a poloidal_build entry of equally sized segments separated by gaps"
     segment = (arc_length - number_of_segments * gap) / number_of_segments

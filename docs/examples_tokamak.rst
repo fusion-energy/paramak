@@ -120,6 +120,55 @@ Tokamak with divertor
         extra_intersect_shapes=[divertor_lower]
     ).toCompound()
 
+Tokamak with layered divertors
+------------------------------
+
+- ``Assembly.add_divertor`` adds divertor layers to an existing tokamak model. Each divertor layer starts at the plasma-facing surface or the previous divertor layer and extends outward by its corresponding thickness.
+- Poloidal angles are measured counter-clockwise from the outboard midplane: 0 degrees is outboard, 90 is top, 180 is inboard, and 270 is bottom.
+- Each call returns an updated model. Assign that result before adding another divertor so the first one stays in the assembly.
+- Blanket parts fully split into inboard and outboard solids are named accordingly. Parts that remain connected keep their original names.
+
+.. cadquery::
+    :select: result
+    :width: 100%
+    :height: 600px
+
+    import paramak
+
+    result = paramak.tokamak_from_plasma(
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 30),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.SOLID, 120),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.SOLID, 120),
+            (paramak.LayerType.SOLID, 10),
+        ],
+        elongation=2,
+        triangularity=0.55,
+        rotation_angle=180,
+    )
+
+    result = result.add_divertor(
+        poloidal_start_angle=75,
+        poloidal_extent_angle=30,
+        divertor_layer_names=["upper_divertor_armor", "upper_divertor_heatsink", "upper_divertor_shield"],
+        divertor_layer_thicknesses=[10, 30, 50],
+    )
+
+    result = result.add_divertor(
+        poloidal_start_angle=255,
+        poloidal_extent_angle=30,
+        divertor_layer_names=["lower_divertor_armor", "lower_divertor_heatsink", "lower_divertor_shield"],
+        divertor_layer_thicknesses=[10, 30, 50],
+    ).toCompound()
+
 .. _tokamak_custom_divertor:
 
 Tokamak with custom divertor
