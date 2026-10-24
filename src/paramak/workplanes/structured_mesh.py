@@ -31,14 +31,37 @@ def tetrahedralize_revolved_layer(
 ):
     """Create structured tetrahedral volume meshes for swept tokamak layers.
 
-    The input profiles and segment index ranges follow
-    :func:`mesh_revolved_layer`. Each structured hexahedral cell is split into
-    six tetrahedra using a consistent face diagonal, allowing adjacent layers
-    and poloidal segments to share conformal interfaces.
+    Each structured hexahedral cell is split into six tetrahedra using a
+    consistent face diagonal, allowing adjacent layers and poloidal segments
+    to share conformal interfaces.
 
-    Returns one record per segment with ``name``, ``vertices`` and
-    ``tetrahedra`` arrays. ``n_radial`` controls the number of cells through
-    each layer thickness.
+    Parameters
+    ----------
+    inner_profile, outer_profile : array-like, shape (n, 2)
+        Matching ``(R, Z)`` coordinates in centimetres for the layer's inner
+        and outer poloidal boundaries. Coordinates at each index correspond.
+    poloidal_angles : array-like, shape (n,)
+        Poloidal sample angles in degrees. They define the profile ordering.
+    toroidal_angles : array-like, shape (m,)
+        Toroidal sample angles in degrees. Partial tori include both end
+        angles; full tori omit a duplicate 360-degree seam sample.
+    n_radial : int, optional
+        Number of subdivisions from the inner to outer profile. Must be at
+        least 1. Defaults to 1.
+    full_torus : bool, optional
+        If true, connect the last toroidal sample to the first. Otherwise,
+        create end faces at the first and last samples. Defaults to false.
+    segments : sequence of (name, start_index, stop_index), optional
+        Inclusive index ranges into the shared poloidal profile. Each segment
+        produces one mesh record. Adjacent segments should share an endpoint
+        index. If omitted, one closed-poloidal mesh is returned.
+
+    Returns
+    -------
+    list of dict
+        One record per segment. Each record contains ``name``, ``vertices``
+        (``(n_vertices, 3)`` coordinates in centimetres), and ``tetrahedra``
+        (``(n_tetrahedra, 4)`` zero-based vertex indices).
     """
     if not isinstance(n_radial, int) or n_radial < 1:
         raise ValueError("n_radial must be a positive integer")
@@ -143,7 +166,36 @@ def tetrahedralize_center_column_layer(
     full_torus=False,
     name=None,
 ):
-    """Create a structured tetrahedral mesh for an annular cylinder layer."""
+    """Create a structured tetrahedral mesh for a central-column cylinder.
+
+    Parameters
+    ----------
+    inner_radius, outer_radius : float
+        Inner and outer radii in centimetres. The inner radius may be zero;
+        the outer radius must be larger.
+    height : float
+        Full axial height in centimetres. The cylinder is centered on Z=0.
+    toroidal_angles : array-like
+        Toroidal sample angles in degrees. For a partial torus, include both
+        end angles; for a full torus, omit the duplicate seam angle.
+    n_axial : int, optional
+        Number of intervals along the cylinder height. Must be at least 1.
+        Defaults to 16.
+    n_radial : int, optional
+        Number of intervals across the cylinder wall. Must be at least 1.
+        Defaults to 1.
+    full_torus : bool, optional
+        Connect the final toroidal sample to the first when true. Defaults to
+        false.
+    name : str, optional
+        Name stored in the returned mesh record. Defaults to ``None``.
+
+    Returns
+    -------
+    list of dict
+        A one-record list containing ``name``, ``vertices`` (coordinates in
+        centimetres), and ``tetrahedra`` (zero-based vertex indices).
+    """
     values = np.asarray([inner_radius, outer_radius, height], dtype=float)
     if not np.all(np.isfinite(values)) or inner_radius < 0 or outer_radius <= inner_radius or height <= 0:
         raise ValueError("central-column radii and height must be finite and satisfy 0 <= inner < outer, height > 0")
@@ -183,9 +235,22 @@ def tetrahedralize_center_column_layer(
 def merge_tetrahedral_meshes(meshes):
     """Merge named component tetrahedral meshes into a shared-node mesh.
 
-    Returns ``(vertices, connectivity, blocks)`` where ``blocks`` maps names
-    to zero-based tetrahedron indices. Matching coordinates at layer and
-    segment interfaces are welded before export.
+    Parameters
+    ----------
+    meshes : iterable of dict
+        Mesh records. Each record must contain ``vertices`` with shape
+        ``(n, 3)``, ``tetrahedra`` with shape ``(m, 4)``, and may contain a
+        ``name`` used for its output block. Coordinates are in centimetres;
+        connectivity indices are zero-based.
+
+    Returns
+    -------
+    tuple
+        ``(vertices, connectivity, blocks)``. ``vertices`` is an
+        ``(n, 3)`` float array, ``connectivity`` is an ``(m, 4)`` integer
+        array, and ``blocks`` maps each mesh name to the zero-based indices
+        of its tetrahedra. Matching coordinates are welded, and records with
+        the same name are grouped into one block.
     """
     vertex_ids = {}
     coordinates = []
@@ -227,9 +292,30 @@ def merge_tetrahedral_meshes(meshes):
 def remap_mesh_names(meshes, tag_names=None):
     """Return mesh records with optional source-to-export name mappings.
 
-    Unmapped records keep their existing names. Multiple records may map to
-    the same target name; volume mesh merging will then combine them into one
-    Exodus block or DAGMC material group.
+    Parameters
+    ----------
+    meshes : iterable of dict
+        Mesh records containing a ``name`` field. Other record fields are
+        copied unchanged.
+    tag_names : mapping of str to str, optional
+        Mapping from existing mesh names to export names. Names not present
+        in the mapping remain unchanged. Multiple source names may map to one
+        target name, grouping their tetrahedra into one Exodus block or their
+        volumes into one DAGMC material group. Every mapping key must match a
+        name in ``meshes``; values must be non-empty strings.
+
+    Returns
+    -------
+    list of dict
+        Copies of the input records with mapped ``name`` values.
+
+    Raises
+    ------
+    TypeError
+        If ``tag_names`` is not a mapping.
+    ValueError
+        If a key or value is empty or non-string, or a key does not match an
+        input mesh name.
     """
     mesh_records = list(meshes)
     if tag_names is None:
@@ -255,7 +341,22 @@ def remap_mesh_names(meshes, tag_names=None):
 
 
 def surface_meshes_from_tetrahedral_meshes(meshes):
-    """Extract closed, outward-oriented boundary triangles from tetra meshes."""
+    """Extract closed, outward-oriented boundary triangles from tetra meshes.
+
+    Parameters
+    ----------
+    meshes : iterable of dict
+        Tetrahedral mesh records. Each must contain ``name``, ``vertices``
+        with shape ``(n, 3)``, and ``tetrahedra`` with shape ``(m, 4)``.
+        Connectivity is zero-based and coordinates use centimetres.
+
+    Returns
+    -------
+    list of dict
+        Surface records with ``name``, ``vertices`` and outward-oriented
+        ``triangles`` (zero-based vertex indices). Interior faces shared by
+        two tetrahedra are omitted.
+    """
     result = []
     face_patterns = ((1, 2, 3), (0, 3, 2), (0, 1, 3), (0, 2, 1))
     for mesh in meshes:
@@ -301,6 +402,26 @@ def write_tetrahedral_mesh_exodus(vertices, connectivity, blocks, exodus_filenam
 
     ``netCDF4`` is imported only when called. Connectivity and block indices
     are zero-based on input; Exodus stores them one-based.
+
+    Parameters
+    ----------
+    vertices : array-like, shape (n, 3)
+        Mesh node coordinates. Paramak meshes use centimetres.
+    connectivity : array-like, shape (m, 4)
+        Zero-based indices into ``vertices``, with one row per tetrahedron.
+    blocks : mapping of str to array-like
+        Element block names mapped to zero-based indices into
+        ``connectivity``. Every tetrahedron must appear in exactly one block.
+    exodus_filename : str or path-like
+        Destination Exodus/Genesis file path.
+    conversion_factor : float, optional
+        Positive scale multiplied by each coordinate before writing. Use
+        ``1.0`` to preserve centimetres. Defaults to 1.0.
+
+    Returns
+    -------
+    str or path-like
+        The destination path supplied as ``exodus_filename``.
     """
     try:
         import netCDF4
@@ -401,8 +522,9 @@ def mesh_revolved_layer(
     Parameters
     ----------
     inner_profile, outer_profile : array-like, shape (n, 2)
-        Matching ``(R, Z)`` coordinates of the layer's inner and outer
-        poloidal boundaries.  Coordinates at the same index must correspond.
+        Matching ``(R, Z)`` coordinates in centimetres of the layer's inner
+        and outer poloidal boundaries. Coordinates at the same index must
+        correspond.
     poloidal_angles : array-like, shape (n,)
         Poloidal sample angles in degrees.  This is retained as metadata for
         callers; the profiles themselves define the mesh coordinates.
@@ -411,14 +533,15 @@ def mesh_revolved_layer(
         end angles.  For a full torus, omit the duplicate seam angle.
     full_torus : bool, optional
         Join the final toroidal row to the first rather than creating end
-        caps.
+        caps. Set this when the samples span a complete 360-degree torus.
     closed_poloidal : bool, optional
         Join the final poloidal row to the first rather than creating segment
-        end caps.  By default, this is true when ``segments`` is omitted.
+        end caps. By default, this is true when ``segments`` is omitted.
     segments : sequence of (name, start_index, stop_index), optional
-        Inclusive index ranges into the shared poloidal grid.  Adjacent
-        segments should share their boundary index.  If omitted, one mesh is
-        returned for the whole poloidal profile.
+        Inclusive ``(start_index, stop_index)`` ranges into the shared
+        poloidal grid, paired with each segment's name. Adjacent segments
+        should share their boundary index. If omitted, one mesh is returned
+        for the whole poloidal profile.
 
     Returns
     -------
@@ -426,7 +549,8 @@ def mesh_revolved_layer(
         Each entry has ``name``, ``vertices`` (``(n, 3)`` float array), and
         ``triangles`` (``(n, 3)`` integer array).  The meshes are closed: the
         inner and outer swept faces, poloidal segment ends, and (for partial
-        tori) toroidal end caps are included.
+        tori) toroidal end caps are included. Vertex coordinates are in
+        centimetres; angle arrays in the record are in degrees.
 
     Notes
     -----
@@ -545,7 +669,30 @@ def mesh_revolved_layer(
 
 
 def mesh_cad_solid_surface(solid, name, tolerance=0.5, angular_tolerance=0.1):
-    """Tessellate a CAD solid into a closed triangular surface mesh."""
+    """Tessellate a CadQuery solid into a closed triangular surface mesh.
+
+    Parameters
+    ----------
+    solid : cadquery.Shape
+        CAD solid to tessellate. The solid's coordinates are used as-is.
+    name : str
+        Name stored in the returned mesh record and later used as its
+        material or component name.
+    tolerance : float, optional
+        Linear tessellation tolerance in the model's length units (centimetres
+        for Paramak geometry). Smaller values generally create finer meshes.
+        Must be positive. Defaults to 0.5.
+    angular_tolerance : float, optional
+        Angular tessellation tolerance in radians. Must be positive.
+        Defaults to 0.1.
+
+    Returns
+    -------
+    dict
+        Mesh record with ``name``, ``vertices`` (``(n, 3)`` float array), and
+        ``triangles`` (``(m, 3)`` zero-based indices). The returned surface is
+        checked to be closed, two-manifold, and outward-oriented.
+    """
     if not np.isfinite(tolerance) or tolerance <= 0:
         raise ValueError("tolerance must be finite and positive")
     if not np.isfinite(angular_tolerance) or angular_tolerance <= 0:
@@ -587,7 +734,33 @@ def mesh_cad_solid_surface(solid, name, tolerance=0.5, angular_tolerance=0.1):
 
 
 def tetrahedralize_cad_solid(solid, name, mesh_size=10.0):
-    """Create a tetrahedral mesh for an arbitrary CAD solid with Gmsh."""
+    """Create a linear tetrahedral mesh for a CAD solid with Gmsh.
+
+    Parameters
+    ----------
+    solid : cadquery.Shape
+        CAD solid to export temporarily to STEP and tetrahedralize with Gmsh.
+    name : str
+        Name stored in the returned mesh record and used as its material or
+        Exodus block name.
+    mesh_size : float, optional
+        Target Gmsh element edge length in the model's length units
+        (centimetres for Paramak geometry). Must be positive. Defaults to
+        10.0.
+
+    Returns
+    -------
+    dict
+        Mesh record with ``name``, ``vertices`` (``(n, 3)`` float array), and
+        ``tetrahedra`` (``(m, 4)`` zero-based indices).
+
+    Raises
+    ------
+    ImportError
+        If Gmsh or one of its required shared libraries is unavailable.
+    ValueError
+        If Gmsh fails to produce linear tetrahedra for the solid.
+    """
     if not np.isfinite(mesh_size) or mesh_size <= 0:
         raise ValueError("mesh_size must be finite and positive")
     try:
@@ -646,10 +819,23 @@ def tetrahedralize_cad_solid(solid, name, mesh_size=10.0):
 def dagmc_model_from_structured_meshes(meshes, tag_names=None):
     """Create a PyDAGMC model from named, closed structured surface meshes.
 
-    Mesh records are produced by :func:`mesh_revolved_layer`. Coincident
-    vertices and triangles are shared across records, so a triangle appearing
-    in two meshes becomes a material interface. A triangle appearing once is
-    an exterior boundary. ``mesh["name"]`` is used as the material name.
+    Mesh records are produced by :func:`mesh_revolved_layer` or
+    :func:`surface_meshes_from_tetrahedral_meshes`. Coincident vertices and
+    triangles are shared across records, so a triangle appearing in two
+    meshes becomes a material interface. A triangle appearing once is an
+    exterior boundary.
+
+    Parameters
+    ----------
+    meshes : iterable of dict
+        Closed surface mesh records. Each must contain ``name``, ``vertices``
+        with shape ``(n, 3)``, and ``triangles`` with shape ``(m, 3)``.
+        Triangle indices are zero-based. Adjacent volumes must use matching
+        coordinates and triangles at shared interfaces.
+    tag_names : mapping of str to str, optional
+        Optional mapping from mesh record names to H5M material names, without
+        the ``mat:`` prefix. Unmapped names are retained. Multiple mesh names
+        can map to one material group. Every key must match an input mesh name.
 
     PyMOAB and PyDAGMC are imported only when this function is called.
     Coordinates are passed through unchanged; Paramak geometry is expressed
@@ -658,6 +844,11 @@ def dagmc_model_from_structured_meshes(meshes, tag_names=None):
     Returns:
         pydagmc.dagnav.Model: DAGMC model. Call ``write_file(path)`` to save
         it as an H5M file.
+
+    Raises:
+        ImportError: If PyMOAB or PyDAGMC is unavailable.
+        ValueError: If the meshes are invalid or a ``tag_names`` key does not
+            match an input mesh name.
     """
     try:
         from pymoab import core, types
