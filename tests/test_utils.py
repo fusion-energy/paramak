@@ -1099,11 +1099,12 @@ def test_resolve_assembly_color():
     custom_colors = {"first_wall": (0.1, 0.2, 0.3), "divertor": (0.9, 0.1, 0.1)}
     assert resolve_assembly_color("first_wall", colors=custom_colors) == (0.1, 0.2, 0.3)
 
-    # Segment inheritance from custom base layer with alternating parity
-    seg_color_1 = resolve_assembly_color("first_wall_module_1", colors=custom_colors)
-    seg_color_2 = resolve_assembly_color("first_wall_module_2", colors=custom_colors)
-    assert seg_color_2 == (0.1, 0.2, 0.3)
-    assert seg_color_1[0] > seg_color_2[0]
+    # Segments take the color of the layer they were made from
+    assert resolve_assembly_color("first_wall_module_1", colors=custom_colors, layer_name="first_wall") == (0.1, 0.2, 0.3)
+    assert resolve_assembly_color("first_wall_module_2", colors=custom_colors, layer_name="first_wall") == (0.1, 0.2, 0.3)
+    # a color given for the segment itself takes precedence
+    custom_colors["first_wall_module_2"] = (0.7, 0.7, 0.7)
+    assert resolve_assembly_color("first_wall_module_2", colors=custom_colors, layer_name="first_wall") == (0.7, 0.7, 0.7)
 
     # Plasma default
     assert resolve_assembly_color("plasma") == DEFAULT_PLASMA_COLOR

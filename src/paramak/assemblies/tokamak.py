@@ -295,6 +295,10 @@ def create_layers_from_plasma(
 
         if sectors is not None:
             pair_solids = apply_toroidal_sectors(pair_solids, sectors, rotation_angle, toroidal_region_size)
+        # records the radial layer each piece came from, so all the pieces of a
+        # segmented layer are given the same color
+        for solid in pair_solids:
+            solid.layer_name = pair["name"]
         layers.extend(pair_solids)
 
     return layers
@@ -628,11 +632,19 @@ def tokamak(
 
     # cut the core layers with any extra shapes (a no-op when there are none)
     cutters = extra_cut_shapes + extra_intersect_shapes
-    for i, (entry, name) in enumerate(zip(inner_radial_build + blanket_layers, layer_names)):
+    radial_layer_names = []
+    for entry, name in zip(inner_radial_build + blanket_layers, layer_names):
+        # pieces of a segmented layer share the color of the layer they came from
+        radial_layer_name = getattr(entry, "layer_name", name)
+        if radial_layer_name not in radial_layer_names:
+            radial_layer_names.append(radial_layer_name)
+        color = resolve_assembly_color(
+            name, radial_layer_names.index(radial_layer_name), colors, layer_name=radial_layer_name
+        )
         # TODO track the names of shapes, even when extra shapes are made due to splitting
         for cutter in cutters:
             entry = entry.cut(cutter)
-        my_assembly.add(entry, name=name, color=cq.Color(*resolve_assembly_color(name, i, colors)))
+        my_assembly.add(entry, name=name, color=cq.Color(*color))
 
     my_assembly.add(plasma, name="plasma", color=cq.Color(*resolve_assembly_color("plasma", None, colors)))
 

@@ -263,3 +263,49 @@ def test_toroidal_build_rotation_angle_and_empty_sectors():
                 None,
             ],
         )
+
+
+@pytest.mark.parametrize("reactor", ["tokamak", "spherical_tokamak"])
+def test_segmented_layer_pieces_share_the_layer_color(reactor):
+    "every poloidal segment and toroidal sector of a layer has the color of the unsegmented layer"
+
+    function = getattr(paramak, f"{reactor}_from_plasma")
+    radial_build = TOKAMAK_RADIAL_BUILD if reactor == "tokamak" else SPHERICAL_RADIAL_BUILD
+    arc_length_function = paramak.poloidal_arc_length if reactor == "tokamak" else paramak.spherical_poloidal_arc_length
+    poloidal_arc = arc_length_function(radial_build)
+    toroidal_arc = paramak.toroidal_arc_length(radial_build, rotation_angle=90)
+    tiles = [(paramak.LayerType.SOLID, poloidal_arc / 3, "tile")] * 3
+    sectors = [(paramak.LayerType.SOLID, toroidal_arc / 3, "sector")] * 3
+
+    def layer_colors(assembly):
+        return {child.name: child.color.toTuple() for child in assembly.children}
+
+    unsegmented = layer_colors(function(radial_build=radial_build, rotation_angle=90))
+    segmented = layer_colors(
+        function(
+            radial_build=radial_build,
+            rotation_angle=90,
+            poloidal_build=[None, tiles, tiles, None],
+            toroidal_build=[None, sectors, None, None],
+        )
+    )
+    first_wall, blanket = "layer_3", "layer_4"
+    for layer in (first_wall, blanket):
+        pieces = [name for name in segmented if name.startswith(f"{layer}_")]
+        assert len(pieces) > 1
+        assert {segmented[name] for name in pieces} == {unsegmented[layer]}
+    assert unsegmented[first_wall] != unsegmented[blanket]
+
+    # a color given for the layer name applies to all of its pieces
+    custom = layer_colors(
+        function(
+            radial_build=radial_build,
+            rotation_angle=90,
+            poloidal_build=[None, tiles, None, None],
+            toroidal_build=[None, sectors, None, None],
+            colors={first_wall: (0.1, 0.2, 0.3)},
+        )
+    )
+    pieces = [name for name in custom if name.startswith(f"{first_wall}_")]
+    assert len(pieces) == 9
+    assert {custom[name] for name in pieces} == {cq.Color(0.1, 0.2, 0.3).toTuple()}

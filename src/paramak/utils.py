@@ -1,4 +1,3 @@
-import re
 import typing
 from collections import Counter
 from enum import Enum
@@ -360,26 +359,31 @@ DEFAULT_LAYER_COLORS = [
     (0.7, 0.5, 0.8),  # lavender
 ]
 
-DEFAULT_PLASMA_COLOR = (1.0, 0.7, 0.8, 0.4)
+DEFAULT_PLASMA_COLOR = (1.0, 0.7, 0.8, 0.15)
 
 
-def resolve_assembly_color(name: str, layer_index: int | None = None, colors: dict | None = None, default=None):
-    """Resolves RGB(A) color for an assembly component based on custom colors or sensible defaults."""
-    if colors and name in colors:
+def resolve_assembly_color(
+    name: str, layer_index: int | None = None, colors: dict | None = None, layer_name: str | None = None
+):
+    """Returns the RGB(A) color for an assembly part.
+
+    A color given in colors for the part name is used first, then a color
+    given for layer_name (the radial layer the part was made from, so every
+    poloidal segment and toroidal sector of a layer shares the layer color),
+    then a default based on the part name or the layer index.
+
+    Args:
+        name: the name of the part in the assembly.
+        layer_index: the index of the radial layer the part belongs to, used
+            to pick a default layer color.
+        colors: user specified colors keyed by part or layer name.
+        layer_name: the name of the radial layer the part was made from.
+    """
+    colors = colors or {}
+    if name in colors:
         return colors[name]
-    if colors:
-        for prefix in ['_module', '_sector', '_tile', '_segment']:
-            if prefix in name:
-                base = name.split(prefix)[0]
-                if base in colors:
-                    base_color = colors[base]
-                    suffix = name[len(base):]
-                    nums = re.findall(r'\d+', suffix)
-                    if nums and sum(int(n) for n in nums) % 2 == 1:
-                        return tuple(min(1.0, c * 1.35) if i < 3 else c for i, c in enumerate(base_color))
-                    return base_color
-    if default is not None:
-        return default
+    if layer_name is not None and layer_name in colors:
+        return colors[layer_name]
     if name == "plasma":
         return DEFAULT_PLASMA_COLOR
     lower_name = name.lower()
@@ -391,14 +395,6 @@ def resolve_assembly_color(name: str, layer_index: int | None = None, colors: di
         return (0.9, 0.4, 0.4)
     if "poloidal_field_coil" in lower_name or lower_name.startswith("pf"):
         return (0.4, 0.9, 0.4)
-
-    base_color = DEFAULT_LAYER_COLORS[layer_index % len(DEFAULT_LAYER_COLORS)] if layer_index is not None else (0.5, 0.5, 0.5)
-    for prefix in ['_module', '_sector', '_tile', '_segment']:
-        if prefix in name:
-            suffix = name[name.index(prefix):]
-            nums = re.findall(r'\d+', suffix)
-            if nums and sum(int(n) for n in nums) % 2 == 1:
-                return tuple(min(1.0, c * 1.35) if i < 3 else c for i, c in enumerate(base_color))
-            return base_color
-    return base_color
-
+    if layer_index is not None:
+        return DEFAULT_LAYER_COLORS[layer_index % len(DEFAULT_LAYER_COLORS)]
+    return (0.5, 0.5, 0.5)
