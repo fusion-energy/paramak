@@ -15,6 +15,7 @@ from ..utils import (
     get_plasma_index,
     resolve_assembly_color,
     rotate_about_z,
+    sum_before_after_plasma,
     validate_build_lengths,
     validate_plasma_radial_build,
     validate_rotation_angle,
@@ -58,12 +59,16 @@ def count_cylinder_layers(radial_build):
     return before_plasma - after_plasma
 
 
-def create_center_column_shield_cylinders(radial_build, rotation_angle, center_column_shield_height):
+def create_center_column_shield_cylinders(radial_build, vertical_build, rotation_angle):
     cylinders = []
     total_sum = 0
     layer_count = 0
 
     number_of_cylinder_layers = count_cylinder_layers(radial_build)
+    # the vertical_build is ordered from the top, so the column goes from -below
+    # the plasma to +above it, the same as the blanket layers
+    _, below = sum_before_after_plasma(vertical_build)
+    center_column_shield_height = sum(item[1] for item in vertical_build)
 
     for _, item in enumerate(radial_build):
         if item[0] == LayerType.PLASMA:
@@ -87,6 +92,7 @@ def create_center_column_shield_cylinders(radial_build, rotation_angle, center_c
             name=layer_name,
             rotation_angle=rotation_angle,
             height=center_column_shield_height,
+            reference_point=("lower", -below),
         )
         total_sum += thickness
         cylinders.append(cylinder)
@@ -600,9 +606,7 @@ def tokamak(
         rotation_angle=rotation_angle,
     )
 
-    inner_radial_build = create_center_column_shield_cylinders(
-        radial_build, rotation_angle, blanket_rear_wall_end_height
-    )
+    inner_radial_build = create_center_column_shield_cylinders(radial_build, vertical_build, rotation_angle)
 
     # validated before the blanket layers are built so errors are raised quickly
     poloidal_segment_angles = None

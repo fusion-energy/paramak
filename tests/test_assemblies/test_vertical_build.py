@@ -48,3 +48,12 @@ def test_tokamak_needs_an_inboard_entry_for_each_outboard_entry():
     radial_build = [(L.GAP, 50), (L.PLASMA, 300), (L.GAP, 10), (L.SOLID, 20)]
     with pytest.raises(ValueError, match="has 2 entries after the plasma but only 1 before it"):
         paramak.tokamak_from_plasma(radial_build=radial_build, rotation_angle=90)
+
+
+@pytest.mark.parametrize("function, radial_build, _", REACTORS)
+def test_centre_column_lines_up_with_the_blanket(function, radial_build, _):
+    "the centre column covers the same heights as the blanket for an asymmetric vertical_build"
+
+    reactor = function(radial_build=radial_build, vertical_build=VERTICAL_BUILD, rotation_angle=90)
+    centre_column, blanket = reactor.names()[0], reactor.names()[-2]
+    assert z_range(reactor, centre_column) == pytest.approx(z_range(reactor, blanket), abs=1)
