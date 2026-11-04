@@ -1,4 +1,5 @@
-// Fixes mouse rotation in the CadQuery 3D viewer (cadquery.cq_directive).
+// Fixes mouse rotation in the CadQuery 3D viewer (cadquery.cq_directive) and
+// shows the mouse controls when hovering over a view.
 (function () {
   if (typeof interactor === "undefined" || typeof manips === "undefined") {
     return;
@@ -50,4 +51,17 @@
   interact_style.removeMouseManipulator(manips.rot);
   interact_style.addMouseManipulator(rotate);
   manips.rot = rotate;
+
+  // shows the mouse controls when hovering over a view
+  const controls = [
+    "Rotate: left drag",
+    "Zoom: right drag or Ctrl + left drag",
+    "Pan: middle drag",
+    "Roll: Shift + left drag",
+  ].join("\n");
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".cq-vtk").forEach((view) => {
+      view.title = controls;
+    });
+  });
 })();
