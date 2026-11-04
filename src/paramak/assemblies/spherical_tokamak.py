@@ -18,6 +18,7 @@ from ..utils import (
     rotate_about_z,
     sum_before_after_plasma,
     sum_up_to_gap_before_plasma,
+    validate_build_lengths,
     validate_plasma_radial_build,
     validate_rotation_angle,
     validate_rotation_start_angle,
@@ -58,8 +59,9 @@ def get_spherical_layer_pairs(radial_build, vertical_build, layer_count=0):
     cumulative_thickness_lvb = 0
 
     for i, item in enumerate(radial_build[plasma_index_radial + 1 :]):
-        upper_thickness = vertical_build[plasma_index_vertical + 1 + i][1]
-        lower_thickness = vertical_build[plasma_index_vertical - 1 - i][1]
+        # the vertical_build is ordered from the top of the reactor to the bottom
+        upper_thickness = vertical_build[plasma_index_vertical - 1 - i][1]
+        lower_thickness = vertical_build[plasma_index_vertical + 1 + i][1]
         radial_thickness = item[1]
 
         if item[0] == LayerType.GAP:
@@ -344,7 +346,8 @@ def create_center_column_shield_cylinders(radial_build, vertical_build, rotation
     total_sum = 0
     layer_count = 0
 
-    before, _ = sum_before_after_plasma(vertical_build)
+    # the entries after the plasma are below it, so the column starts at -below
+    _, below = sum_before_after_plasma(vertical_build)
     center_column_shield_height = sum([item[1] for item in vertical_build])
 
     for index, item in enumerate(radial_build):
@@ -365,7 +368,7 @@ def create_center_column_shield_cylinders(radial_build, vertical_build, rotation
             name=layer_name,
             rotation_angle=rotation_angle,
             height=center_column_shield_height,
-            reference_point=("lower", -before),
+            reference_point=("lower", -below),
         )
         cylinders.append(cylinder)
         total_sum += item[1]
@@ -489,6 +492,10 @@ def spherical_tokamak(
             reactor. Each tuple should contain a LayerType, a float and the string is optional.
         vertical_build: sequence of tuples containing the vertical build of the
             reactor. Each tuple should contain a LayerType, a float and the string is optional.
+            Entries are ordered from the top of the reactor to the bottom, so
+            the entries before the plasma are above it. There must be at
+            least one entry above and below the plasma for each radial_build
+            entry after the plasma.
         triangularity: The triangularity of the plasma. Defaults to 0.55.
         rotation_angle: The rotation angle of the reactor in degrees. Defaults to 180.0.
         rotation_start_angle: The angle in degrees the reactor starts from, measured
@@ -554,6 +561,7 @@ def spherical_tokamak(
 
     validate_plasma_radial_build(radial_build, "radial_build")
     validate_plasma_radial_build(vertical_build, "vertical_build")
+    validate_build_lengths(radial_build, vertical_build, "spherical_tokamak()", inboard_layers=False)
     validate_vertical_build_names(vertical_build, "spherical_tokamak()")
     validate_rotation_start_angle(rotation_start_angle)
     validate_rotation_angle(rotation_angle)
