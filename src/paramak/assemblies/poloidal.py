@@ -205,3 +205,15 @@ def intersect_with_each_part(shape, parts):
         intersection = shape.intersect(part).val()
         pieces.extend(intersection.Solids())
     return cq.Workplane().add(cq.Compound.makeCompound(pieces))
+
+
+def cut_with_shapes(shape, cutters):
+    """Cuts every solid in shape with each of the cutters and returns the
+    remaining solids together in a compound. Works when shape is a compound
+    of pieces (from intersect_with_each_part) or is empty."""
+    solids = [solid for value in shape.vals() for solid in value.Solids()]
+    cutter_shapes = [value for cutter in cutters for value in cutter.vals()]
+    if not solids or not cutter_shapes:
+        return shape
+    result = cq.Compound.makeCompound(solids).cut(*cutter_shapes)
+    return cq.Workplane().add(cq.Compound.makeCompound(result.Solids()))
