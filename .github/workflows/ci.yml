@@ -24,6 +24,26 @@ jobs:
           python -m pip install ruff
           ruff check .
 
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout actions
+        uses: actions/checkout@v4
+        with:
+          # the full history is needed for setuptools_scm to find the version
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the package and check it with twine
+        run: |
+          python -m pip install build twine
+          python -m build
+          twine check --strict dist/*
+
   test:
     runs-on: ubuntu-latest
     strategy:
