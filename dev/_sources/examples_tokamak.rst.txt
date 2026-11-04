@@ -46,7 +46,7 @@ Tokamak
         ],
         triangularity=0.55,
         rotation_angle=180,
-    ).toCompound()
+    )
 
 
 Tokamak from plasma
@@ -79,7 +79,7 @@ Tokamak from plasma
         elongation=2,
         triangularity=0.55,
         rotation_angle=90,
-    ).toCompound()
+    )
 
 Tokamak with divertor
 ---------------------
@@ -118,7 +118,7 @@ Tokamak with divertor
         triangularity=0.55,
         rotation_angle=180,
         extra_intersect_shapes=[divertor_lower]
-    ).toCompound()
+    )
 
 .. _tokamak_custom_divertor:
 
@@ -166,7 +166,7 @@ Tokamak with custom divertor
         triangularity=0.55,
         rotation_angle=180,
         extra_intersect_shapes=[divertor_lower]
-    ).toCompound()
+    )
 
 Tokamak with poloidal field coils
 ---------------------------------
@@ -220,7 +220,7 @@ Tokamak with poloidal field coils
         triangularity=0.55,
         rotation_angle=180,
         extra_cut_shapes=extra_cut_shapes,
-    ).toCompound()
+    )
 
 Tokamak with toroidal field coils
 ---------------------------------
@@ -264,7 +264,7 @@ Tokamak with toroidal field coils
         triangularity=0.55,
         rotation_angle=180,
         extra_cut_shapes=[tf],
-    ).toCompound()
+    )
 
 
 Tokamak with negative triangularity
@@ -308,7 +308,7 @@ Tokamak with negative triangularity
         ],
         triangularity=-0.55,
         rotation_angle=180,
-    ).toCompound()
+    )
 
 
 Tokamak with poloidal segments
@@ -319,7 +319,7 @@ Tokamak with poloidal segments
 - Entries are None for layers that are not segmented, otherwise a list of segments in the same format as radial_build entries: (paramak.LayerType.SOLID, arc_length, name) for a solid segment (the name is optional) or (paramak.LayerType.GAP, arc_length) for a gap.
 - Arc lengths are measured along the plasma facing surface for every layer, starting at the outboard midplane and going counter clockwise (upwards on the outboard side). Each entry must sum to the arc length returned by paramak.poloidal_arc_length.
 - LayerType.GAP segments produce no solid. Solid segments are named "<layer name>_<segment name>" ("segment" when no name is given), with a "_1", "_2" suffix when a name is repeated within a layer.
-- This example splits only the first wall into tiles. The plasma is removed from the result so the tiles can be seen.
+- This example splits only the first wall into tiles. The semi-transparent plasma allows the tiles on the inboard and outboard wall to be seen.
 
 .. cadquery::
     :select: result
@@ -371,7 +371,7 @@ Tokamak with poloidal segments
         elongation=2.0,
         triangularity=0.55,
         rotation_angle=180,
-    ).remove("plasma").toCompound()
+    )
 
 
 Tokamak with first wall and blanket segments
@@ -379,7 +379,7 @@ Tokamak with first wall and blanket segments
 
 - Cuts between segments follow the normal to the plasma surface and all arc lengths are measured on the same surface, so layers given the same segments line up and the gaps run straight through them.
 - Each layer can also be given different segments, boundaries at the same arc length still line up.
-- This example splits the first wall and the blanket into the same modules. The plasma is removed from the result so the modules can be seen.
+- This example splits the first wall and the blanket into the same modules.
 
 .. cadquery::
     :select: result
@@ -421,7 +421,7 @@ Tokamak with first wall and blanket segments
         elongation=2.0,
         triangularity=0.55,
         rotation_angle=180,
-    ).remove("plasma").toCompound()
+    )
 
 
 Tokamak with toroidal sectors
@@ -432,7 +432,7 @@ Tokamak with toroidal sectors
 - Arc lengths are measured around the plasma facing surface at the outboard midplane, starting at the XZ plane, and each entry must sum to the arc length returned by paramak.toroidal_arc_length.
 - Gaps are slots with parallel sides, so a gap has the same width at every radius.
 - Sectors are named "<layer name>_<sector name>". toroidal_build can be combined with poloidal_build, in which case each poloidal segment is split into sectors.
-- This example splits the first wall and blanket into the same eight sectors, so the gaps run straight through them, and leaves the rear wall as a continuous ring. The plasma is removed from the result so the sectors can be seen.
+- This example splits the first wall and blanket into the same eight sectors, so the gaps run straight through them, and leaves the rear wall as a continuous ring.
 
 .. cadquery::
     :select: result
@@ -480,7 +480,7 @@ Tokamak with toroidal sectors
         elongation=2.0,
         triangularity=0.55,
         rotation_angle=rotation_angle,
-    ).remove("plasma").toCompound()  # plasma removed so the sectors can be seen
+    )
 
 
 Tokamak with first wall tiles in both directions
@@ -488,7 +488,7 @@ Tokamak with first wall tiles in both directions
 
 - poloidal_build and toroidal_build can be used together on the same layer. Each poloidal segment is split into the toroidal sectors, giving a grid of tiles.
 - This example splits the first wall into rows of tiles poloidally and columns of tiles toroidally. Tiles are named "<layer name>_<poloidal name>_<toroidal name>", for example layer_3_tile_row_2_tile_column_5.
-- The plasma is removed from the result so the tiles can be seen.
+- The semi-transparent plasma allows the tiles to be seen.
 
 .. cadquery::
     :select: result
@@ -540,7 +540,7 @@ Tokamak with first wall tiles in both directions
         elongation=2.0,
         triangularity=0.55,
         rotation_angle=rotation_angle,
-    ).remove("plasma").toCompound()  # plasma removed so the tiles can be seen
+    )
 
 
 Tokamak with several customizations
@@ -655,7 +655,7 @@ Tokamak with several customizations
         extra_intersect_shapes=[divertor_lower],
         poloidal_build=[None, poloidal_modules, poloidal_modules, None, None],
         toroidal_build=[None, sectors, sectors, None, None],
-    ).toCompound()
+    )
 
 
 Naming tokamak parts
