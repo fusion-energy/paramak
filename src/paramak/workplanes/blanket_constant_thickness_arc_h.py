@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import cadquery as cq
 
-from ..utils import create_wire_workplane_from_points
+from ..utils import create_wire_workplane_from_points, rotate_to_rotation_start_angle
 
 
 def blanket_constant_thickness_arc_h(
@@ -11,6 +11,7 @@ def blanket_constant_thickness_arc_h(
     inner_lower_point: tuple[float, float],
     thickness: float,
     rotation_angle=90,
+    rotation_start_angle: float = 0.0,
     plane="XZ",
     origin=(0, 0, 0),
     obj=None,
@@ -47,6 +48,7 @@ def blanket_constant_thickness_arc_h(
     wire = create_wire_workplane_from_points(points=points, plane=plane, origin=origin, obj=obj)
 
     solid = wire.revolve(rotation_angle)
+    solid = rotate_to_rotation_start_angle(solid, wire, rotation_start_angle)
     solid.name = name
     solid.color = cq.Color(*color)
     return solid

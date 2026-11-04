@@ -4,12 +4,13 @@ import typing
 
 import cadquery as cq
 
-from ..utils import create_wire_workplane_from_points
+from ..utils import create_wire_workplane_from_points, rotate_to_rotation_start_angle
 
 
 def revolved_shape(
     points: typing.Sequence[tuple[float, float, str]],
     rotation_angle: float = 360.0,
+    rotation_start_angle: float = 0.0,
     name: str = "revolved_shape",
     color: tuple[float, float, float, float | None] = (
         0.5,
@@ -40,6 +41,10 @@ def revolved_shape(
             closed automatically.
         rotation_angle: the angle in degrees to revolve the profile around the
             axis. Defaults to 360.
+        rotation_start_angle: the angle in degrees the revolution starts from,
+            measured around the revolve axis from the workplane. The shape covers
+            rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+            between -360 and 360. Defaults to 0.
         name: the name assigned to the resulting solid.
         color: the RGB(A) color assigned to the resulting solid.
         plane: the plane to build the profile on, e.g. "XZ".
@@ -60,6 +65,7 @@ def revolved_shape(
     wire = create_wire_workplane_from_points(points=closed_points, plane=plane, origin=origin, obj=obj)
 
     solid = wire.revolve(rotation_angle)
+    solid = rotate_to_rotation_start_angle(solid, wire, rotation_start_angle)
     solid.name = name
     solid.color = color
     return solid

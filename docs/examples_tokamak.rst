@@ -429,7 +429,7 @@ Tokamak with toroidal sectors
 
 - The toroidal_build argument splits layers into toroidal sectors, for example sectors separated by assembly gaps.
 - toroidal_build has one entry per radial_build entry after the plasma, ordered from the plasma outwards, like poloidal_build. Entries are None for layers that are not segmented, otherwise a list of segments: (paramak.LayerType.SOLID, arc_length, name) for a sector (the name is optional) or (paramak.LayerType.GAP, width) for a gap.
-- Arc lengths are measured around the plasma facing surface at the outboard midplane, starting at the XZ plane, and each entry must sum to the arc length returned by paramak.toroidal_arc_length.
+- Arc lengths are measured around the plasma facing surface at the outboard midplane, starting at rotation_start_angle (the XZ plane by default), and each entry must sum to the arc length returned by paramak.toroidal_arc_length.
 - Gaps are slots with parallel sides, so a gap has the same width at every radius.
 - Sectors are named "<layer name>_<sector name>". toroidal_build can be combined with poloidal_build, in which case each poloidal segment is split into sectors.
 - This example splits the first wall and blanket into the same eight sectors, so the gaps run straight through them, and leaves the rear wall as a continuous ring.

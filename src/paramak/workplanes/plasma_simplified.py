@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from ..utils import create_wire_workplane_from_points
+from ..utils import create_wire_workplane_from_points, rotate_to_rotation_start_angle
 
 
 def plasma_simplified(
@@ -19,6 +19,7 @@ def plasma_simplified(
         0.0,
     ),
     rotation_angle=90,
+    rotation_start_angle: float = 0.0,
     plane="XZ",
     origin=(0, 0, 0),
     obj=None,
@@ -33,6 +34,10 @@ def plasma_simplified(
         triangularity: the triangularity of the plasma.
         vertical_displacement: the vertical_displacement of the plasma (cm)..
         num_points: number of points to describe the shape.
+        rotation_start_angle: the angle in degrees the revolution starts from,
+            measured around the revolve axis from the workplane. The shape covers
+            rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+            between -360 and 360. Defaults to 0.
     """
     if elongation <= 0:
         raise ValueError(f"elongation must be positive, got {elongation}.")
@@ -69,6 +74,7 @@ def plasma_simplified(
         solid = solid2.union(solid1)  # todo try fuzzy bool tol=0.01
     else:
         solid = wire.revolve(rotation_angle)
+    solid = rotate_to_rotation_start_angle(solid, wire, rotation_start_angle)
     solid.name = name
     solid.color = color
     return solid

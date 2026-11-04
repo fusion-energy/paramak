@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import cadquery as cq
 
-from ..utils import create_wire_workplane_from_points
+from ..utils import create_wire_workplane_from_points, rotate_to_rotation_start_angle
 
 
 def cutting_wedge(
     height: float,
     radius: float,
     rotation_angle: float = 180.0,
+    rotation_start_angle: float = 0.0,
     plane="XZ",
     origin=(0, 0, 0),
     obj=None,
@@ -26,6 +27,10 @@ def cutting_wedge(
         height: the vertical (z axis) height of the coil (cm).
         radius: the horizontal (x axis) width of the coil (cm).
         rotation_angle: Defaults to 180.0.
+        rotation_start_angle: the angle in degrees the revolution starts from,
+            measured around the revolve axis from the workplane. The shape covers
+            rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+            between -360 and 360. Defaults to 0.
     """
 
     points = [
@@ -41,12 +46,7 @@ def cutting_wedge(
     solid = wire.revolve(
         angleDegrees=rotation_angle,
     )
-    # The code can be changed to revolve it in the other direction
-    # solid = wire.revolve(
-    #     angleDegrees=rotation_angle,
-    #     axisStart=cq.Vector(0, 0),
-    #     axisEnd=cq.Vector(0, -1)
-    # )
+    solid = rotate_to_rotation_start_angle(solid, wire, rotation_start_angle)
     solid.name = name
     solid.color = cq.Color(*color)
     return solid

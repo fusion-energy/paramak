@@ -11,6 +11,7 @@ def dished_vacuum_vessel(
     cylinder_height: float = 400,
     thickness: float = 15,
     rotation_angle: float = 90,
+    rotation_start_angle: float = 0.0,
     name: str = "dished_vessel",
     plane="XZ",
 ):
@@ -27,6 +28,10 @@ def dished_vacuum_vessel(
         cylinder_height: the height of the cylindrical section of the vacuum
             vessel.
         thickness: the radial thickness of the vessel in cm.
+        rotation_start_angle: the angle in degrees the revolution starts from,
+            measured around the revolve axis from the workplane. The shape covers
+            rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+            between -360 and 360. Defaults to 0.
     """
     if cylinder_height <= 0:
         raise ValueError(f"cylinder_height must be positive, got {cylinder_height}.")
@@ -87,6 +92,7 @@ def dished_vacuum_vessel(
         thickness=thickness,
         reference_point=("center", center_height),
         rotation_angle=rotation_angle,
+        rotation_start_angle=rotation_start_angle,
         plane=plane,
     )
 
@@ -97,6 +103,7 @@ def dished_vacuum_vessel(
         chord_height=dish_height[1],
         upper_or_lower="upper",
         rotation_angle=rotation_angle,
+        rotation_start_angle=rotation_start_angle,
         plane=plane,
     )
 
@@ -107,6 +114,7 @@ def dished_vacuum_vessel(
         chord_height=dish_height[0],
         upper_or_lower="lower",
         rotation_angle=rotation_angle,
+        rotation_start_angle=rotation_start_angle,
         plane=plane,
     )
 

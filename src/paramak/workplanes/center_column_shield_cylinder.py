@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from ..utils import create_wire_workplane_from_points
+from ..utils import create_wire_workplane_from_points, rotate_to_rotation_start_angle
 
 
 def center_column_shield_cylinder(
@@ -15,6 +15,7 @@ def center_column_shield_cylinder(
         0.0,
     ),
     rotation_angle=90,
+    rotation_start_angle: float = 0.0,
     plane="XZ",
     origin=(0, 0, 0),
     obj=None,
@@ -28,6 +29,10 @@ def center_column_shield_cylinder(
         reference_point: the vertical coordinates to build the vessel from and
             description of the reference point. Can be either the 'center'
             with a numerical value or 'lower' with a numerical value.
+        rotation_start_angle: the angle in degrees the revolution starts from,
+            measured around the revolve axis from the workplane. The shape covers
+            rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+            between -360 and 360. Defaults to 0.
     """
     if height <= 0:
         raise ValueError(f"height must be positive, got {height}.")
@@ -68,6 +73,7 @@ def center_column_shield_cylinder(
     wire = create_wire_workplane_from_points(points=points, plane=plane, origin=origin, obj=obj)
 
     solid = wire.revolve(rotation_angle)
+    solid = rotate_to_rotation_start_angle(solid, wire, rotation_start_angle)
     solid.name = name
     solid.color = color
     return solid

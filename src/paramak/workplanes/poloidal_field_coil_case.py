@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from ..utils import create_wire_workplane_from_points
+from ..utils import create_wire_workplane_from_points, rotate_to_rotation_start_angle
 
 
 def poloidal_field_coil_case(
@@ -11,6 +11,7 @@ def poloidal_field_coil_case(
     name: str = "poloidal_field_coil_case",
     color: tuple[float, float, float, float | None] = (1.0, 1.0, 0.498),
     rotation_angle=90,
+    rotation_start_angle: float = 0.0,
     plane="XZ",
     origin=(0, 0, 0),
     obj=None,
@@ -22,6 +23,10 @@ def poloidal_field_coil_case(
         coil_width: the horizontal (x axis) width of the coil (cm).
         center_point: the center of the coil (x,z) values (cm).
         casing_thickness: the thickness of the coil casing (cm).
+        rotation_start_angle: the angle in degrees the revolution starts from,
+            measured around the revolve axis from the workplane. The shape covers
+            rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+            between -360 and 360. Defaults to 0.
     """
     if coil_height <= 0:
         raise ValueError(f"coil_height must be positive, got {coil_height}.")
@@ -65,6 +70,7 @@ def poloidal_field_coil_case(
 
     inner_solid = inner_wire.revolve(rotation_angle)
     solid = outer_wire.revolve(rotation_angle).cut(inner_solid)
+    solid = rotate_to_rotation_start_angle(solid, outer_wire, rotation_start_angle)
     solid.name = name
     solid.color = color
     return solid

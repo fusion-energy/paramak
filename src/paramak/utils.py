@@ -85,6 +85,38 @@ def create_wire_workplane_from_points(points, plane, origin=(0, 0, 0), obj=None)
     return result
 
 
+def validate_rotation_start_angle(rotation_start_angle):
+    """Checks the rotation_start_angle is between -360 and 360 degrees."""
+    if not -360 <= rotation_start_angle <= 360:
+        raise ValueError(
+            f"rotation_start_angle must be between -360 and 360 degrees, not {rotation_start_angle}."
+        )
+
+
+def rotate_to_rotation_start_angle(solid: Workplane, wire: Workplane, rotation_start_angle: float) -> Workplane:
+    """Rotates a solid revolved from wire by rotation_start_angle degrees
+    about the axis it was revolved around, so the revolution starts at
+    rotation_start_angle instead of 0."""
+    validate_rotation_start_angle(rotation_start_angle)
+    if rotation_start_angle == 0:
+        return solid
+    axis_start = wire.plane.toWorldCoords((0, 0))
+    axis_end = wire.plane.toWorldCoords((0, 1))
+    return solid.rotate(axis_start.toTuple(), axis_end.toTuple(), rotation_start_angle)
+
+
+def rotate_about_z(shape: Workplane, angle: float) -> Workplane:
+    """Rotates a shape about the Z axis by angle degrees, keeping the name
+    and layer_name attributes that paramak sets on the parts of a reactor."""
+    if angle == 0:
+        return shape
+    rotated = shape.rotate((0, 0, 0), (0, 0, 1), angle)
+    for attribute in ("name", "layer_name"):
+        if hasattr(shape, attribute):
+            setattr(rotated, attribute, getattr(shape, attribute))
+    return rotated
+
+
 def rotate_solid(angles: typing.Sequence[float], solid: Workplane) -> Workplane:
     rotation_axis = {
         "X": [(-1, 0, 0), (1, 0, 0)],
