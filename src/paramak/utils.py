@@ -347,3 +347,54 @@ def get_assembly_names(extra_cut_shapes, extra_intersect_shapes, inner_radial_bu
         for i, entry in enumerate(inner_radial_build + blanket_layers)
     ]
     return cut_names, intersect_names, layer_names
+
+
+DEFAULT_LAYER_COLORS = [
+    (0.4, 0.9, 0.4),  # green
+    (0.6, 0.8, 0.6),  # light green
+    (0.1, 0.1, 0.9),  # blue
+    (0.4, 0.4, 0.8),  # medium blue/purple
+    (0.5, 0.5, 0.8),  # slate blue
+    (0.2, 0.7, 0.8),  # cyan
+    (0.7, 0.5, 0.8),  # lavender
+]
+
+DEFAULT_PLASMA_COLOR = (1.0, 0.7, 0.8, 0.25)
+
+
+def resolve_assembly_color(
+    name: str, layer_index: int | None = None, colors: dict | None = None, layer_name: str | None = None
+):
+    """Returns the RGB(A) color for an assembly part.
+
+    A color given in colors for the part name is used first, then a color
+    given for layer_name (the radial layer the part was made from, so every
+    poloidal segment and toroidal sector of a layer shares the layer color),
+    then a default based on the part name or the layer index.
+
+    Args:
+        name: the name of the part in the assembly.
+        layer_index: the index of the radial layer the part belongs to, used
+            to pick a default layer color.
+        colors: user specified colors keyed by part or layer name.
+        layer_name: the name of the radial layer the part was made from.
+    """
+    colors = colors or {}
+    if name in colors:
+        return colors[name]
+    if layer_name is not None and layer_name in colors:
+        return colors[layer_name]
+    if name == "plasma":
+        return DEFAULT_PLASMA_COLOR
+    lower_name = name.lower()
+    if "divertor" in lower_name or "extra_intersect" in lower_name:
+        return (0.8, 0.2, 0.2)
+    if "toroidal_field_coil" in lower_name or lower_name.startswith("tf"):
+        return (0.6, 0.3, 0.4)
+    if "poloidal_field_coil_case" in lower_name:
+        return (0.9, 0.4, 0.4)
+    if "poloidal_field_coil" in lower_name or lower_name.startswith("pf"):
+        return (0.4, 0.9, 0.4)
+    if layer_index is not None:
+        return DEFAULT_LAYER_COLORS[layer_index % len(DEFAULT_LAYER_COLORS)]
+    return (0.5, 0.5, 0.5)

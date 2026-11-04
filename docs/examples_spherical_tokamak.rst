@@ -42,7 +42,7 @@ Spherical tokamak
         ],
         rotation_angle=180,
         triangularity=0.55,
-    ).toCompound()
+    )
 
 
 Spherical tokamak from plasma
@@ -73,7 +73,7 @@ Spherical tokamak from plasma
         elongation=2,
         triangularity=0.55,
         rotation_angle=90,
-    ).toCompound()
+    )
 
 
 Spherical tokamak with divertor
@@ -110,7 +110,7 @@ Spherical tokamak with divertor
         triangularity=0.55,
         rotation_angle=180,
         extra_intersect_shapes=[divertor_lower]
-    ).toCompound()
+    )
 
 .. _spherical_custom_divertor:
 
@@ -160,7 +160,6 @@ Spherical tokamak with custom divertor
 
     # add the divertor plate directly to the assembly so it is not clipped to the blanket
     result.add(divertor, name="divertor", color=cq.Color("red"))
-    result = result.toCompound()
 
 Spherical tokamak with poloidal field coils
 -------------------------------------------
@@ -212,7 +211,7 @@ Spherical tokamak with poloidal field coils
         triangularity=0.55,
         rotation_angle=270,
         extra_cut_shapes=extra_cut_shapes,
-    ).toCompound()
+    )
 
 
 Spherical tokamak with toroidal field coils
@@ -257,7 +256,7 @@ Spherical tokamak with toroidal field coils
         rotation_angle=180,
         triangularity=0.55,
         extra_cut_shapes=[tf_style_1]
-    ).toCompound().translate((700, 0, 0))
+    )
 
     tf_style_2 = paramak.toroidal_field_coil_princeton_d(
         r1=5,
@@ -284,13 +283,12 @@ Spherical tokamak with toroidal field coils
         rotation_angle=180,
         triangularity=0.55,
         extra_cut_shapes=[tf_style_2]
-    ).toCompound().translate((-700, 0, 0))
+    )
 
     import cadquery as cq
     result = cq.Assembly()
-    result.add(result1, name="rectangular_tf")
-    result.add(result2, name="princeton_d_tf")
-    result = result.toCompound()
+    result.add(result1, name="rectangular_tf", loc=cq.Location(cq.Vector(700, 0, 0)))
+    result.add(result2, name="princeton_d_tf", loc=cq.Location(cq.Vector(-700, 0, 0)))
 
 
 Spherical tokamak with negative triangularity
@@ -331,7 +329,7 @@ Spherical tokamak with negative triangularity
         ],
         rotation_angle=180,
         triangularity=-0.55,
-    ).toCompound()
+    )
 
 
 Spherical tokamak with poloidal segments
@@ -341,7 +339,7 @@ Spherical tokamak with poloidal segments
 - poloidal_build has one entry per radial_build entry after the plasma, ordered from the plasma outwards. Entries are None for layers that are not segmented, otherwise a list of segments in the same format as radial_build entries: (paramak.LayerType.SOLID, arc_length, name) for a solid segment (the name is optional) or (paramak.LayerType.GAP, arc_length) for a gap.
 - Arc lengths are measured along the plasma facing surface for every layer. This surface starts where the layer meets the centre column at the bottom, runs along the bottom, up the outboard side and along the top back to the centre column. Each entry must sum to the arc length returned by paramak.spherical_poloidal_arc_length.
 - Cuts are vertical along the top and bottom and follow the normal to the plasma surface on the outboard side, so layers given the same segments line up.
-- This example splits the first wall and blanket into the same modules. The plasma is removed from the result so the modules can be seen.
+- This example splits the first wall and blanket into the same modules.
 
 .. cadquery::
     :select: result
@@ -381,7 +379,7 @@ Spherical tokamak with poloidal segments
         elongation=2.0,
         triangularity=0.55,
         rotation_angle=180,
-    ).remove("plasma").toCompound()
+    )
 
 
 Spherical tokamak with toroidal sectors
@@ -392,7 +390,7 @@ Spherical tokamak with toroidal sectors
 - Arc lengths are measured around the plasma facing surface at the outboard midplane, starting at the XZ plane, and each entry must sum to the arc length returned by paramak.toroidal_arc_length.
 - Gaps are slots with parallel sides, so a gap has the same width at every radius.
 - Sectors are named "<layer name>_<sector name>". toroidal_build can be combined with poloidal_build, in which case each poloidal segment is split into sectors.
-- This example splits the first wall and blanket into the same six sectors, so the gaps run straight through them, and leaves the rear wall as a continuous ring. The plasma is removed from the result so the sectors can be seen.
+- This example splits the first wall and blanket into the same six sectors, so the gaps run straight through them, and leaves the rear wall as a continuous ring.
 
 .. cadquery::
     :select: result
@@ -437,7 +435,7 @@ Spherical tokamak with toroidal sectors
         elongation=2.0,
         triangularity=0.55,
         rotation_angle=rotation_angle,
-    ).remove("plasma").toCompound()  # plasma removed so the sectors can be seen
+    )
 
 
 Naming spherical tokamak parts

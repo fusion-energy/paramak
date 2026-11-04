@@ -1090,3 +1090,32 @@ def test_smooth_profile_is_constant_between_equal_values():
     open_profile = smooth_profile([-90, 0, 90], [10, 30, 10])
     assert float(open_profile(-120)) == pytest.approx(10)  # clipped outside the range
     assert float(open_profile(0)) == pytest.approx(30)
+
+
+def test_resolve_assembly_color():
+    from paramak.utils import DEFAULT_PLASMA_COLOR, resolve_assembly_color
+
+    # Exact match in colors
+    custom_colors = {"first_wall": (0.1, 0.2, 0.3), "divertor": (0.9, 0.1, 0.1)}
+    assert resolve_assembly_color("first_wall", colors=custom_colors) == (0.1, 0.2, 0.3)
+
+    # Segments take the color of the layer they were made from
+    assert resolve_assembly_color("first_wall_module_1", colors=custom_colors, layer_name="first_wall") == (0.1, 0.2, 0.3)
+    assert resolve_assembly_color("first_wall_module_2", colors=custom_colors, layer_name="first_wall") == (0.1, 0.2, 0.3)
+    # a color given for the segment itself takes precedence
+    custom_colors["first_wall_module_2"] = (0.7, 0.7, 0.7)
+    assert resolve_assembly_color("first_wall_module_2", colors=custom_colors, layer_name="first_wall") == (0.7, 0.7, 0.7)
+
+    # Plasma default
+    assert resolve_assembly_color("plasma") == DEFAULT_PLASMA_COLOR
+
+    # Divertor and coils defaults
+    assert resolve_assembly_color("lower_divertor") == (0.8, 0.2, 0.2)
+    assert resolve_assembly_color("tf_coils") == (0.6, 0.3, 0.4)
+    assert resolve_assembly_color("pf_coils") == (0.4, 0.9, 0.4)
+
+    # Default layer index fallback
+    color_l0 = resolve_assembly_color("layer_1", layer_index=0)
+    color_l1 = resolve_assembly_color("layer_2", layer_index=1)
+    assert color_l0 != color_l1
+
