@@ -47,6 +47,8 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
 html_css_files = ["paramak.css"]
+# fixes mouse rotation in the CadQuery 3D viewer, see the comments in the file
+html_js_files = ["cq_viewer.js"]
 
 # TODO add logo
 # html_favicon = "favicon.ico"
