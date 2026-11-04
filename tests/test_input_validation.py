@@ -143,3 +143,19 @@ def test_center_column_accepts_zero_inner_radius():
     paramak.center_column_shield_cylinder(height=100, inner_radius=0, thickness=10)
     with pytest.raises(ValueError, match="inner_radius must be zero or positive"):
         paramak.center_column_shield_cylinder(height=100, inner_radius=-1, thickness=10)
+
+
+@pytest.mark.parametrize("function", [paramak.plasma_simplified, paramak.blanket_from_plasma])
+def test_num_points_must_be_an_integer(function):
+    kwargs = dict(thickness=20, start_angle=-90, stop_angle=90) if function is paramak.blanket_from_plasma else {}
+    with pytest.raises(TypeError, match="num_points must be an integer"):
+        function(num_points=50.5, **kwargs)
+
+
+def test_numpy_numbers_are_accepted():
+    import numpy as np
+
+    paramak.center_column_shield_cylinder(
+        height=np.float64(100), inner_radius=np.int64(10), thickness=np.int64(10), reference_point=("lower", np.int64(0))
+    )
+    paramak.plasma_simplified(num_points=np.int64(50))

@@ -106,6 +106,14 @@ def validate_non_negative(value, name):
         raise ValueError(f"{name} must be zero or positive, got {value}.")
 
 
+def validate_positive_integer(value, name):
+    """Checks value is a whole number above 0."""
+    if isinstance(value, bool) or not isinstance(value, numbers.Integral):
+        raise TypeError(f"{name} must be an integer, not {type(value).__name__}.")
+    if value <= 0:
+        raise ValueError(f"{name} must be positive, got {value}.")
+
+
 def validate_rotation_angle(rotation_angle):
     """Checks the rotation_angle is above 0 and at most 360 degrees."""
     validate_number(rotation_angle, "rotation_angle")

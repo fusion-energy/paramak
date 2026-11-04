@@ -4,6 +4,7 @@ from ..utils import (
     create_wire_workplane_from_points,
     rotate_to_rotation_start_angle,
     validate_non_negative,
+    validate_number,
     validate_positive,
     validate_rotation_angle,
 )
@@ -48,9 +49,7 @@ def center_column_shield_cylinder(
         raise ValueError("reference_point must be a tuple of the form ('center', value) or ('lower', value).")
     if reference_point[0] not in ("center", "lower"):
         raise ValueError(f"reference_point location must be 'center' or 'lower', got '{reference_point[0]}'.")
-    if not isinstance(reference_point[1], (int, float)):
-        raise TypeError(
-            f"reference_point value must be numeric, got {type(reference_point[1]).__name__}.")
+    validate_number(reference_point[1], "reference_point value")
 
     outer_radius = inner_radius + thickness
 
@@ -60,10 +59,6 @@ def center_column_shield_cylinder(
         center_height = reference_point[1] + 0.5 * height
     else:
         raise ValueError('reference_point should be a tuple where the first value is either "center" or "lower"')
-
-    if not isinstance(center_height, (int, float)):
-        msg = f"center_height should be a float or int. Not a {type(center_height)}"
-        raise TypeError(msg)
 
     points = [
         (inner_radius, center_height + height / 2, "straight"),

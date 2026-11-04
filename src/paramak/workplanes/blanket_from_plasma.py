@@ -14,6 +14,7 @@ from ..utils import (
     create_wire_workplane_from_points,
     rotate_to_rotation_start_angle,
     validate_positive,
+    validate_positive_integer,
     validate_rotation_angle,
 )
 
@@ -356,7 +357,7 @@ def blanket_from_plasma(
             rotation_start_angle to rotation_start_angle + rotation_angle. Must be
             between -360 and 360. Defaults to 0.
     """
-    validate_positive(num_points, "num_points")
+    validate_positive_integer(num_points, "num_points")
     validate_rotation_angle(rotation_angle)
     validate_positive(major_radius, "major_radius")
     validate_positive(minor_radius, "minor_radius")
