@@ -1,3 +1,4 @@
+import numbers
 import typing
 from collections import Counter
 from enum import Enum
@@ -85,8 +86,36 @@ def create_wire_workplane_from_points(points, plane, origin=(0, 0, 0), obj=None)
     return result
 
 
+def validate_number(value, name):
+    """Checks value is a real number (bools are not accepted)."""
+    if isinstance(value, bool) or not isinstance(value, numbers.Real):
+        raise TypeError(f"{name} must be a number, not {type(value).__name__}.")
+
+
+def validate_positive(value, name):
+    """Checks value is a number above 0."""
+    validate_number(value, name)
+    if value <= 0:
+        raise ValueError(f"{name} must be positive, got {value}.")
+
+
+def validate_non_negative(value, name):
+    """Checks value is a number of 0 or more."""
+    validate_number(value, name)
+    if value < 0:
+        raise ValueError(f"{name} must be zero or positive, got {value}.")
+
+
+def validate_rotation_angle(rotation_angle):
+    """Checks the rotation_angle is above 0 and at most 360 degrees."""
+    validate_number(rotation_angle, "rotation_angle")
+    if not 0 < rotation_angle <= 360:
+        raise ValueError(f"rotation_angle must be above 0 and at most 360 degrees, not {rotation_angle}.")
+
+
 def validate_rotation_start_angle(rotation_start_angle):
     """Checks the rotation_start_angle is between -360 and 360 degrees."""
+    validate_number(rotation_start_angle, "rotation_start_angle")
     if not -360 <= rotation_start_angle <= 360:
         raise ValueError(
             f"rotation_start_angle must be between -360 and 360 degrees, not {rotation_start_angle}."
@@ -200,8 +229,8 @@ def smooth_profile(angles, values, period=None):
     return profile
 
 
-class ValidationError(Exception):
-    pass
+class ValidationError(ValueError):
+    """Raised when a radial or vertical build is not valid."""
 
 
 def sum_before_after_plasma(vertical_build):
@@ -258,27 +287,36 @@ def validate_divertor_radial_build(radial_build):
         )
 
 
-def validate_plasma_radial_build(radial_build):
-    # TODO should end with layer, not gap
-    valid_strings = {LayerType.GAP, LayerType.SOLID, LayerType.PLASMA}
+def validate_plasma_radial_build(radial_build, build_name="radial_build"):
+    """Checks a radial or vertical build that contains a plasma: every entry
+    is a (LayerType, thickness) or (LayerType, thickness, name) tuple with a
+    positive thickness, and there is one LayerType.PLASMA entry with a
+    LayerType.GAP either side of it."""
+    if not isinstance(radial_build, (list, tuple)) or len(radial_build) == 0:
+        raise ValidationError(f"{build_name} must be a non empty list of tuples, not {radial_build!r}")
     plasma_count = 0
     plasma_index = -1
     for index, item in enumerate(radial_build):
+        if not isinstance(item, (list, tuple)) or len(item) not in (2, 3):
+            raise ValidationError(
+                f"Each {build_name} entry should be a tuple of (LayerType, thickness) or "
+                f"(LayerType, thickness, name), not {item!r} at index {index}"
+            )
         if not isinstance(item[0], LayerType):
-            raise ValidationError("First entry in each radial build Tuple should be a paramak.LayerType")
-        if not isinstance(item[1], (int, float)):
-            raise ValidationError("Second entry in each radial build Tuple should be a Float")
-        if item[0] not in valid_strings:
-            raise ValidationError(f"Invalid entry '{item[0]}' at index {index}")
+            raise ValidationError(f"First entry in each {build_name} Tuple should be a paramak.LayerType")
+        if isinstance(item[1], bool) or not isinstance(item[1], numbers.Real):
+            raise ValidationError(f"Second entry in each {build_name} Tuple should be a Float")
         if item[1] <= 0:
-            raise ValidationError(f"Non-positive value '{item[1]}' at index {index}")
+            raise ValidationError(f"Non-positive value '{item[1]}' at index {index} of the {build_name}")
+        if len(item) == 3 and not isinstance(item[2], str):
+            raise ValidationError(f"Third entry in each {build_name} Tuple should be a str name, not {item[2]!r}")
         if item[0] == LayerType.PLASMA:
             plasma_count += 1
             plasma_index = index
             if plasma_count > 1:
-                raise ValidationError("Multiple LayerType.PLASMA entries found")
+                raise ValidationError(f"Multiple LayerType.PLASMA entries found in the {build_name}")
     if plasma_count != 1:
-        raise ValidationError("LayerType.PLASMA entry not found or found multiple times")
+        raise ValidationError(f"LayerType.PLASMA entry not found or found multiple times in the {build_name}")
     if plasma_index == 0 or plasma_index == len(radial_build) - 1:
         raise ValidationError("LayerType.PLASMA entry must have at least one entry before and after it")
     if radial_build[plasma_index - 1][0] != LayerType.GAP or radial_build[plasma_index + 1][0] != LayerType.GAP:

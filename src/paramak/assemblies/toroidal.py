@@ -7,7 +7,7 @@ from typing import Sequence
 
 import cadquery as cq
 
-from ..utils import LayerType, get_plasma_index
+from ..utils import LayerType, get_plasma_index, validate_rotation_angle
 from .poloidal import (
     DEFAULT_SEGMENT_NAME,
     POLOIDAL_ARC_LENGTH_RTOL,
@@ -31,14 +31,6 @@ def toroidal_reference_radius(radial_build) -> float:
             return radius
         radius += item[1]
     raise ValueError("The radial_build has no LayerType.SOLID entries after the plasma to segment.")
-
-
-def validate_rotation_angle(rotation_angle):
-    """Toroidal segments need a rotation angle above 0 and up to 360 degrees."""
-    if not 0 < rotation_angle <= 360:
-        raise ValueError(
-            f"rotation_angle must be above 0 and at most 360 degrees to use toroidal segments, not {rotation_angle}."
-        )
 
 
 def toroidal_arc_length(

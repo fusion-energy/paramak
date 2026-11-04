@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import numpy as np
 
-from ..utils import create_wire_workplane_from_points, rotate_to_rotation_start_angle
+from ..utils import (
+    create_wire_workplane_from_points,
+    rotate_to_rotation_start_angle,
+    validate_positive,
+    validate_rotation_angle,
+)
 
 
 def plasma_simplified(
@@ -39,12 +44,11 @@ def plasma_simplified(
             rotation_start_angle to rotation_start_angle + rotation_angle. Must be
             between -360 and 360. Defaults to 0.
     """
-    if elongation <= 0:
-        raise ValueError(f"elongation must be positive, got {elongation}.")
-    if major_radius <= 0:
-        raise ValueError(f"major_radius must be positive, got {major_radius}.")
-    if minor_radius <= 0:
-        raise ValueError(f"minor_radius must be positive, got {minor_radius}.")
+    validate_positive(num_points, "num_points")
+    validate_rotation_angle(rotation_angle)
+    validate_positive(elongation, "elongation")
+    validate_positive(major_radius, "major_radius")
+    validate_positive(minor_radius, "minor_radius")
     if minor_radius >= major_radius:
         raise ValueError(f"minor_radius ({minor_radius}) must be less than major_radius ({major_radius}).")
     if not (-1.0 <= triangularity <= 1.0):

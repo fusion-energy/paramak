@@ -411,7 +411,7 @@ def test_first_entry_not_string():
             10,
         ),
     ]
-    with pytest.raises(ValidationError, match="First entry in each radial build Tuple should be a paramak.LayerType"):
+    with pytest.raises(ValidationError, match="First entry in each radial_build Tuple should be a paramak.LayerType"):
         validate_plasma_radial_build(radial_build)
 
 
@@ -458,7 +458,7 @@ def test_second_entry_not_number():
             10,
         ),
     ]
-    with pytest.raises(ValidationError, match="Second entry in each radial build Tuple should be a Float"):
+    with pytest.raises(ValidationError, match="Second entry in each radial_build Tuple should be a Float"):
         validate_plasma_radial_build(radial_build)
 
 
@@ -505,7 +505,7 @@ def test_invalid_string():
             10,
         ),
     ]
-    with pytest.raises(ValidationError, match="First entry in each radial build Tuple should be a paramak.LayerType"):
+    with pytest.raises(ValidationError, match="First entry in each radial_build Tuple should be a paramak.LayerType"):
         validate_plasma_radial_build(radial_build)
 
 
@@ -650,7 +650,7 @@ def test_non_positive_values():
             10,
         ),
     ]
-    with pytest.raises(ValidationError, match="Non-positive value '0' at index 2"):
+    with pytest.raises(ValidationError, match="Non-positive value .0. at index 2 of the radial_build"):
         validate_plasma_radial_build(radial_build)
 
 

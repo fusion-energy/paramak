@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from ..utils import validate_positive, validate_rotation_angle
 from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
 from ..workplanes.constant_thickness_dome import constant_thickness_dome
 
@@ -33,25 +34,15 @@ def dished_vacuum_vessel(
             rotation_start_angle to rotation_start_angle + rotation_angle. Must be
             between -360 and 360. Defaults to 0.
     """
-    if cylinder_height <= 0:
-        raise ValueError(f"cylinder_height must be positive, got {cylinder_height}.")
+    validate_rotation_angle(rotation_angle)
+    validate_positive(cylinder_height, "cylinder_height")
     if len(dish_height) != 2:
         raise ValueError(f"dish_height must contain exactly two values, got {dish_height}.")
-    if any(h <= 0 for h in dish_height):
-        raise ValueError(f"All values in dish_height must be positive, got {dish_height}.")
+    for value in dish_height:
+        validate_positive(value, "dish_height values")
 
-    if not isinstance(radius, (float, int)):
-        raise TypeError(f"radius must be a number. Not {type(radius)}")
-    if radius <= 0:
-        msg = "radius must be a positive number above 0. " f"Not {radius}"
-        raise ValueError(msg)
-
-    if not isinstance(thickness, (float, int)):
-        msg = f"thickness must be a number. Not {type(thickness)}"
-        raise TypeError(msg)
-    if thickness <= 0:
-        msg = f"thickness must be a positive number above 0. Not {thickness}"
-        raise ValueError(msg)
+    validate_positive(radius, "radius")
+    validate_positive(thickness, "thickness")
 
         #
         #          -   -
