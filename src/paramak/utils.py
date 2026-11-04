@@ -1,3 +1,4 @@
+import re
 import typing
 from collections import Counter
 from enum import Enum
@@ -347,3 +348,57 @@ def get_assembly_names(extra_cut_shapes, extra_intersect_shapes, inner_radial_bu
         for i, entry in enumerate(inner_radial_build + blanket_layers)
     ]
     return cut_names, intersect_names, layer_names
+
+
+DEFAULT_LAYER_COLORS = [
+    (0.4, 0.9, 0.4),  # green
+    (0.6, 0.8, 0.6),  # light green
+    (0.1, 0.1, 0.9),  # blue
+    (0.4, 0.4, 0.8),  # medium blue/purple
+    (0.5, 0.5, 0.8),  # slate blue
+    (0.2, 0.7, 0.8),  # cyan
+    (0.7, 0.5, 0.8),  # lavender
+]
+
+DEFAULT_PLASMA_COLOR = (1.0, 0.7, 0.8, 0.4)
+
+
+def resolve_assembly_color(name: str, layer_index: int | None = None, colors: dict | None = None, default=None):
+    """Resolves RGB(A) color for an assembly component based on custom colors or sensible defaults."""
+    if colors and name in colors:
+        return colors[name]
+    if colors:
+        for prefix in ['_module', '_sector', '_tile', '_segment']:
+            if prefix in name:
+                base = name.split(prefix)[0]
+                if base in colors:
+                    base_color = colors[base]
+                    suffix = name[len(base):]
+                    nums = re.findall(r'\d+', suffix)
+                    if nums and sum(int(n) for n in nums) % 2 == 1:
+                        return tuple(min(1.0, c * 1.35) if i < 3 else c for i, c in enumerate(base_color))
+                    return base_color
+    if default is not None:
+        return default
+    if name == "plasma":
+        return DEFAULT_PLASMA_COLOR
+    lower_name = name.lower()
+    if "divertor" in lower_name or "extra_intersect" in lower_name:
+        return (0.8, 0.2, 0.2)
+    if "toroidal_field_coil" in lower_name or lower_name.startswith("tf"):
+        return (0.6, 0.3, 0.4)
+    if "poloidal_field_coil_case" in lower_name:
+        return (0.9, 0.4, 0.4)
+    if "poloidal_field_coil" in lower_name or lower_name.startswith("pf"):
+        return (0.4, 0.9, 0.4)
+
+    base_color = DEFAULT_LAYER_COLORS[layer_index % len(DEFAULT_LAYER_COLORS)] if layer_index is not None else (0.5, 0.5, 0.5)
+    for prefix in ['_module', '_sector', '_tile', '_segment']:
+        if prefix in name:
+            suffix = name[name.index(prefix):]
+            nums = re.findall(r'\d+', suffix)
+            if nums and sum(int(n) for n in nums) % 2 == 1:
+                return tuple(min(1.0, c * 1.35) if i < 3 else c for i, c in enumerate(base_color))
+            return base_color
+    return base_color
+

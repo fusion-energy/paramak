@@ -14,6 +14,7 @@ from ..utils import (
     get_layer_name,
     get_plasma_index,
     get_plasma_value,
+    resolve_assembly_color,
     sum_before_after_plasma,
     sum_up_to_gap_before_plasma,
     validate_unique_assembly_names,
@@ -589,7 +590,7 @@ def spherical_tokamak(
     for entry, name in zip(extra_cut_shapes, cut_names):
         if not isinstance(entry, cq.Workplane):
             raise TypeError(f"extra_cut_shapes should only contain cadquery Workplanes, not {type(entry)}")
-        my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
+        my_assembly.add(entry, name=name, color=cq.Color(*resolve_assembly_color(name, None, colors)))
 
     # builds up the intersect shapes
     segmented = poloidal_build is not None or toroidal_build is not None
@@ -609,17 +610,17 @@ def spherical_tokamak(
                 # makes fusing all the parts unreliable, so the shape is intersected
                 # with each part and the pieces are kept together in a compound
                 reactor_entry_intersection = intersect_with_each_part(entry, inner_radial_build + blanket_layers)
-            my_assembly.add(reactor_entry_intersection, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
+            my_assembly.add(reactor_entry_intersection, name=name, color=cq.Color(*resolve_assembly_color(name, None, colors)))
 
     # cut the core layers with any extra shapes (a no-op when there are none)
     cutters = extra_cut_shapes + extra_intersect_shapes
-    for entry, name in zip(inner_radial_build + blanket_layers, layer_names):
+    for i, (entry, name) in enumerate(zip(inner_radial_build + blanket_layers, layer_names)):
         # TODO track the names of shapes, even when extra shapes are made due to splitting
         for cutter in cutters:
             entry = entry.cut(cutter)
-        my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
+        my_assembly.add(entry, name=name, color=cq.Color(*resolve_assembly_color(name, i, colors)))
 
-    my_assembly.add(plasma, name="plasma", color=cq.Color(*colors.get("plasma", (0.5,0.5,0.5))))
+    my_assembly.add(plasma, name="plasma", color=cq.Color(*resolve_assembly_color("plasma", None, colors)))
 
     my_assembly.elongation = elongation
     my_assembly.triangularity = triangularity
