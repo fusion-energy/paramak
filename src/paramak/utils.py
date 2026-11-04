@@ -359,7 +359,7 @@ DEFAULT_LAYER_COLORS = [
     (0.7, 0.5, 0.8),  # lavender
 ]
 
-DEFAULT_PLASMA_COLOR = (1.0, 0.7, 0.8, 0.15)
+DEFAULT_PLASMA_COLOR = (1.0, 0.7, 0.8, 0.25)
 
 
 def resolve_assembly_color(
