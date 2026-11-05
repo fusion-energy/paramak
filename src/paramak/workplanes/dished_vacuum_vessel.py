@@ -11,9 +11,9 @@ def dished_vacuum_vessel(
     cylinder_height: float = 400,
     thickness: float = 15,
     rotation_angle: float = 90,
-    rotation_start_angle: float = 0.0,
     name: str = "dished_vessel",
     plane="XZ",
+    rotation_start_angle: float = 0.0,
 ):
     """A cylindrical vessel volume with constant thickness with a simple dished
     head. This style of tank head has no knuckle radius or straight flange.

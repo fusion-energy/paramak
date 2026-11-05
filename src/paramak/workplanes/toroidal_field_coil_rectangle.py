@@ -13,7 +13,6 @@ def toroidal_field_coil_rectangle(
     thickness: float = 30,
     distance: float = 20,
     rotation_angle: float = 360.0,
-    rotation_start_angle: float = 0.0,
     name: str = "toroidal_field_coil",
     with_inner_leg: bool = True,
     azimuthal_placement_angles: typing.Sequence[float] | None = None,
@@ -22,6 +21,7 @@ def toroidal_field_coil_rectangle(
     plane: str = "XZ",
     origin: tuple[float, float, float] = (0.0, 0.0, 0.0),
     obj=None,
+    rotation_start_angle: float = 0.0,
 ):
     """Creates a rectangular shaped toroidal field coil.
 

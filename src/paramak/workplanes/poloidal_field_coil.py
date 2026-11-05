@@ -14,10 +14,10 @@ def poloidal_field_coil(
         0.0,
     ),
     rotation_angle=90,
-    rotation_start_angle: float = 0.0,
     plane="XZ",
     origin=(0, 0, 0),
     obj=None,
+    rotation_start_angle: float = 0.0,
 ):
     """A rectangular poloidal field coil.
 

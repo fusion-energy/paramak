@@ -10,7 +10,6 @@ from ..utils import create_wire_workplane_from_points, rotate_to_rotation_start_
 def revolved_shape(
     points: typing.Sequence[tuple[float, float, str]],
     rotation_angle: float = 360.0,
-    rotation_start_angle: float = 0.0,
     name: str = "revolved_shape",
     color: tuple[float, float, float, float | None] = (
         0.5,
@@ -20,6 +19,7 @@ def revolved_shape(
     plane: str = "XZ",
     origin: tuple[float, float, float] = (0, 0, 0),
     obj=None,
+    rotation_start_angle: float = 0.0,
 ) -> cq.Workplane:
     """Creates a solid by revolving an arbitrary closed 2D profile around the axis.
 

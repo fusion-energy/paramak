@@ -307,12 +307,12 @@ def blanket_from_plasma(
         0.0,
     ),
     rotation_angle: float = 90.0,
-    rotation_start_angle: float = 0.0,
     plane="XZ",
     origin=(0, 0, 0),
     obj=None,
     allow_overlapping_shape=False,
     connect_to_center=False,
+    rotation_start_angle: float = 0.0,
 ):
     """A blanket volume created from plasma parameters. It might be necessary
     to increase the num_points when making long but thin geometry with this
