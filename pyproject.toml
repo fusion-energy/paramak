@@ -46,6 +46,8 @@ docs = [
     "sphinx_autodoc_typehints",
     "sphinx",
     "pydata-sphinx-theme",
+    # needed by cadquery.cq_directive
+    "ipython",
     "sphinx_design",
 ]
 
