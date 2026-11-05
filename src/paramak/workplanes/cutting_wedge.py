@@ -14,7 +14,6 @@ def cutting_wedge(
     height: float,
     radius: float,
     rotation_angle: float = 180.0,
-    rotation_start_angle: float = 0.0,
     plane="XZ",
     origin=(0, 0, 0),
     obj=None,
@@ -24,6 +23,7 @@ def cutting_wedge(
         0.0,
     ),
     name="cutting_wedge",
+    rotation_start_angle: float = 0.0,
 ):
     """Creates a wedge from height, radius and rotation angle arguments than
     can be useful for cutting sector models.
