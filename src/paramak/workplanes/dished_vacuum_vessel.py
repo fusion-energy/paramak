@@ -34,14 +34,14 @@ def dished_vacuum_vessel(
         color: the RGB(A) color of the parts. Defaults to (0.0, 0.333, 0.0).
         origin: the origin of the workplane, which moves all the parts.
             Defaults to (0, 0, 0).
-
-    Returns:
-        tuple: the lower dome, cylinder and upper dome as three CadQuery
-        Workplanes. They are kept separate as fusing them can fail.
         rotation_start_angle: the angle in degrees the revolution starts from,
             measured around the revolve axis from the workplane. The shape covers
             rotation_start_angle to rotation_start_angle + rotation_angle. Must be
             between -360 and 360. Defaults to 0.
+
+    Returns:
+        tuple: the lower dome, cylinder and upper dome as three CadQuery
+        Workplanes. They are kept separate as fusing them can fail.
     """
     validate_rotation_angle(rotation_angle)
     validate_positive(cylinder_height, "cylinder_height")

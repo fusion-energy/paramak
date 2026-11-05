@@ -14,9 +14,9 @@ def u_shaped_dome(
     rotation_angle: float = 180,
     name: str = "u_shaped_dome",
     plane="XZ",
+    upper_or_lower="upper",
     color: tuple[float, float, float, float | None] = (0.0, 0.333, 0.0),
     origin=(0, 0, 0),
-    upper_or_lower="upper",
     rotation_start_angle: float = 0.0,
 ):
     """A cylindrical u shaped dome with constant thickness.
@@ -36,13 +36,13 @@ def u_shaped_dome(
         color: the RGB(A) color of the parts. Defaults to (0.0, 0.333, 0.0).
         origin: the origin of the workplane, which moves all the parts.
             Defaults to (0, 0, 0).
-
-    Returns:
-        tuple: the dome and cylinder as two CadQuery Workplanes.
         rotation_start_angle: the angle in degrees the revolution starts from,
             measured around the revolve axis from the workplane. The shape covers
             rotation_start_angle to rotation_start_angle + rotation_angle. Must be
             between -360 and 360. Defaults to 0.
+
+    Returns:
+        tuple: the dome and cylinder as two CadQuery Workplanes.
     """
     validate_positive(dish_height, "dish_height")
     validate_rotation_angle(rotation_angle)
