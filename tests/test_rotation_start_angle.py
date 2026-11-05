@@ -1,3 +1,4 @@
+import inspect
 import cadquery as cq
 import pytest
 
@@ -113,7 +114,10 @@ def test_toroidal_build_starts_at_the_start_angle():
 
 WORKPLANES = [
     (paramak.blanket_from_plasma, dict(thickness=20, start_angle=-90, stop_angle=90)),
-    (paramak.blanket_constant_thickness_arc_h, dict(inner_mid_point=(100, 0), inner_upper_point=(50, 100), inner_lower_point=(50, -100), thickness=10)),
+    (
+        paramak.blanket_constant_thickness_arc_h,
+        dict(inner_mid_point=(100, 0), inner_upper_point=(50, 100), inner_lower_point=(50, -100), thickness=10),
+    ),
     (paramak.center_column_shield_cylinder, dict(height=100, inner_radius=10, thickness=10)),
     (paramak.constant_thickness_dome, dict()),
     (paramak.cutting_wedge, dict(height=10, radius=100)),
@@ -186,3 +190,33 @@ def test_toroidal_field_coils_are_kept_in_the_rotated_sector(function, kwargs):
 def test_rotation_start_angle_out_of_range(function, kwargs, rotation_start_angle):
     with pytest.raises(ValueError, match="rotation_start_angle must be between -360 and 360"):
         function(rotation_start_angle=rotation_start_angle, **kwargs)
+
+
+FUNCTIONS_WITH_ROTATION_START_ANGLE = [
+    getattr(paramak, name)
+    for name in paramak.__all__
+    if callable(getattr(paramak, name))
+    and "rotation_start_angle" in getattr(inspect.signature(getattr(paramak, name)), "parameters", {})
+]
+
+
+def test_functions_with_rotation_start_angle_are_found():
+    assert len(FUNCTIONS_WITH_ROTATION_START_ANGLE) >= 15
+
+
+@pytest.mark.parametrize("function", FUNCTIONS_WITH_ROTATION_START_ANGLE, ids=lambda f: f.__name__)
+def test_rotation_start_angle_comes_after_the_other_arguments(function):
+    """rotation_start_angle was added after the existing arguments so calls
+    that pass the existing arguments by position keep working."""
+    names = [
+        parameter.name
+        for parameter in inspect.signature(function).parameters.values()
+        if parameter.kind in (parameter.POSITIONAL_OR_KEYWORD, parameter.KEYWORD_ONLY)
+    ]
+    assert names[-1] == "rotation_start_angle"
+
+
+def test_positional_arguments_keep_their_meaning():
+    points = [(10, 0, "straight"), (20, 0, "straight"), (20, 10, "straight")]
+    solid = paramak.revolved_shape(points, 90, "legacy_wall")
+    assert solid.name == "legacy_wall"
