@@ -12,10 +12,10 @@ def u_shaped_dome(
     cylinder_height: float = 400,
     thickness: float = 16,
     rotation_angle: float = 180,
-    rotation_start_angle: float = 0.0,
     name: str = "u_shaped_dome",
     plane="XZ",
     upper_or_lower="upper",
+    rotation_start_angle: float = 0.0,
 ):
     """A cylindrical u shaped dome with constant thickness.
 
