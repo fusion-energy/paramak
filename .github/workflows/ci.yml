@@ -88,3 +88,30 @@ jobs:
           python examples/tokamak_from_plasma_with_poloidal_segments.py
           python examples/tokamak_from_plasma_with_toroidal_sectors.py
 
+  transport:
+    # converts the geometry to DAGMC and runs OpenMC on it, openmc is installed
+    # from the shimwell/wheels index as it is not on PyPI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install system packages
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libgl1 libglx-mesa0 libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev libosmesa6 libosmesa6-dev libgles2-mesa-dev libarchive-dev libpangocairo-1.0-0
+
+      - name: checkout actions
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: install dependencies
+        run: |
+          python -m pip install --extra-index-url https://shimwell.github.io/wheels .[tests,transport]
+          # fails here rather than silently skipping the transport tests
+          python -c "import openmc, cad_to_dagmc"
+
+      - name: Run the transport tests
+        run: |
+          pytest -v -k transport -rs
