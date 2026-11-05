@@ -5,6 +5,7 @@ from paramak.utils import (
     ValidationError,
     validate_non_negative,
     validate_number,
+    validate_plasma_radial_build,
     validate_positive,
     validate_rotation_angle,
 )
@@ -54,6 +55,46 @@ def test_validate_rotation_angle_out_of_range(rotation_angle):
         validate_rotation_angle(rotation_angle)
 
 
+@pytest.mark.parametrize("value", [float("nan"), float("inf"), float("-inf")])
+@pytest.mark.parametrize("validator", [validate_number, validate_positive, validate_non_negative])
+def test_validators_reject_non_finite_numbers(validator, value):
+    with pytest.raises(ValueError, match="height must be a finite number"):
+        validator(value, "height")
+
+
+@pytest.mark.parametrize("value", [float("nan"), float("inf"), float("-inf")])
+def test_validate_rotation_angle_rejects_non_finite_numbers(value):
+    with pytest.raises(ValueError, match="rotation_angle must be a finite number"):
+        validate_rotation_angle(value)
+
+
+@pytest.mark.parametrize("value", [float("nan"), float("inf"), float("-inf")])
+def test_validate_plasma_radial_build_rejects_non_finite_thickness(value):
+    radial_build = [
+        (paramak.LayerType.GAP, 1),
+        (paramak.LayerType.PLASMA, 100),
+        (paramak.LayerType.GAP, 1),
+        (paramak.LayerType.SOLID, value),
+    ]
+    with pytest.raises(ValidationError, match=f"Non-finite value '{value}' at index 3 of the radial_build"):
+        validate_plasma_radial_build(radial_build)
+
+
+@pytest.mark.parametrize("function", [paramak.tokamak_from_plasma, paramak.spherical_tokamak_from_plasma])
+@pytest.mark.parametrize("value", [float("nan"), float("inf")])
+def test_reactor_rejects_non_finite_layer_thickness(function, value):
+    radial_build = list(RADIAL_BUILD)
+    radial_build[-2] = (paramak.LayerType.SOLID, value)
+    with pytest.raises(ValueError, match=f"Non-finite value '{value}' at index 10 of the radial_build"):
+        function(radial_build=radial_build, rotation_angle=90)
+
+
+@pytest.mark.parametrize("value", [float("nan"), float("inf")])
+def test_workplane_rejects_non_finite_values(value):
+    with pytest.raises(ValueError, match="height must be a finite number"):
+        paramak.poloidal_field_coil(height=value, width=10, center_point=(100, 0))
+
+
 def test_validation_error_is_a_value_error():
     assert issubclass(ValidationError, ValueError)
 
@@ -94,7 +135,10 @@ def test_reactor_rejects_rotation_angle_out_of_range(function, rotation_angle):
 
 
 WORKPLANES = [
-    (paramak.blanket_constant_thickness_arc_h, dict(inner_mid_point=(100, 0), inner_upper_point=(50, 100), inner_lower_point=(50, -100), thickness=10)),
+    (
+        paramak.blanket_constant_thickness_arc_h,
+        dict(inner_mid_point=(100, 0), inner_upper_point=(50, 100), inner_lower_point=(50, -100), thickness=10),
+    ),
     (paramak.blanket_from_plasma, dict(thickness=20, start_angle=-90, stop_angle=90)),
     (paramak.center_column_shield_cylinder, dict(height=100, inner_radius=10, thickness=10)),
     (paramak.constant_thickness_dome, dict()),
@@ -120,10 +164,18 @@ def test_workplane_rejects_rotation_angle_out_of_range(function, kwargs, rotatio
 @pytest.mark.parametrize(
     "function, kwargs, name",
     [
-        (paramak.blanket_constant_thickness_arc_h, dict(inner_mid_point=(100, 0), inner_upper_point=(50, 100), inner_lower_point=(50, -100), thickness=-10), "thickness"),
+        (
+            paramak.blanket_constant_thickness_arc_h,
+            dict(inner_mid_point=(100, 0), inner_upper_point=(50, 100), inner_lower_point=(50, -100), thickness=-10),
+            "thickness",
+        ),
         (paramak.cutting_wedge, dict(height=0, radius=100), "height"),
         (paramak.cutting_wedge, dict(height=10, radius=-1), "radius"),
-        (paramak.poloidal_field_coil_case, dict(coil_height=10, coil_width=10, casing_thickness=0, center_point=(100, 0)), "casing_thickness"),
+        (
+            paramak.poloidal_field_coil_case,
+            dict(coil_height=10, coil_width=10, casing_thickness=0, center_point=(100, 0)),
+            "casing_thickness",
+        ),
         (paramak.plasma_simplified, dict(num_points=0), "num_points"),
         (paramak.u_shaped_dome, dict(dish_height=-5), "dish_height"),
         (paramak.dished_vacuum_vessel, dict(radius=-300), "radius"),
@@ -156,6 +208,9 @@ def test_numpy_numbers_are_accepted():
     import numpy as np
 
     paramak.center_column_shield_cylinder(
-        height=np.float64(100), inner_radius=np.int64(10), thickness=np.int64(10), reference_point=("lower", np.int64(0))
+        height=np.float64(100),
+        inner_radius=np.int64(10),
+        thickness=np.int64(10),
+        reference_point=("lower", np.int64(0)),
     )
     paramak.plasma_simplified(num_points=np.int64(50))
