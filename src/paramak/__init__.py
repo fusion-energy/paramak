@@ -1,5 +1,6 @@
 from importlib.metadata import version
 
+from .assemblies.paper_reactors import eu_demo_from_2015_paper, iter_from_2020_paper, sparc_from_2020_paper
 from .assemblies.spherical_tokamak import (
     spherical_poloidal_arc_length,
     spherical_tokamak,
@@ -36,11 +37,14 @@ __all__ = [
     "constant_thickness_dome",
     "cutting_wedge",
     "dished_vacuum_vessel",
+    "eu_demo_from_2015_paper",
+    "iter_from_2020_paper",
     "plasma_simplified",
     "poloidal_arc_length",
     "poloidal_field_coil",
     "poloidal_field_coil_case",
     "revolved_shape",
+    "sparc_from_2020_paper",
     "spherical_poloidal_arc_length",
     "spherical_tokamak",
     "spherical_tokamak_from_plasma",

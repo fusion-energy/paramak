@@ -14,3 +14,4 @@ python examples/tokamak_from_plasma_with_toroidal_sectors.py
 python examples/tokamak_minimal.py
 python examples/tokamak_with_pf_magnets.py
 python examples/tokamak_with_pf_tf_magnets_divertor.py
+python examples/reactors_from_papers.py
