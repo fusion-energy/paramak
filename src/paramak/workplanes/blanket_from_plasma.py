@@ -3,9 +3,7 @@ from __future__ import annotations
 import typing
 import warnings
 
-import mpmath
 import numpy as np
-import sympy as sp
 from OCP.Standard import Standard_Failure
 from OCP.StdFail import StdFail_NotDone
 from scipy.interpolate import interp1d
@@ -145,65 +143,14 @@ def create_offset_points(
         list: list of points [[R1, Z1, connection1], [R2, Z2, connection2],
         ...]
     """
-    # create sympy objects and derivatives
-
-    overlapping_shape = False
-    theta_sp = sp.Symbol("theta")
-
-    R_sp, Z_sp = distribution(
-        major_radius,
-        minor_radius,
-        triangularity,
-        elongation,
-        vertical_displacement,
-        theta_sp,
-        pkg=sp,
+    thetas = np.asarray(thetas, dtype=float)
+    # offset may be a user function that only accepts a single angle
+    offsets = np.array([offset(theta) for theta in thetas], dtype=float)
+    R, Z = offset_curve_coordinates(
+        major_radius, minor_radius, triangularity, elongation, vertical_displacement, thetas, offsets
     )
-    R_derivative = sp.diff(R_sp, theta_sp)
-    Z_derivative = sp.diff(Z_sp, theta_sp)
-    points = []
-
-    for theta in thetas:
-        # get local value of derivatives
-        val_R_derivative = float(R_derivative.subs("theta", theta))
-        val_Z_derivative = float(Z_derivative.subs("theta", theta))
-
-        # get normal vector components
-        nx = val_Z_derivative
-        ny = -val_R_derivative
-
-        # normalise normal vector
-        normal_vector_norm = (nx**2 + ny**2) ** 0.5
-        nx /= normal_vector_norm
-        ny /= normal_vector_norm
-
-        # calculate outer points
-        val_R_outer = (
-            distribution(
-                major_radius,
-                minor_radius,
-                triangularity,
-                elongation,
-                vertical_displacement,
-                theta,
-            )[0]
-            + offset(theta) * nx
-        )
-        val_Z_outer = (
-            distribution(
-                major_radius,
-                minor_radius,
-                triangularity,
-                elongation,
-                vertical_displacement,
-                theta,
-            )[1]
-            + offset(theta) * ny
-        )
-        if float(val_R_outer) > 0:
-            points.append([float(val_R_outer), float(val_Z_outer), "spline"])
-        else:
-            overlapping_shape = True
+    points = [[float(r), float(z), "spline"] for r, z in zip(R, Z) if r > 0]
+    overlapping_shape = len(points) < len(thetas)
     return points, overlapping_shape
 
 
@@ -216,7 +163,7 @@ def offset_curve_coordinates(
     thetas,
     offsets,
 ):
-    """Vectorised equivalent of create_offset_points. Returns the R and Z
+    """Returns the R and Z
     coordinates of the plasma surface offset along its outward normal.
 
     Args:
@@ -272,26 +219,19 @@ def poloidal_arc_length_table(
     return thetas, arc_lengths
 
 
-def distribution(major_radius, minor_radius, triangularity, elongation, vertical_displacement, theta, pkg=np):
+def distribution(major_radius, minor_radius, triangularity, elongation, vertical_displacement, theta):
     """Plasma distribution theta in degrees
 
     Args:
-        theta (float or np.array or sp.Symbol): the angle(s) in degrees.
-        pkg (module, optional): Module to use in the function. If sp, as
-            sympy object will be returned. If np, a np.array or a float
-            will be returned. Defaults to np.
+        theta (float or np.array): the angle(s) in degrees.
 
     Returns:
-        (float, float) or (sympy.Add, sympy.Mul) or
-            (numpy.array, numpy.array): The R and Z coordinates of the
-            point with angle theta
+        (float, float) or (numpy.array, numpy.array): The R and Z
+            coordinates of the point with angle theta
     """
-    if pkg == np:
-        theta = np.radians(theta)
-    else:
-        theta = mpmath.radians(theta)
-    R = major_radius + minor_radius * pkg.cos(theta + triangularity * pkg.sin(theta))
-    Z = elongation * minor_radius * pkg.sin(theta) + vertical_displacement
+    theta = np.radians(theta)
+    R = major_radius + minor_radius * np.cos(theta + triangularity * np.sin(theta))
+    Z = elongation * minor_radius * np.sin(theta) + vertical_displacement
     return R, Z
 
 

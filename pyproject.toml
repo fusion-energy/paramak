@@ -21,8 +21,6 @@ keywords = ["python", "geometry", "reactor", "model", "cad", "fusion", "parametr
 dependencies = [
     "cadquery>=2.6.0",
     "numpy",
-    "mpmath",
-    "sympy",
     "scipy",
 ]
 
