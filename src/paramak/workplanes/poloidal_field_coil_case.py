@@ -16,10 +16,10 @@ def poloidal_field_coil_case(
     name: str = "poloidal_field_coil_case",
     color: tuple[float, float, float, float | None] = (1.0, 1.0, 0.498),
     rotation_angle=90,
-    rotation_start_angle: float = 0.0,
     plane="XZ",
     origin=(0, 0, 0),
     obj=None,
+    rotation_start_angle: float = 0.0,
 ):
     """Constant thickness casing for a rectangular poloidal coil.
 
