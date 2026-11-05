@@ -1,3 +1,4 @@
+import math
 import numbers
 import typing
 from collections import Counter
@@ -94,9 +95,12 @@ def create_wire_workplane_from_points(points, plane, origin=(0, 0, 0), obj=None)
 
 
 def validate_number(value, name):
-    """Checks value is a real number (bools are not accepted)."""
+    """Checks value is a finite real number (bools, NaN and infinity are not
+    accepted)."""
     if isinstance(value, bool) or not isinstance(value, numbers.Real):
         raise TypeError(f"{name} must be a number, not {type(value).__name__}.")
+    if not math.isfinite(value):
+        raise ValueError(f"{name} must be a finite number, got {value}.")
 
 
 def validate_positive(value, name):
@@ -132,9 +136,7 @@ def validate_rotation_start_angle(rotation_start_angle):
     """Checks the rotation_start_angle is between -360 and 360 degrees."""
     validate_number(rotation_start_angle, "rotation_start_angle")
     if not -360 <= rotation_start_angle <= 360:
-        raise ValueError(
-            f"rotation_start_angle must be between -360 and 360 degrees, not {rotation_start_angle}."
-        )
+        raise ValueError(f"rotation_start_angle must be between -360 and 360 degrees, not {rotation_start_angle}.")
 
 
 def rotate_to_rotation_start_angle(solid: Workplane, wire: Workplane, rotation_start_angle: float) -> Workplane:
@@ -321,6 +323,8 @@ def validate_plasma_radial_build(radial_build, build_name="radial_build"):
             raise ValidationError(f"First entry in each {build_name} Tuple should be a paramak.LayerType")
         if isinstance(item[1], bool) or not isinstance(item[1], numbers.Real):
             raise ValidationError(f"Second entry in each {build_name} Tuple should be a Float")
+        if not math.isfinite(item[1]):
+            raise ValidationError(f"Non-finite value '{item[1]}' at index {index} of the {build_name}")
         if item[1] <= 0:
             raise ValidationError(f"Non-positive value '{item[1]}' at index {index} of the {build_name}")
         if len(item) == 3 and not isinstance(item[2], str):
@@ -416,12 +420,14 @@ def sum_after_gap_following_plasma(radial_build):
 
     return total_sum
 
+
 def get_layer_name(item, index):
     if len(item) == 2:
         layer_name = f"layer_{index}"
     else:
         layer_name = item[2]
     return layer_name
+
 
 def validate_vertical_build_names(vertical_build, reactor_name):
     named_layers = [item[2] for item in vertical_build if len(item) == 3]
@@ -442,18 +448,19 @@ def validate_unique_assembly_names(names, reactor_name):
             f"The following names are duplicated in the assembly: {duplicate_names}. "
             "Please rename the repeated layers in radial_build."
         )
-    
+
+
 def get_assembly_names(extra_cut_shapes, extra_intersect_shapes, inner_radial_build, blanket_layers):
     cut_names = [
-        f"{name}_{i + 1}" if (name := getattr(entry, 'name', None)) else f"add_extra_cut_shape_{i + 1}"
+        f"{name}_{i + 1}" if (name := getattr(entry, "name", None)) else f"add_extra_cut_shape_{i + 1}"
         for i, entry in enumerate(extra_cut_shapes)
     ]
     intersect_names = [
-        f"{name}_{i + 1}" if (name := getattr(entry, 'name', None)) else f"extra_intersect_shapes_{i + 1}"
+        f"{name}_{i + 1}" if (name := getattr(entry, "name", None)) else f"extra_intersect_shapes_{i + 1}"
         for i, entry in enumerate(extra_intersect_shapes)
     ]
     layer_names = [
-        name if (name := getattr(entry, 'name', None)) else f"layer_{i + 1}"
+        name if (name := getattr(entry, "name", None)) else f"layer_{i + 1}"
         for i, entry in enumerate(inner_radial_build + blanket_layers)
     ]
     return cut_names, intersect_names, layer_names

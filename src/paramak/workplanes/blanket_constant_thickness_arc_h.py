@@ -16,7 +16,6 @@ def blanket_constant_thickness_arc_h(
     inner_lower_point: tuple[float, float],
     thickness: float,
     rotation_angle=90,
-    rotation_start_angle: float = 0.0,
     plane="XZ",
     origin=(0, 0, 0),
     obj=None,
@@ -26,6 +25,7 @@ def blanket_constant_thickness_arc_h(
         0.0,
     ),
     name="blanket_constant_thickness_arc_h",
+    rotation_start_angle: float = 0.0,
 ):
     validate_positive(thickness, "thickness")
     validate_rotation_angle(rotation_angle)
