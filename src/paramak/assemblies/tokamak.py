@@ -401,12 +401,12 @@ def tokamak_from_plasma(
     elongation: float = 2.0,
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
-    rotation_start_angle: float = 0.0,
     extra_cut_shapes: Sequence[cq.Workplane] | None = None,
     extra_intersect_shapes: Sequence[cq.Workplane] | None = None,
     colors: dict | None = None,
     poloidal_build: SegmentBuild | None = None,
     toroidal_build: SegmentBuild | None = None,
+    rotation_start_angle: float = 0.0,
 ) -> Assembly:
     """
     Creates a tokamak fusion reactor from a radial build and plasma parameters.
@@ -501,12 +501,12 @@ def tokamak(
     vertical_build: Sequence[tuple[LayerType, float] | tuple[LayerType, float, str]],
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
-    rotation_start_angle: float = 0.0,
     extra_cut_shapes: Sequence[cq.Workplane] | None = None,
     extra_intersect_shapes: Sequence[cq.Workplane] | None = None,
     colors: dict | None = None,
     poloidal_build: SegmentBuild | None = None,
     toroidal_build: SegmentBuild | None = None,
+    rotation_start_angle: float = 0.0,
 ) -> Assembly:
     """
     Creates a tokamak fusion reactor from a radial and vertical build.

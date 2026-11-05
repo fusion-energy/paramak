@@ -25,10 +25,10 @@ def plasma_simplified(
         0.0,
     ),
     rotation_angle=90,
-    rotation_start_angle: float = 0.0,
     plane="XZ",
     origin=(0, 0, 0),
     obj=None,
+    rotation_start_angle: float = 0.0,
 ):
     """Creates a double null tokamak plasma shape that is controlled by 4
     shaping parameters.

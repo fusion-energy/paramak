@@ -23,8 +23,8 @@ def constant_thickness_dome(
     ),
     origin=(0, 0, 0),
     rotation_angle=90,
-    rotation_start_angle: float = 0.0,
     obj=None,
+    rotation_start_angle: float = 0.0,
     **kwargs,
 ):
     """A cylindrical vessel volume with constant thickness with a simple dished
