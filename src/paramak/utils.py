@@ -52,10 +52,17 @@ def create_wire_workplane_from_instructions(
         if instruction_type == "straight":
             workplane = workplane.polyline(points)
         if instruction_type == "circle":
-            p0 = points[0]
-            p1 = points[1]
-            p2 = points[2]
-            workplane = workplane.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
+            # each arc goes through a start, middle and end point, and the end
+            # of one arc is the start of the next
+            if len(points) < 3 or len(points) % 2 == 0:
+                raise ValueError(
+                    'Each "circle" arc uses two points (its start and middle point) and ends at the next '
+                    f"point, so a run of consecutive circle points must have an even number of points, "
+                    f"got {len(points) - 1} circle points starting at {points[0]}."
+                )
+            workplane = workplane.moveTo(points[0][0], points[0][1])
+            for start in range(0, len(points) - 1, 2):
+                workplane = workplane.threePointArc(points[start + 1], points[start + 2])
 
     return workplane.close()
 
