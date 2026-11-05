@@ -35,7 +35,8 @@ def toroidal_field_coil_rectangle(
         horizontal_start_point: the (x,z) coordinates of the inner upper
             point (cm).
         vertical_mid_point: the (x,z) coordinates of the mid point of the
-            vertical section (cm).
+            vertical section (cm). The coil is symmetric about this height,
+            so the bottom is the horizontal_start_point mirrored about it.
         thickness: the thickness of the toroidal field coil.
         distance: the extrusion distance.
         rotation_angle (float): angle of rotation in degrees, this cuts the resulting shape with a wedge. Useful for sector models.
@@ -66,6 +67,10 @@ def toroidal_field_coil_rectangle(
                 horizontal_start_point y value"
         )
 
+    # the coil is symmetric about the height of the vertical_mid_point, so the
+    # bottom is the top mirrored about that height
+    bottom = 2 * vertical_mid_point[1] - horizontal_start_point[1]
+
     points = [
         horizontal_start_point,  # connection point
         (
@@ -73,21 +78,21 @@ def toroidal_field_coil_rectangle(
             horizontal_start_point[1],
         ),
         (vertical_mid_point[0], horizontal_start_point[1]),
-        (vertical_mid_point[0], -horizontal_start_point[1]),
+        (vertical_mid_point[0], bottom),
         # connection point
         (
             horizontal_start_point[0] + thickness,
-            -horizontal_start_point[1],
+            bottom,
         ),
         # connection point
-        (horizontal_start_point[0], -horizontal_start_point[1]),
+        (horizontal_start_point[0], bottom),
         (
             horizontal_start_point[0],
-            -(horizontal_start_point[1] + thickness),
+            bottom - thickness,
         ),
         (
             vertical_mid_point[0] + thickness,
-            -(horizontal_start_point[1] + thickness),
+            bottom - thickness,
         ),
         (
             vertical_mid_point[0] + thickness,
