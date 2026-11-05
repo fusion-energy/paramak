@@ -281,7 +281,6 @@ def create_layers_from_plasma(
     triangularity,
     elongation,
     rotation_angle,
-    center_column,
     layer_count=0,
     poloidal_segment_angles=None,
     toroidal_sectors=None,
@@ -629,7 +628,6 @@ def tokamak(
         triangularity=triangularity,
         elongation=elongation,
         rotation_angle=rotation_angle,
-        center_column=inner_radial_build[0],  # blanket_cutting_cylinder,
         layer_count=len(inner_radial_build),
         poloidal_segment_angles=poloidal_segment_angles,
         toroidal_sectors=toroidal_sectors,
@@ -660,8 +658,10 @@ def tokamak(
     if len(extra_intersect_shapes) > 0:
         if not segmented:
             # makes a union of the the radial build to use as a base for the intersect shapes
-            reactor_compound = inner_radial_build[0]
-            for entry in inner_radial_build[1:] + blanket_layers:
+            # there may be no centre column cylinders, so all the parts are used
+            all_parts = inner_radial_build + blanket_layers
+            reactor_compound = all_parts[0]
+            for entry in all_parts[1:]:
                 reactor_compound = reactor_compound.union(entry)
 
         # adds the extra intersect shapes to the assembly

@@ -563,6 +563,11 @@ def spherical_tokamak(
     validate_plasma_radial_build(radial_build, "radial_build")
     validate_plasma_radial_build(vertical_build, "vertical_build")
     validate_build_lengths(radial_build, vertical_build, "spherical_tokamak()", inboard_layers=False)
+    if not any(item[0] == LayerType.SOLID for item in radial_build[: get_plasma_index(radial_build)]):
+        raise ValueError(
+            "The radial_build for spherical_tokamak() needs at least one LayerType.SOLID before the "
+            "LayerType.GAP next to the plasma, as the blanket layers are joined to the centre column."
+        )
     validate_vertical_build_names(vertical_build, "spherical_tokamak()")
     validate_rotation_start_angle(rotation_start_angle)
     validate_rotation_angle(rotation_angle)
