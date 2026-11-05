@@ -80,3 +80,8 @@ html_sidebars = {"**": ["sidebar-nav-bs"]}
 
 html_favicon = "_static/favicon.ico"
 master_doc = "index"
+
+# external sites such as anaconda.org are sometimes slow to respond, retry
+# before reporting a link as broken
+linkcheck_timeout = 60
+linkcheck_retries = 3
