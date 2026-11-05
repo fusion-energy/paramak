@@ -45,9 +45,16 @@ def toroidal_field_coil_rectangle(
             rotation_start_angle to rotation_start_angle + rotation_angle. The coils are
             still placed at azimuthal_placement_angles. Must be between -360 and 360.
             Defaults to 0.
+        name: the name of the coil. Defaults to "toroidal_field_coil".
         with_inner_leg: include the inner tf leg. Defaults to True.
-        azimuth_start_angle: The azimuth angle to for the first TF coil which
-            offsets the placement of coils around the azimuthal angle
+        azimuthal_placement_angles: the angles in degrees around the Z axis to
+            place a coil at. Defaults to [0].
+        vertical_displacement: the vertical distance to move the coil (cm).
+            Defaults to 0.
+        color: the RGB(A) color of the coil. Defaults to (0.0, 0.0, 1.0).
+        plane: the plane the coil profile is drawn on. Defaults to "XZ".
+        origin: the origin of the workplane. Defaults to (0.0, 0.0, 0.0).
+        obj: an optional existing CadQuery object to build upon.
     """
     validate_rotation_angle(rotation_angle)
     validate_positive(thickness, "thickness")

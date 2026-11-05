@@ -271,13 +271,12 @@ def blanket_from_plasma(
             a tuple of floats, blanket thickness will vary linearly between the
             two values. If thickness is callable, then the blanket thickness
             will be a function of poloidal angle (in degrees). If thickness is
-            a list of two lists (thicknesses and angles) then these will be
+            a list of two lists (angles and thicknesses) then these will be
             used together with linear interpolation.
         start_angle: the angle in degrees to start the blanket, measured anti
             clockwise from 3 o'clock.
         stop_angle: the angle in degrees to stop the blanket, measured anti
             clockwise from 3 o'clock.
-        plasma: If not None, the parameters of the plasma Object will be used.
         minor_radius: the minor radius of the plasma (cm).
         major_radius: the major radius of the plasma (cm).
         triangularity: the triangularity of the plasma.

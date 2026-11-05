@@ -11,7 +11,7 @@ from ..utils import (
 def poloidal_field_coil_case(
     coil_height: float,
     coil_width: float,
-    casing_thickness: tuple[float, float],
+    casing_thickness: float,
     center_point: tuple[float, float],
     name: str = "poloidal_field_coil_case",
     color: tuple[float, float, float, float | None] = (1.0, 1.0, 0.498),

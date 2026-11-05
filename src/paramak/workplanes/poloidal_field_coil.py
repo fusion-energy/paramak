@@ -11,7 +11,7 @@ from ..utils import (
 def poloidal_field_coil(
     height: float,
     width: float,
-    center_point: float,
+    center_point: tuple[float, float],
     name: str = "poloidal_field_coil",
     color: tuple[float, float, float, float | None] = (
         0.0,
