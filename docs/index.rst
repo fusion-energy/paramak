@@ -37,24 +37,14 @@ The style of reactor, sizes of components, plasma shape and number of radial or 
         </video>
     </div>
 
-Reactors from published papers can also be made, with any rotation angle between 1 and 360 degrees.
+Reactors from published papers (SPARC, ITER and EU DEMO) can also be made, with any rotation angle between 1 and 360 degrees.
 
 .. raw:: html
 
     <div style="display: flex; justify-content: center;">
-        <video width="30%" controls autoplay loop muted playsinline title="SPARC (paramak.sparc_from_2020_paper): based on Figure 4 of Overview of the SPARC tokamak (2020). The animation varies the rotation_angle from 1 to 360 degrees and back.">
-            <source src="_static/sparc_rotation_animation.webm" type="video/webm">
-            <source src="_static/sparc_rotation_animation.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        <video width="30%" controls autoplay loop muted playsinline title="ITER (paramak.iter_from_2020_paper): based on the diagram in ITER Project: International Cooperation and Energy Investment (2020). The animation varies the rotation_angle from 1 to 360 degrees and back.">
-            <source src="_static/iter_rotation_animation.webm" type="video/webm">
-            <source src="_static/iter_rotation_animation.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        <video width="30%" controls autoplay loop muted playsinline title="EU DEMO (paramak.eu_demo_from_2015_paper): based on Figure 2 of Definition of the basic DEMO tokamak geometry based on systems code studies (2015). The animation varies the rotation_angle from 1 to 360 degrees and back.">
-            <source src="_static/eu_demo_rotation_animation.webm" type="video/webm">
-            <source src="_static/eu_demo_rotation_animation.mp4" type="video/mp4">
+        <video width="90%" controls autoplay loop muted playsinline title="Reactors from papers: SPARC (paramak.sparc_from_2020_paper, based on Figure 4 of Overview of the SPARC tokamak, 2020), ITER (paramak.iter_from_2020_paper, based on the diagram in ITER Project: International Cooperation and Energy Investment, 2020) and EU DEMO (paramak.eu_demo_from_2015_paper, based on Figure 2 of Definition of the basic DEMO tokamak geometry based on systems code studies, 2015). The animation varies the rotation_angle of each reactor from 1 to 360 degrees and back.">
+            <source src="_static/paper_reactors_animation.webm" type="video/webm">
+            <source src="_static/paper_reactors_animation.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     </div>

@@ -1,16 +1,16 @@
-"""Makes the reactors from papers animations on the front page of the
-documentation. Each of the SPARC, ITER and EU DEMO reactors is built with a
-rotation_angle that sweeps from 1 to 360 degrees and back again.
+"""Makes the reactors from papers animation on the front page of the
+documentation. The SPARC, ITER and EU DEMO reactors are shown side by side,
+each built with a rotation_angle that sweeps from 1 to 360 degrees and back
+again.
 
-For each reactor this writes an mp4 on a white background and a webm with a
-transparent background (so the animation also works on dark pages), in the
-same format as the tokamak and spherical tokamak animations. The frames are
-built and rendered in parallel processes. Requires Pillow, VTK (installed with
-CadQuery) and ffmpeg.
+This writes an mp4 on a white background and a webm with a transparent
+background (so the animation also works on dark pages), in the same format as
+the tokamak and spherical tokamak animations. Each reactor is built and
+rendered in parallel processes, then the three renders are placed side by side
+in each frame. Requires Pillow, VTK (installed with CadQuery) and ffmpeg.
 """
 
 import os
-import shutil
 from concurrent.futures import ProcessPoolExecutor
 
 import cadquery as cq
@@ -31,6 +31,7 @@ REACTORS = {
 ANGLES = [1, 5] + list(range(10, 361, 10))
 PAUSE_FRAMES = 10  # number of frames to hold the fully built and the thinnest reactors
 ZOOM = 1.2
+WATERMARKED_REACTOR = "iter"  # the watermark goes under the middle reactor only
 
 
 def add_watermark(reactor, z):
@@ -49,6 +50,7 @@ def camera_settings(label):
     bb = reactor.toCompound().BoundingBox()
     # low enough to stay visible below the near side of the complete reactor
     watermark_z = bb.zmin - bb.xmax * 0.9
+    # every reactor is framed as if it had a watermark, so they all line up
     add_watermark(reactor, watermark_z)
     bb = reactor.toCompound().BoundingBox()
     return watermark_z, (bb.xmin, bb.xmax, bb.ymin, bb.ymax, bb.zmin, bb.zmax)
@@ -95,7 +97,8 @@ def build_and_render(job):
     a transparent background (used for the webm)."""
     label, angle, watermark_z, bounds = job
     reactor = REACTORS[label](rotation_angle=angle)
-    add_watermark(reactor, watermark_z)
+    if label == WATERMARKED_REACTOR:
+        add_watermark(reactor, watermark_z)
     file_path, alpha_file_path = frame_paths(label, angle)
     # the difference between renders on black and white backgrounds gives the
     # transparency of each pixel (including anti aliased edges and the partly
@@ -119,19 +122,20 @@ if __name__ == "__main__":
 
     # builds up to 360 degrees, holds, then goes back down to 1 degree and holds
     sequence = ANGLES + [ANGLES[-1]] * PAUSE_FRAMES + ANGLES[::-1] + [ANGLES[0]] * PAUSE_FRAMES
-    for label in REACTORS:
-        for frame, angle in enumerate(sequence):
-            file_path, alpha_file_path = frame_paths(label, angle)
-            shutil.copy(file_path, f"{label}_frame_{frame:03d}.png")
-            shutil.copy(alpha_file_path, f"{label}_alpha_frame_{frame:03d}.png")
+    for frame, angle in enumerate(sequence):
+        # the white and transparent renders of the reactors side by side
+        for index, name in enumerate([f"frame_{frame:03d}.png", f"alpha_frame_{frame:03d}.png"]):
+            panels = [Image.open(frame_paths(label, angle)[index]).convert("RGBA") for label in REACTORS]
+            background = (255, 255, 255, 255) if index == 0 else (0, 0, 0, 0)
+            combined = Image.new("RGBA", (sum(p.width for p in panels), panels[0].height), background)
+            for position, panel in enumerate(panels):
+                combined.paste(panel, (position * panel.width, 0))
+            combined.save(name)
 
-        # mp4 on a white background, and webm with a transparent background for
-        # browsers that support it
-        os.system(
-            f"ffmpeg -y -r 10 -i {label}_frame_%03d.png -c:v libx264 -r 30 -pix_fmt yuv420p "
-            f"{label}_rotation_animation.mp4"
-        )
-        os.system(
-            f"ffmpeg -y -r 10 -i {label}_alpha_frame_%03d.png -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 0 -crf 32 "
-            f"-r 30 {label}_rotation_animation.webm"
-        )
+    # mp4 on a white background, and webm with a transparent background for
+    # browsers that support it
+    os.system("ffmpeg -y -r 10 -i frame_%03d.png -c:v libx264 -r 30 -pix_fmt yuv420p paper_reactors_animation.mp4")
+    os.system(
+        "ffmpeg -y -r 10 -i alpha_frame_%03d.png -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 0 -crf 32 -r 30 "
+        "paper_reactors_animation.webm"
+    )
