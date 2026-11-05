@@ -117,24 +117,10 @@ def constant_thickness_dome(
 
     points = [point_1, point_2, point_3, point_6, point_7]
 
-    radius_of_sphere = ((math.pow(chord_width, 2)) + (4.0 * math.pow(chord_height, 2))) / (8 * chord_height)
+    # the spheres and wedge are built on the same workplane (plane and origin) as the cutters
+    big_sphere = cq.Workplane(plane, origin=origin).moveTo(center_point[0], center_point[1]).sphere(radius_of_sphere + thickness)
 
-    # TODO set to 0 for now, add ability to shift the center of the chord left and right
-    chord_center = (0, chord_center_height)
-
-    # far_side is center on x and
-    if upper_or_lower == "upper":
-        center_point = (chord_center[0], chord_center[1] + chord_height - radius_of_sphere)
-        far_side = (center_point[0], center_point[1] - (radius_of_sphere + thickness))
-    elif upper_or_lower == "lower":
-        center_point = (chord_center[0], chord_center[1] - chord_height + radius_of_sphere)
-        far_side = (center_point[0], center_point[1] + radius_of_sphere + thickness)
-    else:
-        raise ValueError("upper_or_lower argument must be set to either 'upper' or 'lower'")
-
-    big_sphere = cq.Workplane(plane).moveTo(center_point[0], center_point[1]).sphere(radius_of_sphere + thickness)
-
-    small_sphere = cq.Workplane(plane).moveTo(center_point[0], center_point[1]).sphere(radius_of_sphere)
+    small_sphere = cq.Workplane(plane, origin=origin).moveTo(center_point[0], center_point[1]).sphere(radius_of_sphere)
 
     wire = create_wire_workplane_from_points(
         points=(
@@ -176,6 +162,7 @@ def constant_thickness_dome(
         rotation_angle=rotation_angle,
         rotation_start_angle=rotation_start_angle,
         plane=plane,
+        origin=origin,
     )
 
     cap = cap.cut(outer_cylinder_cutter).cut(inner_cylinder_cutter)
