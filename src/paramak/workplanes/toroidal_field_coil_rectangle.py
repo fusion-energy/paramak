@@ -146,6 +146,7 @@ def toroidal_field_coil_rectangle(
             radius=radius,
             rotation_angle=rotation_angle,
             rotation_start_angle=rotation_start_angle,
+            origin=origin,
         )
         solid = solid.intersect(cutting_shape)
 

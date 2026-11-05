@@ -255,6 +255,7 @@ def toroidal_field_coil_princeton_d(
             radius=radius,
             rotation_angle=rotation_angle,
             rotation_start_angle=rotation_start_angle,
+            origin=origin,
         )
         solid = solid.intersect(cutting_shape)
 

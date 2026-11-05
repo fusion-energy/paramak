@@ -25,7 +25,6 @@ def constant_thickness_dome(
     rotation_angle=90,
     rotation_start_angle: float = 0.0,
     obj=None,
-    **kwargs,
 ):
     """A cylindrical vessel volume with constant thickness with a simple dished
     head. This style of tank head has no knuckle radius or straight flange. The
@@ -169,5 +168,5 @@ def constant_thickness_dome(
     cap = cap.intersect(cutter)
 
     cap.name = name
-    cap.color = cq.Color(*color)
+    cap.color = color
     return cap
