@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.assemblies.paper_reactors &#8212; Paramak 0.11.1.dev4+g022f019f3 documentation</title>
+    <title>paramak.assemblies.paper_reactors &#8212; Paramak 0.11.1.dev5+g7576b115c documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=f75f8a40"></script>
+    <script src="../../../_static/documentation_options.js?v=c29f9679"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -228,7 +228,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.11.1.dev4+g022f019f3" />
+  <meta name="docsearch:version" content="0.11.1.dev5+g7576b115c" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -1363,57 +1363,6 @@ function render(data, parent_element, ratio){
     <span class="p">)</span>
     <span class="n">divertor</span> <span class="o">=</span> <span class="n">_revolve</span><span class="p">(</span><span class="n">divertor_points</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">)</span>
 
-    <span class="c1"># the space inside the vacuum vessel, which the blanket and divertor sit in</span>
-    <span class="n">vessel_cavity_points</span> <span class="o">=</span> <span class="n">_spline</span><span class="p">(</span>
-        <span class="p">[</span>
-            <span class="p">(</span><span class="mf">574.13</span><span class="p">,</span> <span class="mf">101.11</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">574.69</span><span class="p">,</span> <span class="mf">165.88</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">576.22</span><span class="p">,</span> <span class="mf">183.81</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">578.25</span><span class="p">,</span> <span class="mf">276.25</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">592.98</span><span class="p">,</span> <span class="mf">356.14</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">618.39</span><span class="p">,</span> <span class="mf">410.17</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">660.06</span><span class="p">,</span> <span class="mf">462.71</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">711.89</span><span class="p">,</span> <span class="mf">503.99</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">763.71</span><span class="p">,</span> <span class="mf">528.24</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">800.81</span><span class="p">,</span> <span class="mf">535.07</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">957.82</span><span class="p">,</span> <span class="mf">529.16</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1009.65</span><span class="p">,</span> <span class="mf">511.73</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1061.48</span><span class="p">,</span> <span class="mf">484.36</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1113.31</span><span class="p">,</span> <span class="mf">445.67</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1160.05</span><span class="p">,</span> <span class="mf">396.81</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1196.13</span><span class="p">,</span> <span class="mf">343.45</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1221.54</span><span class="p">,</span> <span class="mf">290.07</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1239.32</span><span class="p">,</span> <span class="mf">234.98</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1251.52</span><span class="p">,</span> <span class="mf">177.4</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1259.9</span><span class="p">,</span> <span class="mf">119.15</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1262.9</span><span class="p">,</span> <span class="mf">91.48</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1257.76</span><span class="p">,</span> <span class="o">-</span><span class="mf">69.66</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1248.47</span><span class="p">,</span> <span class="o">-</span><span class="mf">117.97</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1236.27</span><span class="p">,</span> <span class="o">-</span><span class="mf">162.39</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1219.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">215.31</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1198.16</span><span class="p">,</span> <span class="o">-</span><span class="mf">267.66</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1171.74</span><span class="p">,</span> <span class="o">-</span><span class="mf">320.87</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1140.74</span><span class="p">,</span> <span class="o">-</span><span class="mf">372.28</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1102.63</span><span class="p">,</span> <span class="o">-</span><span class="mf">425.0</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1058.94</span><span class="p">,</span> <span class="o">-</span><span class="mf">476.29</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">1022.86</span><span class="p">,</span> <span class="o">-</span><span class="mf">523.16</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">998.47</span><span class="p">,</span> <span class="o">-</span><span class="mf">582.32</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">961.88</span><span class="p">,</span> <span class="o">-</span><span class="mf">633.83</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">788.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">641.84</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">746.44</span><span class="p">,</span> <span class="o">-</span><span class="mf">626.41</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">694.61</span><span class="p">,</span> <span class="o">-</span><span class="mf">595.17</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">646.34</span><span class="p">,</span> <span class="o">-</span><span class="mf">549.17</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">610.77</span><span class="p">,</span> <span class="o">-</span><span class="mf">496.43</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">588.92</span><span class="p">,</span> <span class="o">-</span><span class="mf">442.35</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">578.15</span><span class="p">,</span> <span class="o">-</span><span class="mf">383.5</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">577.7</span><span class="p">,</span> <span class="o">-</span><span class="mf">343.84</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">576.22</span><span class="p">,</span> <span class="o">-</span><span class="mf">254.97</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">576.22</span><span class="p">,</span> <span class="o">-</span><span class="mf">201.97</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">576.22</span><span class="p">,</span> <span class="o">-</span><span class="mf">148.97</span><span class="p">),</span>
-            <span class="p">(</span><span class="mf">576.22</span><span class="p">,</span> <span class="o">-</span><span class="mf">95.98</span><span class="p">),</span>
-        <span class="p">]</span>
-    <span class="p">)</span>
-
     <span class="n">vessel_outer_points</span> <span class="o">=</span> <span class="n">_spline</span><span class="p">(</span>
         <span class="p">[</span>
             <span class="p">(</span><span class="mf">515.49</span><span class="p">,</span> <span class="mf">96.83</span><span class="p">),</span>
@@ -1469,16 +1418,15 @@ function render(data, parent_element, ratio){
             <span class="p">(</span><span class="mf">516.75</span><span class="p">,</span> <span class="o">-</span><span class="mf">107.41</span><span class="p">),</span>
         <span class="p">]</span>
     <span class="p">)</span>
-    <span class="c1"># the blanket and divertor outlines from the figure poke slightly outside</span>
-    <span class="c1"># the cavity in places and nearly touch it elsewhere. Adding them, with a</span>
-    <span class="c1"># 1 cm gap, to the cavity stops the vessel overlapping or touching them,</span>
-    <span class="c1"># as nearly coincident spline surfaces do not imprint reliably for</span>
-    <span class="c1"># neutronics. The vessel profile is made with 2D booleans and then</span>
-    <span class="c1"># revolved, which is more robust than 3D booleans on the revolved shapes.</span>
-    <span class="n">cavity_face</span> <span class="o">=</span> <span class="n">_profile_face</span><span class="p">(</span><span class="n">vessel_cavity_points</span><span class="p">)</span><span class="o">.</span><span class="n">fuse</span><span class="p">(</span>
-        <span class="n">_profile_face</span><span class="p">(</span><span class="n">blanket_points</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">_profile_face</span><span class="p">(</span><span class="n">divertor_points</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-    <span class="p">)</span>
-    <span class="n">vessel_face</span> <span class="o">=</span> <span class="n">_single_face</span><span class="p">(</span><span class="n">_profile_face</span><span class="p">(</span><span class="n">vessel_outer_points</span><span class="p">)</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">_single_face</span><span class="p">(</span><span class="n">cavity_face</span><span class="o">.</span><span class="n">clean</span><span class="p">()))</span><span class="o">.</span><span class="n">clean</span><span class="p">())</span>
+    <span class="c1"># the vessel sits directly against the blanket and divertor, so the space</span>
+    <span class="c1"># inside it is the outline of the two (their fused face with the hole for</span>
+    <span class="c1"># the plasma filled in). The vessel then shares its inner surfaces with</span>
+    <span class="c1"># them and imprints onto them. The vessel profile is made with 2D booleans</span>
+    <span class="c1"># and then revolved, which is more robust than 3D booleans on the</span>
+    <span class="c1"># revolved shapes.</span>
+    <span class="n">blanket_and_divertor</span> <span class="o">=</span> <span class="n">_single_face</span><span class="p">(</span><span class="n">_profile_face</span><span class="p">(</span><span class="n">blanket_points</span><span class="p">)</span><span class="o">.</span><span class="n">fuse</span><span class="p">(</span><span class="n">_profile_face</span><span class="p">(</span><span class="n">divertor_points</span><span class="p">))</span><span class="o">.</span><span class="n">clean</span><span class="p">())</span>
+    <span class="n">cavity_face</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Face</span><span class="o">.</span><span class="n">makeFromWires</span><span class="p">(</span><span class="n">blanket_and_divertor</span><span class="o">.</span><span class="n">outerWire</span><span class="p">())</span>
+    <span class="n">vessel_face</span> <span class="o">=</span> <span class="n">_single_face</span><span class="p">(</span><span class="n">_profile_face</span><span class="p">(</span><span class="n">vessel_outer_points</span><span class="p">)</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">cavity_face</span><span class="p">)</span><span class="o">.</span><span class="n">clean</span><span class="p">())</span>
     <span class="n">vessel</span> <span class="o">=</span> <span class="n">_revolve_face</span><span class="p">(</span><span class="n">vessel_face</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">)</span>
 
     <span class="n">pf_coil_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">204</span><span class="p">,</span> <span class="mi">141</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">95</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">121</span><span class="p">]</span>
