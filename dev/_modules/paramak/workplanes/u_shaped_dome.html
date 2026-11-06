@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.workplanes.u_shaped_dome &#8212; Paramak 0.10.1.dev14+g41d16b05b documentation</title>
+    <title>paramak.workplanes.u_shaped_dome &#8212; Paramak 0.10.1.dev15+g469cef7e9 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=bde42e5d"></script>
+    <script src="../../../_static/documentation_options.js?v=eae266c5"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev14+g41d16b05b" />
+  <meta name="docsearch:version" content="0.10.1.dev15+g469cef7e9" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -580,9 +580,11 @@ function render(data, parent_element, ratio){
 <span class="sd">    Arguments:</span>
 <span class="sd">        radius: the radius from which the centres of the vessel meets the outer</span>
 <span class="sd">            circumference.</span>
-<span class="sd">        reference_point: the x,z coordinates to build the vessel from. Can be</span>
-<span class="sd">            either the 'center' with a value or 'lower' with a</span>
-<span class="sd">            value. For example</span>
+<span class="sd">        reference_point: the vertical position to build the vessel from,</span>
+<span class="sd">            either ("center", z) for the middle of the cylinder or</span>
+<span class="sd">            ("lower", z) for the lowest point of the shape (the bottom of</span>
+<span class="sd">            the cylinder for an upper dome, the bottom of the dish for a</span>
+<span class="sd">            lower dome).</span>
 <span class="sd">        dish_height: the height of the dish section.</span>
 <span class="sd">        cylinder_height: the height of the cylindrical section of the vacuum</span>
 <span class="sd">            vessel.</span>
@@ -616,9 +618,12 @@ function render(data, parent_element, ratio){
         <span class="n">lower_chord_center_height</span> <span class="o">=</span> <span class="n">reference_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">cylinder_height</span>
         <span class="n">upper_chord_center_height</span> <span class="o">=</span> <span class="n">reference_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">cylinder_height</span>
     <span class="k">elif</span> <span class="n">reference_point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"lower"</span><span class="p">:</span>
-        <span class="n">center_height</span> <span class="o">=</span> <span class="n">reference_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">thickness</span> <span class="o">+</span> <span class="n">dish_height</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">cylinder_height</span>
-        <span class="n">lower_chord_center_height</span> <span class="o">=</span> <span class="n">reference_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">thickness</span> <span class="o">+</span> <span class="n">dish_height</span>
-        <span class="n">upper_chord_center_height</span> <span class="o">=</span> <span class="n">reference_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">thickness</span> <span class="o">+</span> <span class="n">dish_height</span> <span class="o">+</span> <span class="n">cylinder_height</span>
+        <span class="c1"># the lowest point is the bottom of the dish for a lower dome and the</span>
+        <span class="c1"># bottom of the cylinder for an upper dome</span>
+        <span class="n">cylinder_bottom</span> <span class="o">=</span> <span class="n">reference_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">thickness</span> <span class="o">+</span> <span class="n">dish_height</span> <span class="k">if</span> <span class="n">upper_or_lower</span> <span class="o">==</span> <span class="s2">"lower"</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">center_height</span> <span class="o">=</span> <span class="n">cylinder_bottom</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">cylinder_height</span>
+        <span class="n">lower_chord_center_height</span> <span class="o">=</span> <span class="n">cylinder_bottom</span>
+        <span class="n">upper_chord_center_height</span> <span class="o">=</span> <span class="n">cylinder_bottom</span> <span class="o">+</span> <span class="n">cylinder_height</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'reference_point should be a tuple where the first value is either "center" or "lower"'</span><span class="p">)</span>
 

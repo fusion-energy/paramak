@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Python API reference &#8212; Paramak 0.10.1.dev14+g41d16b05b documentation</title>
+    <title>Python API reference &#8212; Paramak 0.10.1.dev15+g469cef7e9 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="_static/documentation_options.js?v=bde42e5d"></script>
+    <script src="_static/documentation_options.js?v=eae266c5"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/vtk.js?v=415cc427"></script>
@@ -223,7 +223,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev14+g41d16b05b" />
+  <meta name="docsearch:version" content="0.10.1.dev15+g469cef7e9" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -1243,9 +1243,11 @@ offsets the placement of coils around the azimuthal angle</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>radius</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the radius from which the centres of the vessel meets the outer
 circumference.</p></li>
-<li><p><strong>reference_point</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></span>) – the x,z coordinates to build the vessel from. Can be
-either the ‘center’ with a value or ‘lower’ with a
-value. For example</p></li>
+<li><p><strong>reference_point</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></span>) – the vertical position to build the vessel from,
+either (“center”, z) for the middle of the cylinder or
+(“lower”, z) for the lowest point of the shape (the bottom of
+the cylinder for an upper dome, the bottom of the dish for a
+lower dome).</p></li>
 <li><p><strong>dish_height</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the height of the dish section.</p></li>
 <li><p><strong>cylinder_height</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the height of the cylindrical section of the vacuum
 vessel.</p></li>
