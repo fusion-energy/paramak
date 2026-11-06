@@ -335,6 +335,31 @@ def validate_plasma_radial_build(radial_build, build_name="radial_build"):
         raise ValidationError("LayerType.PLASMA entry must be preceded and followed by a LayerType.GAP")
 
 
+def validate_build_lengths(radial_build, vertical_build, reactor_name, inboard_layers=True):
+    """Checks the vertical_build has an entry above and below the plasma for
+    each radial_build entry after the plasma, as each layer after the plasma
+    takes its top and bottom thickness from the vertical_build. When
+    inboard_layers is True (tokamak) the radial_build also needs an entry
+    before the plasma for each entry after it, as the layers are made from
+    inboard and outboard pairs."""
+    plasma_index_rb = get_plasma_index(radial_build)
+    plasma_index_vb = get_plasma_index(vertical_build)
+    after_plasma = len(radial_build) - plasma_index_rb - 1
+    above = plasma_index_vb
+    below = len(vertical_build) - plasma_index_vb - 1
+    if inboard_layers and plasma_index_rb < after_plasma:
+        raise ValueError(
+            f"The radial_build for {reactor_name} has {after_plasma} entries after the plasma but only "
+            f"{plasma_index_rb} before it. Each entry after the plasma is paired with an entry before the plasma, "
+            "so the radial_build needs at least as many entries before the plasma as after it."
+        )
+    if above < after_plasma or below < after_plasma:
+        raise ValueError(
+            f"The vertical_build for {reactor_name} needs at least {after_plasma} entries above and below the "
+            f"plasma, one for each radial_build entry after the plasma, but it has {above} above and {below} below."
+        )
+
+
 def is_lower_or_upper_divertor(radial_build):
     for item in radial_build:
         if item[0] == "lower_divertor":

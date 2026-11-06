@@ -15,6 +15,7 @@ from ..utils import (
     get_plasma_index,
     resolve_assembly_color,
     rotate_about_z,
+    validate_build_lengths,
     validate_plasma_radial_build,
     validate_rotation_angle,
     validate_rotation_start_angle,
@@ -477,6 +478,8 @@ def tokamak_from_plasma(
         colors = {}
 
     validate_plasma_radial_build(radial_build, "radial_build")
+    # the vertical build is made from the inboard radial build
+    validate_build_lengths(radial_build, radial_build, "tokamak_from_plasma()")
     vertical_build = vertical_build_from_radial_build(radial_build, elongation)
 
     return tokamak(
@@ -513,6 +516,10 @@ def tokamak(
             reactor. Each tuple should contain a LayerType, a float and the string is optional.
         vertical_build: sequence of tuples containing the vertical build of the
             reactor. Each tuple should contain a LayerType, a float and the string is optional.
+            Entries are ordered from the top of the reactor to the bottom, so
+            the entries before the plasma are above it. There must be at
+            least one entry above and below the plasma for each radial_build
+            entry after the plasma.
         triangularity: The triangularity of the plasma. Defaults to 0.55.
         rotation_angle: The rotation angle of the plasma. Defaults to 180.0.
         rotation_start_angle: The angle in degrees the reactor starts from, measured
@@ -577,6 +584,7 @@ def tokamak(
 
     validate_plasma_radial_build(radial_build, "radial_build")
     validate_plasma_radial_build(vertical_build, "vertical_build")
+    validate_build_lengths(radial_build, vertical_build, "tokamak()")
     validate_vertical_build_names(vertical_build, "tokamak()")
     validate_rotation_start_angle(rotation_start_angle)
     validate_rotation_angle(rotation_angle)
