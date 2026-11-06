@@ -232,13 +232,16 @@ def sparc_from_2020_paper(
     """
     _validate(rotation_angle, number_of_tf_coils)
 
-    major_radius, minor_radius, elongation, triangularity = 185.0, 57.0, 1.97, 0.31
-
+    major_radius, elongation, triangularity = 185.0, 1.97, 0.31
     # the paper gives a minor radius of 57 cm, the plasma is made slightly
-    # smaller so that it does not touch the inner vessel components
+    # smaller so that it does not touch the inner vessel components. The
+    # modelled value is used for the plasma and reported on the assembly.
+    paper_minor_radius = 57.0
+    minor_radius = paper_minor_radius - 6
+
     plasma = plasma_simplified(
         major_radius=major_radius,
-        minor_radius=minor_radius - 6,
+        minor_radius=minor_radius,
         elongation=elongation,
         triangularity=triangularity,
         rotation_angle=rotation_angle,

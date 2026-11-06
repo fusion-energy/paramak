@@ -82,6 +82,17 @@ def test_plasma_metadata(reactor_function_and_180_degree_reactor):
     assert 0 < reactor.triangularity < 1
 
 
+def test_plasma_metadata_matches_the_plasma(reactor_function_and_180_degree_reactor):
+    """The plasma parameters on the assembly describe the plasma that was built."""
+    _, reactor = reactor_function_and_180_degree_reactor
+    plasma = reactor.objects["plasma"].obj.val().BoundingBox()
+    # the outboard and inboard midplane points of the plasma
+    assert plasma.xmax == pytest.approx(reactor.major_radius + reactor.minor_radius, abs=0.1)
+    assert plasma.xmin == pytest.approx(-(reactor.major_radius + reactor.minor_radius), abs=0.1)
+    height = plasma.zmax - plasma.zmin
+    assert height == pytest.approx(2 * reactor.elongation * reactor.minor_radius, rel=1e-3)
+
+
 @pytest.mark.parametrize("reactor_function", PAPER_REACTORS, ids=lambda f: f.__name__)
 def test_smaller_rotation_angle_gives_smaller_volumes(reactor_function):
     volumes_90 = part_volumes(reactor_function(rotation_angle=90))
