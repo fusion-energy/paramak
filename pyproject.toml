@@ -33,16 +33,18 @@ dependencies = [
 [project.optional-dependencies]
 tests = [
     "pytest>=5.4.3",
-    "pytest-cov>=2.12.1",
-    "dagmc_h5m_file_inspector>=0.5.0",
-    "openmc_data_downloader"
+]
+# openmc wheels are not on PyPI, install with
+# pip install --extra-index-url https://shimwell.github.io/wheels .[transport]
+transport = [
+    "cad_to_dagmc",
+    "openmc>=0.16.1.dev0",
 ]
 docs = [
     "sphinx_autodoc_typehints",
-    "openmc_data_downloader",
     "sphinx",
     "pydata-sphinx-theme",
-    "cadquery",
+    # needed by cadquery.cq_directive
     "ipython",
     "sphinx_design",
 ]

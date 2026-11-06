@@ -11,7 +11,10 @@ from .test_utils import transport_particles_on_h5m_geometry
 
 
 @pytest.mark.parametrize("rotation_angle", [30, 180])
-@pytest.mark.skipif(not importlib.util.find_spec("cad_to_dagmc"), reason="Skipping transport tests")
+@pytest.mark.skipif(
+    not (importlib.util.find_spec("cad_to_dagmc") and importlib.util.find_spec("openmc")),
+    reason="transport tests need cad_to_dagmc and openmc, install them with the transport extra",
+)
 def test_transport_with_magnets(rotation_angle):
     from cad_to_dagmc import CadToDagmc
 
@@ -73,7 +76,10 @@ def test_transport_with_magnets(rotation_angle):
     assert flux > 0.0
 
 
-@pytest.mark.skipif(not importlib.util.find_spec("cad_to_dagmc"), reason="Skipping transport tests")
+@pytest.mark.skipif(
+    not (importlib.util.find_spec("cad_to_dagmc") and importlib.util.find_spec("openmc")),
+    reason="transport tests need cad_to_dagmc and openmc, install them with the transport extra",
+)
 def test_transport_without_magnets():
     from cad_to_dagmc import CadToDagmc
 
