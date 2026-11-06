@@ -15,6 +15,8 @@ def u_shaped_dome(
     name: str = "u_shaped_dome",
     plane="XZ",
     upper_or_lower="upper",
+    color: tuple[float, float, float, float | None] = (0.0, 0.333, 0.0),
+    origin=(0, 0, 0),
     rotation_start_angle: float = 0.0,
 ):
     """A cylindrical u shaped dome with constant thickness.
@@ -31,10 +33,16 @@ def u_shaped_dome(
         cylinder_height: the height of the cylindrical section of the vacuum
             vessel.
         thickness: the radial thickness of the vessel in cm.
+        color: the RGB(A) color of the parts. Defaults to (0.0, 0.333, 0.0).
+        origin: the origin of the workplane, which moves all the parts.
+            Defaults to (0, 0, 0).
         rotation_start_angle: the angle in degrees the revolution starts from,
             measured around the revolve axis from the workplane. The shape covers
             rotation_start_angle to rotation_start_angle + rotation_angle. Must be
             between -360 and 360. Defaults to 0.
+
+    Returns:
+        tuple: the dome and cylinder as two CadQuery Workplanes.
     """
     validate_positive(dish_height, "dish_height")
     validate_rotation_angle(rotation_angle)
@@ -77,6 +85,8 @@ def u_shaped_dome(
         rotation_angle=rotation_angle,
         rotation_start_angle=rotation_start_angle,
         plane=plane,
+        color=color,
+        origin=origin,
     )
 
     if upper_or_lower == "upper":
@@ -89,6 +99,8 @@ def u_shaped_dome(
             rotation_angle=rotation_angle,
             rotation_start_angle=rotation_start_angle,
             plane=plane,
+            color=color,
+            origin=origin,
         )
 
     elif upper_or_lower == "lower":
@@ -101,6 +113,8 @@ def u_shaped_dome(
             rotation_angle=rotation_angle,
             rotation_start_angle=rotation_start_angle,
             plane=plane,
+            color=color,
+            origin=origin,
         )
     else:
         raise ValueError(f'upper_or_lower must be either "lower" or "upper" not {upper_or_lower}')

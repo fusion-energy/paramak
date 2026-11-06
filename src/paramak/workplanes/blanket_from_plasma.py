@@ -289,8 +289,10 @@ def blanket_from_plasma(
             (angles and offsets) then these will be used together with linear
             interpolation.
         num_points: number of points that will describe the shape.
-        allow_overlapping_shape: allows parameters to create a shape that
-            overlaps itself.
+        allow_overlapping_shape: if False (the default) a warning is given
+            when the offset makes some points of the profile reach past the
+            Z axis (a negative R). Those points are always left out of the
+            profile, setting this to True only stops the warning.
         rotation_start_angle: the angle in degrees the revolution starts from,
             measured around the revolve axis from the workplane. The shape covers
             rotation_start_angle to rotation_start_angle + rotation_angle. Must be

@@ -14,6 +14,8 @@ def dished_vacuum_vessel(
     rotation_angle: float = 90,
     name: str = "dished_vessel",
     plane="XZ",
+    color: tuple[float, float, float, float | None] = (0.0, 0.333, 0.0),
+    origin=(0, 0, 0),
     rotation_start_angle: float = 0.0,
 ):
     """A cylindrical vessel volume with constant thickness with a simple dished
@@ -29,10 +31,17 @@ def dished_vacuum_vessel(
         cylinder_height: the height of the cylindrical section of the vacuum
             vessel.
         thickness: the radial thickness of the vessel in cm.
+        color: the RGB(A) color of the parts. Defaults to (0.0, 0.333, 0.0).
+        origin: the origin of the workplane, which moves all the parts.
+            Defaults to (0, 0, 0).
         rotation_start_angle: the angle in degrees the revolution starts from,
             measured around the revolve axis from the workplane. The shape covers
             rotation_start_angle to rotation_start_angle + rotation_angle. Must be
             between -360 and 360. Defaults to 0.
+
+    Returns:
+        tuple: the lower dome, cylinder and upper dome as three CadQuery
+        Workplanes. They are kept separate as fusing them can fail.
     """
     validate_rotation_angle(rotation_angle)
     validate_positive(cylinder_height, "cylinder_height")
@@ -85,6 +94,8 @@ def dished_vacuum_vessel(
         rotation_angle=rotation_angle,
         rotation_start_angle=rotation_start_angle,
         plane=plane,
+        color=color,
+        origin=origin,
     )
 
     upper_dome_section = constant_thickness_dome(
@@ -96,6 +107,8 @@ def dished_vacuum_vessel(
         rotation_angle=rotation_angle,
         rotation_start_angle=rotation_start_angle,
         plane=plane,
+        color=color,
+        origin=origin,
     )
 
     lower_dome_section = constant_thickness_dome(
@@ -107,6 +120,8 @@ def dished_vacuum_vessel(
         rotation_angle=rotation_angle,
         rotation_start_angle=rotation_start_angle,
         plane=plane,
+        color=color,
+        origin=origin,
     )
 
     # union can fail, safer to return 3 workplanes

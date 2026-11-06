@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import cadquery as cq
 
 from ..utils import (
     create_wire_workplane_from_points,
@@ -56,5 +55,5 @@ def cutting_wedge(
     )
     solid = rotate_to_rotation_start_angle(solid, wire, rotation_start_angle)
     solid.name = name
-    solid.color = cq.Color(*color)
+    solid.color = color
     return solid

@@ -146,6 +146,9 @@ def toroidal_field_coil_rectangle(
             radius=radius,
             rotation_angle=rotation_angle,
             rotation_start_angle=rotation_start_angle,
+            # the coils are placed around the global Z axis, so the wedge stays
+            # on that axis and only takes the height of the origin
+            origin=(0, 0, origin[2]),
         )
         solid = solid.intersect(cutting_shape)
 

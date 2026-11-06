@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import cadquery as cq
 
 from ..utils import (
     create_wire_workplane_from_points,
@@ -57,5 +56,5 @@ def blanket_constant_thickness_arc_h(
     solid = wire.revolve(rotation_angle)
     solid = rotate_to_rotation_start_angle(solid, wire, rotation_start_angle)
     solid.name = name
-    solid.color = cq.Color(*color)
+    solid.color = color
     return solid
