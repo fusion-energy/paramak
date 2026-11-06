@@ -411,7 +411,7 @@ def test_first_entry_not_string():
             10,
         ),
     ]
-    with pytest.raises(ValidationError, match="First entry in each radial build Tuple should be a paramak.LayerType"):
+    with pytest.raises(ValidationError, match="First entry in each radial_build Tuple should be a paramak.LayerType"):
         validate_plasma_radial_build(radial_build)
 
 
@@ -458,7 +458,7 @@ def test_second_entry_not_number():
             10,
         ),
     ]
-    with pytest.raises(ValidationError, match="Second entry in each radial build Tuple should be a Float"):
+    with pytest.raises(ValidationError, match="Second entry in each radial_build Tuple should be a Float"):
         validate_plasma_radial_build(radial_build)
 
 
@@ -505,7 +505,7 @@ def test_invalid_string():
             10,
         ),
     ]
-    with pytest.raises(ValidationError, match="First entry in each radial build Tuple should be a paramak.LayerType"):
+    with pytest.raises(ValidationError, match="First entry in each radial_build Tuple should be a paramak.LayerType"):
         validate_plasma_radial_build(radial_build)
 
 
@@ -650,7 +650,7 @@ def test_non_positive_values():
             10,
         ),
     ]
-    with pytest.raises(ValidationError, match="Non-positive value '0' at index 2"):
+    with pytest.raises(ValidationError, match="Non-positive value .0. at index 2 of the radial_build"):
         validate_plasma_radial_build(radial_build)
 
 
@@ -1119,3 +1119,20 @@ def test_resolve_assembly_color():
     color_l1 = resolve_assembly_color("layer_2", layer_index=1)
     assert color_l0 != color_l1
 
+
+
+def test_consecutive_circle_points_make_consecutive_arcs():
+    import paramak
+
+    shape = paramak.revolved_shape(
+        points=[(100, 0, "circle"), (150, 50, "circle"), (200, 0, "circle"), (250, -50, "circle"), (200, -100, "straight")]
+    )
+    assert shape.val().isValid()
+    assert shape.val().BoundingBox().xmax == pytest.approx(250, abs=1e-3)
+
+
+def test_odd_number_of_circle_points_raises():
+    import paramak
+
+    with pytest.raises(ValueError, match="must have an even number of points, got 3 circle points"):
+        paramak.revolved_shape(points=[(100, 0, "circle"), (150, 50, "circle"), (200, 0, "circle"), (200, -100, "straight")])

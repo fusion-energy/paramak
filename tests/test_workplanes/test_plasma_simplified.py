@@ -19,7 +19,10 @@ def test_creation_different_angles(rotation_angle):
 
 
 @pytest.mark.parametrize("rotation_angle", [60, 360])
-@pytest.mark.skipif(not importlib.util.find_spec("cad_to_dagmc"), reason="Skipping transport tests")
+@pytest.mark.skipif(
+    not (importlib.util.find_spec("cad_to_dagmc") and importlib.util.find_spec("openmc")),
+    reason="transport tests need cad_to_dagmc and openmc, install them with the transport extra",
+)
 def test_transport_different_angles(rotation_angle):
     from cad_to_dagmc import CadToDagmc
 
@@ -46,3 +49,14 @@ def test_transport_different_angles(rotation_angle):
         cross_sections_xml="tests/cross_sections.xml",
     )
     assert flux > 0.0
+
+
+def test_full_rotation_is_centred_on_the_z_axis():
+    full = paramak.plasma_simplified(major_radius=450, minor_radius=150, rotation_angle=360)
+    half = paramak.plasma_simplified(major_radius=450, minor_radius=150, rotation_angle=180)
+    bb = full.val().BoundingBox()
+    assert bb.xmin == pytest.approx(-600, abs=1e-3)
+    assert bb.xmax == pytest.approx(600, abs=1e-3)
+    assert bb.ymin == pytest.approx(-600, abs=1e-3)
+    assert bb.ymax == pytest.approx(600, abs=1e-3)
+    assert full.val().Volume() == pytest.approx(2 * half.val().Volume(), rel=1e-6)

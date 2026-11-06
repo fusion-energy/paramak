@@ -4,7 +4,11 @@ import typing
 
 import cadquery as cq
 
-from ..utils import create_wire_workplane_from_points
+from ..utils import (
+    create_wire_workplane_from_points,
+    rotate_to_rotation_start_angle,
+    validate_rotation_angle,
+)
 
 
 def revolved_shape(
@@ -19,6 +23,7 @@ def revolved_shape(
     plane: str = "XZ",
     origin: tuple[float, float, float] = (0, 0, 0),
     obj=None,
+    rotation_start_angle: float = 0.0,
 ) -> cq.Workplane:
     """Creates a solid by revolving an arbitrary closed 2D profile around the axis.
 
@@ -40,6 +45,10 @@ def revolved_shape(
             closed automatically.
         rotation_angle: the angle in degrees to revolve the profile around the
             axis. Defaults to 360.
+        rotation_start_angle: the angle in degrees the revolution starts from,
+            measured around the revolve axis from the workplane. The shape covers
+            rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+            between -360 and 360. Defaults to 0.
         name: the name assigned to the resulting solid.
         color: the RGB(A) color assigned to the resulting solid.
         plane: the plane to build the profile on, e.g. "XZ".
@@ -49,6 +58,7 @@ def revolved_shape(
     Returns:
         A CadQuery Workplane containing the revolved solid.
     """
+    validate_rotation_angle(rotation_angle)
 
     if len(points) < 3:
         msg = f"revolved_shape requires at least 3 points to form a profile, got {len(points)}."
@@ -60,6 +70,7 @@ def revolved_shape(
     wire = create_wire_workplane_from_points(points=closed_points, plane=plane, origin=origin, obj=obj)
 
     solid = wire.revolve(rotation_angle)
+    solid = rotate_to_rotation_start_angle(solid, wire, rotation_start_angle)
     solid.name = name
     solid.color = color
     return solid

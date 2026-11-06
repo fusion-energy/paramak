@@ -14,6 +14,12 @@ from ..utils import (
     get_layer_name,
     get_plasma_index,
     resolve_assembly_color,
+    rotate_about_z,
+    sum_before_after_plasma,
+    validate_build_lengths,
+    validate_plasma_radial_build,
+    validate_rotation_angle,
+    validate_rotation_start_angle,
     validate_unique_assembly_names,
     validate_vertical_build_names,
 )
@@ -29,6 +35,7 @@ from .poloidal import (
     SegmentBuild,
     check_not_empty,
     get_poloidal_segment_angles,
+    cut_with_shapes,
     intersect_with_each_part,
     resolve_vertical_build,
     validate_segment_build,
@@ -53,12 +60,16 @@ def count_cylinder_layers(radial_build):
     return before_plasma - after_plasma
 
 
-def create_center_column_shield_cylinders(radial_build, rotation_angle, center_column_shield_height):
+def create_center_column_shield_cylinders(radial_build, vertical_build, rotation_angle):
     cylinders = []
     total_sum = 0
     layer_count = 0
 
     number_of_cylinder_layers = count_cylinder_layers(radial_build)
+    # the vertical_build is ordered from the top, so the column goes from -below
+    # the plasma to +above it, the same as the blanket layers
+    _, below = sum_before_after_plasma(vertical_build)
+    center_column_shield_height = sum(item[1] for item in vertical_build)
 
     for _, item in enumerate(radial_build):
         if item[0] == LayerType.PLASMA:
@@ -82,6 +93,7 @@ def create_center_column_shield_cylinders(radial_build, rotation_angle, center_c
             name=layer_name,
             rotation_angle=rotation_angle,
             height=center_column_shield_height,
+            reference_point=("lower", -below),
         )
         total_sum += thickness
         cylinders.append(cylinder)
@@ -269,7 +281,6 @@ def create_layers_from_plasma(
     triangularity,
     elongation,
     rotation_angle,
-    center_column,
     layer_count=0,
     poloidal_segment_angles=None,
     toroidal_sectors=None,
@@ -401,6 +412,7 @@ def tokamak_from_plasma(
     colors: dict | None = None,
     poloidal_build: SegmentBuild | None = None,
     toroidal_build: SegmentBuild | None = None,
+    rotation_start_angle: float = 0.0,
 ) -> Assembly:
     """
     Creates a tokamak fusion reactor from a radial build and plasma parameters.
@@ -411,6 +423,12 @@ def tokamak_from_plasma(
         elongation: The elongation of the plasma. Defaults to 2.0.
         triangularity: The triangularity of the plasma. Defaults to 0.55.
         rotation_angle: The rotation angle of the plasma. Defaults to 180.0.
+        rotation_start_angle: The angle in degrees the reactor starts from, measured
+            around the Z axis from the XZ plane in the direction the reactor is
+            revolved, so the reactor covers rotation_start_angle to
+            rotation_start_angle + rotation_angle. extra_cut_shapes and
+            extra_intersect_shapes are used where they are and are not rotated.
+            Must be between -360 and 360. Defaults to 0.
         extra_cut_shapes: A list of extra shapes to cut the reactor with. Defaults to [].
         extra_intersect_shapes: A list of extra shapes to intersect the reactor with. Defaults to [].
         colors (dict, optional): the colors to assign to the assembly parts. Defaults to {}.
@@ -445,9 +463,10 @@ def tokamak_from_plasma(
             arc_length, name) for a sector (the name is optional) or
             (paramak.LayerType.GAP, width) for a gap. Arc lengths are measured
             around the plasma facing surface at the outboard midplane,
-            starting at the XZ plane and going in the direction the reactor is
-            revolved, and each entry must sum to the arc length returned by
-            paramak.toroidal_arc_length (within 0.1 percent). Gaps are slots
+            starting at rotation_start_angle (the XZ plane by default) and
+            going in the direction the reactor is revolved, and each entry
+            must sum to the arc length returned by paramak.toroidal_arc_length
+            (within 0.1 percent). Gaps are slots
             with parallel sides, so a gap has the same width at every radius.
             Sectors are named "<layer name>_<sector name>", or
             "<layer name>_<poloidal segment name>_<sector name>" when the
@@ -464,6 +483,9 @@ def tokamak_from_plasma(
     if colors is None:
         colors = {}
 
+    validate_plasma_radial_build(radial_build, "radial_build")
+    # the vertical build is made from the inboard radial build
+    validate_build_lengths(radial_build, radial_build, "tokamak_from_plasma()")
     vertical_build = vertical_build_from_radial_build(radial_build, elongation)
 
     return tokamak(
@@ -471,6 +493,7 @@ def tokamak_from_plasma(
         vertical_build=vertical_build,
         triangularity=triangularity,
         rotation_angle=rotation_angle,
+        rotation_start_angle=rotation_start_angle,
         extra_cut_shapes=extra_cut_shapes,
         extra_intersect_shapes=extra_intersect_shapes,
         colors=colors,
@@ -489,6 +512,7 @@ def tokamak(
     colors: dict | None = None,
     poloidal_build: SegmentBuild | None = None,
     toroidal_build: SegmentBuild | None = None,
+    rotation_start_angle: float = 0.0,
 ) -> Assembly:
     """
     Creates a tokamak fusion reactor from a radial and vertical build.
@@ -498,8 +522,18 @@ def tokamak(
             reactor. Each tuple should contain a LayerType, a float and the string is optional.
         vertical_build: sequence of tuples containing the vertical build of the
             reactor. Each tuple should contain a LayerType, a float and the string is optional.
+            Entries are ordered from the top of the reactor to the bottom, so
+            the entries before the plasma are above it. There must be at
+            least one entry above and below the plasma for each radial_build
+            entry after the plasma.
         triangularity: The triangularity of the plasma. Defaults to 0.55.
         rotation_angle: The rotation angle of the plasma. Defaults to 180.0.
+        rotation_start_angle: The angle in degrees the reactor starts from, measured
+            around the Z axis from the XZ plane in the direction the reactor is
+            revolved, so the reactor covers rotation_start_angle to
+            rotation_start_angle + rotation_angle. extra_cut_shapes and
+            extra_intersect_shapes are used where they are and are not rotated.
+            Must be between -360 and 360. Defaults to 0.
         extra_cut_shapes: A list of extra shapes to cut the reactor with. Defaults to [].
         extra_intersect_shapes: A list of extra shapes to intersect the reactor with. Defaults to [].
         colors (dict, optional): the colors to assign to the assembly parts. Defaults to {}.
@@ -534,9 +568,10 @@ def tokamak(
             arc_length, name) for a sector (the name is optional) or
             (paramak.LayerType.GAP, width) for a gap. Arc lengths are measured
             around the plasma facing surface at the outboard midplane,
-            starting at the XZ plane and going in the direction the reactor is
-            revolved, and each entry must sum to the arc length returned by
-            paramak.toroidal_arc_length (within 0.1 percent). Gaps are slots
+            starting at rotation_start_angle (the XZ plane by default) and
+            going in the direction the reactor is revolved, and each entry
+            must sum to the arc length returned by paramak.toroidal_arc_length
+            (within 0.1 percent). Gaps are slots
             with parallel sides, so a gap has the same width at every radius.
             Sectors are named "<layer name>_<sector name>", or
             "<layer name>_<poloidal segment name>_<sector name>" when the
@@ -553,7 +588,12 @@ def tokamak(
     if colors is None:
         colors = {}
 
+    validate_plasma_radial_build(radial_build, "radial_build")
+    validate_plasma_radial_build(vertical_build, "vertical_build")
+    validate_build_lengths(radial_build, vertical_build, "tokamak()")
     validate_vertical_build_names(vertical_build, "tokamak()")
+    validate_rotation_start_angle(rotation_start_angle)
+    validate_rotation_angle(rotation_angle)
 
     major_radius, minor_radius, elongation = get_plasma_geometry(radial_build, vertical_build)
     blanket_rear_wall_end_height = sum([item[1] for item in vertical_build])
@@ -566,9 +606,7 @@ def tokamak(
         rotation_angle=rotation_angle,
     )
 
-    inner_radial_build = create_center_column_shield_cylinders(
-        radial_build, rotation_angle, blanket_rear_wall_end_height
-    )
+    inner_radial_build = create_center_column_shield_cylinders(radial_build, vertical_build, rotation_angle)
 
     # validated before the blanket layers are built so errors are raised quickly
     poloidal_segment_angles = None
@@ -590,12 +628,17 @@ def tokamak(
         triangularity=triangularity,
         elongation=elongation,
         rotation_angle=rotation_angle,
-        center_column=inner_radial_build[0],  # blanket_cutting_cylinder,
         layer_count=len(inner_radial_build),
         poloidal_segment_angles=poloidal_segment_angles,
         toroidal_sectors=toroidal_sectors,
         toroidal_region_size=4 * max(sum(item[1] for item in radial_build), blanket_rear_wall_end_height),
     )
+
+    # the reactor is built from 0 degrees then rotated to rotation_start_angle,
+    # before the extra shapes are applied as they are given in their final position
+    plasma = rotate_about_z(plasma, rotation_start_angle)
+    inner_radial_build = [rotate_about_z(entry, rotation_start_angle) for entry in inner_radial_build]
+    blanket_layers = [rotate_about_z(entry, rotation_start_angle) for entry in blanket_layers]
 
     cut_names, intersect_names, layer_names = get_assembly_names(
         extra_cut_shapes, extra_intersect_shapes, inner_radial_build, blanket_layers
@@ -615,12 +658,14 @@ def tokamak(
     if len(extra_intersect_shapes) > 0:
         if not segmented:
             # makes a union of the the radial build to use as a base for the intersect shapes
-            reactor_compound = inner_radial_build[0]
-            for entry in inner_radial_build[1:] + blanket_layers:
+            # there may be no centre column cylinders, so all the parts are used
+            all_parts = inner_radial_build + blanket_layers
+            reactor_compound = all_parts[0]
+            for entry in all_parts[1:]:
                 reactor_compound = reactor_compound.union(entry)
 
         # adds the extra intersect shapes to the assembly
-        for entry, name in zip(extra_intersect_shapes, intersect_names):
+        for index, (entry, name) in enumerate(zip(extra_intersect_shapes, intersect_names)):
             if not segmented:
                 reactor_entry_intersection = entry.intersect(reactor_compound)
             else:
@@ -628,6 +673,11 @@ def tokamak(
                 # makes fusing all the parts unreliable, so the shape is intersected
                 # with each part and the pieces are kept together in a compound
                 reactor_entry_intersection = intersect_with_each_part(entry, inner_radial_build + blanket_layers)
+            # the cut shapes are parts of the assembly and the earlier intersect shapes have
+            # already taken their share of the reactor, so both are removed to avoid overlaps
+            reactor_entry_intersection = cut_with_shapes(
+                reactor_entry_intersection, [*extra_cut_shapes, *extra_intersect_shapes[:index]]
+            )
             my_assembly.add(reactor_entry_intersection, name=name, color=cq.Color(*resolve_assembly_color(name, None, colors)))
 
     # cut the core layers with any extra shapes (a no-op when there are none)

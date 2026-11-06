@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 import math
-import numbers
 
 import cadquery as cq
 
-from ..utils import create_wire_workplane_from_points
+from ..utils import create_wire_workplane_from_points, validate_positive, validate_rotation_angle
 from ..workplanes.cutting_wedge import cutting_wedge
 
 
@@ -25,7 +24,7 @@ def constant_thickness_dome(
     origin=(0, 0, 0),
     rotation_angle=90,
     obj=None,
-    **kwargs,
+    rotation_start_angle: float = 0.0,
 ):
     """A cylindrical vessel volume with constant thickness with a simple dished
     head. This style of tank head has no knuckle radius or straight flange. The
@@ -42,26 +41,15 @@ def constant_thickness_dome(
             domes to be made.
         name: the name of the shape, used in the graph legend and as a
             filename prefix when exporting.
+        rotation_start_angle: the angle in degrees the revolution starts from,
+            measured around the revolve axis from the workplane. The shape covers
+            rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+            between -360 and 360. Defaults to 0.
     """
-
-    if not isinstance(chord_width, numbers.Number):
-        raise TypeError(f"chord_width must be a number. Not {type(chord_width)}")
-    if chord_width <= 0:
-        msg = f"chord_width must be a positive number above 0. Not {chord_width}"
-        raise ValueError(msg)
-
-    if not isinstance(chord_height, numbers.Number):
-        raise TypeError(f"chord_height must be a number. Not {type(chord_height)}")
-    if chord_height <= 0:
-        msg = f"chord_height must be a positive number above 0. Not {chord_height}"
-        raise ValueError(msg)
-
-    if not isinstance(thickness, numbers.Number):
-        msg = f"thickness must be a number. Not {type(thickness)}"
-        raise TypeError(msg)
-    if thickness <= 0:
-        msg = f"thickness must be a positive number above 0. Not {thickness}"
-        raise ValueError(msg)
+    validate_rotation_angle(rotation_angle)
+    validate_positive(chord_width, "chord_width")
+    validate_positive(chord_height, "chord_height")
+    validate_positive(thickness, "thickness")
 
     # Note these points are not used in the normal way when constructing
     # the solid
@@ -128,24 +116,10 @@ def constant_thickness_dome(
 
     points = [point_1, point_2, point_3, point_6, point_7]
 
-    radius_of_sphere = ((math.pow(chord_width, 2)) + (4.0 * math.pow(chord_height, 2))) / (8 * chord_height)
+    # the spheres and wedge are built on the same workplane (plane and origin) as the cutters
+    big_sphere = cq.Workplane(plane, origin=origin).moveTo(center_point[0], center_point[1]).sphere(radius_of_sphere + thickness)
 
-    # TODO set to 0 for now, add ability to shift the center of the chord left and right
-    chord_center = (0, chord_center_height)
-
-    # far_side is center on x and
-    if upper_or_lower == "upper":
-        center_point = (chord_center[0], chord_center[1] + chord_height - radius_of_sphere)
-        far_side = (center_point[0], center_point[1] - (radius_of_sphere + thickness))
-    elif upper_or_lower == "lower":
-        center_point = (chord_center[0], chord_center[1] - chord_height + radius_of_sphere)
-        far_side = (center_point[0], center_point[1] + radius_of_sphere + thickness)
-    else:
-        raise ValueError("upper_or_lower argument must be set to either 'upper' or 'lower'")
-
-    big_sphere = cq.Workplane(plane).moveTo(center_point[0], center_point[1]).sphere(radius_of_sphere + thickness)
-
-    small_sphere = cq.Workplane(plane).moveTo(center_point[0], center_point[1]).sphere(radius_of_sphere)
+    small_sphere = cq.Workplane(plane, origin=origin).moveTo(center_point[0], center_point[1]).sphere(radius_of_sphere)
 
     wire = create_wire_workplane_from_points(
         points=(
@@ -181,11 +155,18 @@ def constant_thickness_dome(
 
     height = 2 * (radius_of_sphere + abs(center_point[1]) + thickness)
     radius = 2 * (radius_of_sphere + abs(center_point[0]) + thickness)
-    cutter = cutting_wedge(height=height, radius=radius, rotation_angle=rotation_angle, plane=plane)
+    cutter = cutting_wedge(
+        height=height,
+        radius=radius,
+        rotation_angle=rotation_angle,
+        rotation_start_angle=rotation_start_angle,
+        plane=plane,
+        origin=origin,
+    )
 
     cap = cap.cut(outer_cylinder_cutter).cut(inner_cylinder_cutter)
     cap = cap.intersect(cutter)
 
     cap.name = name
-    cap.color = cq.Color(*color)
+    cap.color = color
     return cap

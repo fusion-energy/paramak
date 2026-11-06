@@ -1,3 +1,5 @@
+import math
+import numbers
 import typing
 from collections import Counter
 from enum import Enum
@@ -51,10 +53,17 @@ def create_wire_workplane_from_instructions(
         if instruction_type == "straight":
             workplane = workplane.polyline(points)
         if instruction_type == "circle":
-            p0 = points[0]
-            p1 = points[1]
-            p2 = points[2]
-            workplane = workplane.moveTo(p0[0], p0[1]).threePointArc(p1, p2)
+            # each arc goes through a start, middle and end point, and the end
+            # of one arc is the start of the next
+            if len(points) < 3 or len(points) % 2 == 0:
+                raise ValueError(
+                    'Each "circle" arc uses two points (its start and middle point) and ends at the next '
+                    f"point, so a run of consecutive circle points must have an even number of points, "
+                    f"got {len(points) - 1} circle points starting at {points[0]}."
+                )
+            workplane = workplane.moveTo(points[0][0], points[0][1])
+            for start in range(0, len(points) - 1, 2):
+                workplane = workplane.threePointArc(points[start + 1], points[start + 2])
 
     return workplane.close()
 
@@ -83,6 +92,75 @@ def create_wire_workplane_from_points(points, plane, origin=(0, 0, 0), obj=None)
         )
 
     return result
+
+
+def validate_number(value, name):
+    """Checks value is a finite real number (bools, NaN and infinity are not
+    accepted)."""
+    if isinstance(value, bool) or not isinstance(value, numbers.Real):
+        raise TypeError(f"{name} must be a number, not {type(value).__name__}.")
+    if not math.isfinite(value):
+        raise ValueError(f"{name} must be a finite number, got {value}.")
+
+
+def validate_positive(value, name):
+    """Checks value is a number above 0."""
+    validate_number(value, name)
+    if value <= 0:
+        raise ValueError(f"{name} must be positive, got {value}.")
+
+
+def validate_non_negative(value, name):
+    """Checks value is a number of 0 or more."""
+    validate_number(value, name)
+    if value < 0:
+        raise ValueError(f"{name} must be zero or positive, got {value}.")
+
+
+def validate_positive_integer(value, name):
+    """Checks value is a whole number above 0."""
+    if isinstance(value, bool) or not isinstance(value, numbers.Integral):
+        raise TypeError(f"{name} must be an integer, not {type(value).__name__}.")
+    if value <= 0:
+        raise ValueError(f"{name} must be positive, got {value}.")
+
+
+def validate_rotation_angle(rotation_angle):
+    """Checks the rotation_angle is above 0 and at most 360 degrees."""
+    validate_number(rotation_angle, "rotation_angle")
+    if not 0 < rotation_angle <= 360:
+        raise ValueError(f"rotation_angle must be above 0 and at most 360 degrees, not {rotation_angle}.")
+
+
+def validate_rotation_start_angle(rotation_start_angle):
+    """Checks the rotation_start_angle is between -360 and 360 degrees."""
+    validate_number(rotation_start_angle, "rotation_start_angle")
+    if not -360 <= rotation_start_angle <= 360:
+        raise ValueError(f"rotation_start_angle must be between -360 and 360 degrees, not {rotation_start_angle}.")
+
+
+def rotate_to_rotation_start_angle(solid: Workplane, wire: Workplane, rotation_start_angle: float) -> Workplane:
+    """Rotates a solid revolved from wire by rotation_start_angle degrees
+    about the axis it was revolved around, so the revolution starts at
+    rotation_start_angle instead of 0."""
+    validate_rotation_start_angle(rotation_start_angle)
+    if rotation_start_angle == 0:
+        return solid
+    axis_start = wire.plane.toWorldCoords((0, 0))
+    axis_end = wire.plane.toWorldCoords((0, 1))
+    return solid.rotate(axis_start.toTuple(), axis_end.toTuple(), rotation_start_angle)
+
+
+def rotate_about_z(shape: Workplane, angle: float) -> Workplane:
+    """Rotates a shape about the Z axis by angle degrees, keeping the name
+    and layer_name attributes that paramak sets on the parts of a reactor."""
+    if angle == 0:
+        return shape
+    rotated = shape.rotate((0, 0, 0), (0, 0, 1), angle)
+    for attribute in ("name", "layer_name"):
+        if hasattr(shape, attribute):
+            setattr(rotated, attribute, getattr(shape, attribute))
+    return rotated
 
 
 def rotate_solid(angles: typing.Sequence[float], solid: Workplane) -> Workplane:
@@ -168,8 +246,8 @@ def smooth_profile(angles, values, period=None):
     return profile
 
 
-class ValidationError(Exception):
-    pass
+class ValidationError(ValueError):
+    """Raised when a radial or vertical build is not valid."""
 
 
 def sum_before_after_plasma(vertical_build):
@@ -226,31 +304,67 @@ def validate_divertor_radial_build(radial_build):
         )
 
 
-def validate_plasma_radial_build(radial_build):
-    # TODO should end with layer, not gap
-    valid_strings = {LayerType.GAP, LayerType.SOLID, LayerType.PLASMA}
+def validate_plasma_radial_build(radial_build, build_name="radial_build"):
+    """Checks a radial or vertical build that contains a plasma: every entry
+    is a (LayerType, thickness) or (LayerType, thickness, name) tuple with a
+    positive thickness, and there is one LayerType.PLASMA entry with a
+    LayerType.GAP either side of it."""
+    if not isinstance(radial_build, (list, tuple)) or len(radial_build) == 0:
+        raise ValidationError(f"{build_name} must be a non empty list of tuples, not {radial_build!r}")
     plasma_count = 0
     plasma_index = -1
     for index, item in enumerate(radial_build):
+        if not isinstance(item, (list, tuple)) or len(item) not in (2, 3):
+            raise ValidationError(
+                f"Each {build_name} entry should be a tuple of (LayerType, thickness) or "
+                f"(LayerType, thickness, name), not {item!r} at index {index}"
+            )
         if not isinstance(item[0], LayerType):
-            raise ValidationError("First entry in each radial build Tuple should be a paramak.LayerType")
-        if not isinstance(item[1], (int, float)):
-            raise ValidationError("Second entry in each radial build Tuple should be a Float")
-        if item[0] not in valid_strings:
-            raise ValidationError(f"Invalid entry '{item[0]}' at index {index}")
+            raise ValidationError(f"First entry in each {build_name} Tuple should be a paramak.LayerType")
+        if isinstance(item[1], bool) or not isinstance(item[1], numbers.Real):
+            raise ValidationError(f"Second entry in each {build_name} Tuple should be a Float")
+        if not math.isfinite(item[1]):
+            raise ValidationError(f"Non-finite value '{item[1]}' at index {index} of the {build_name}")
         if item[1] <= 0:
-            raise ValidationError(f"Non-positive value '{item[1]}' at index {index}")
+            raise ValidationError(f"Non-positive value '{item[1]}' at index {index} of the {build_name}")
+        if len(item) == 3 and not isinstance(item[2], str):
+            raise ValidationError(f"Third entry in each {build_name} Tuple should be a str name, not {item[2]!r}")
         if item[0] == LayerType.PLASMA:
             plasma_count += 1
             plasma_index = index
             if plasma_count > 1:
-                raise ValidationError("Multiple LayerType.PLASMA entries found")
+                raise ValidationError(f"Multiple LayerType.PLASMA entries found in the {build_name}")
     if plasma_count != 1:
-        raise ValidationError("LayerType.PLASMA entry not found or found multiple times")
+        raise ValidationError(f"LayerType.PLASMA entry not found or found multiple times in the {build_name}")
     if plasma_index == 0 or plasma_index == len(radial_build) - 1:
         raise ValidationError("LayerType.PLASMA entry must have at least one entry before and after it")
     if radial_build[plasma_index - 1][0] != LayerType.GAP or radial_build[plasma_index + 1][0] != LayerType.GAP:
         raise ValidationError("LayerType.PLASMA entry must be preceded and followed by a LayerType.GAP")
+
+
+def validate_build_lengths(radial_build, vertical_build, reactor_name, inboard_layers=True):
+    """Checks the vertical_build has an entry above and below the plasma for
+    each radial_build entry after the plasma, as each layer after the plasma
+    takes its top and bottom thickness from the vertical_build. When
+    inboard_layers is True (tokamak) the radial_build also needs an entry
+    before the plasma for each entry after it, as the layers are made from
+    inboard and outboard pairs."""
+    plasma_index_rb = get_plasma_index(radial_build)
+    plasma_index_vb = get_plasma_index(vertical_build)
+    after_plasma = len(radial_build) - plasma_index_rb - 1
+    above = plasma_index_vb
+    below = len(vertical_build) - plasma_index_vb - 1
+    if inboard_layers and plasma_index_rb < after_plasma:
+        raise ValueError(
+            f"The radial_build for {reactor_name} has {after_plasma} entries after the plasma but only "
+            f"{plasma_index_rb} before it. Each entry after the plasma is paired with an entry before the plasma, "
+            "so the radial_build needs at least as many entries before the plasma as after it."
+        )
+    if above < after_plasma or below < after_plasma:
+        raise ValueError(
+            f"The vertical_build for {reactor_name} needs at least {after_plasma} entries above and below the "
+            f"plasma, one for each radial_build entry after the plasma, but it has {above} above and {below} below."
+        )
 
 
 def is_lower_or_upper_divertor(radial_build):
@@ -306,12 +420,14 @@ def sum_after_gap_following_plasma(radial_build):
 
     return total_sum
 
+
 def get_layer_name(item, index):
     if len(item) == 2:
         layer_name = f"layer_{index}"
     else:
         layer_name = item[2]
     return layer_name
+
 
 def validate_vertical_build_names(vertical_build, reactor_name):
     named_layers = [item[2] for item in vertical_build if len(item) == 3]
@@ -332,18 +448,19 @@ def validate_unique_assembly_names(names, reactor_name):
             f"The following names are duplicated in the assembly: {duplicate_names}. "
             "Please rename the repeated layers in radial_build."
         )
-    
+
+
 def get_assembly_names(extra_cut_shapes, extra_intersect_shapes, inner_radial_build, blanket_layers):
     cut_names = [
-        f"{name}_{i + 1}" if (name := getattr(entry, 'name', None)) else f"add_extra_cut_shape_{i + 1}"
+        f"{name}_{i + 1}" if (name := getattr(entry, "name", None)) else f"add_extra_cut_shape_{i + 1}"
         for i, entry in enumerate(extra_cut_shapes)
     ]
     intersect_names = [
-        f"{name}_{i + 1}" if (name := getattr(entry, 'name', None)) else f"extra_intersect_shapes_{i + 1}"
+        f"{name}_{i + 1}" if (name := getattr(entry, "name", None)) else f"extra_intersect_shapes_{i + 1}"
         for i, entry in enumerate(extra_intersect_shapes)
     ]
     layer_names = [
-        name if (name := getattr(entry, 'name', None)) else f"layer_{i + 1}"
+        name if (name := getattr(entry, "name", None)) else f"layer_{i + 1}"
         for i, entry in enumerate(inner_radial_build + blanket_layers)
     ]
     return cut_names, intersect_names, layer_names

@@ -3,14 +3,18 @@ from __future__ import annotations
 import typing
 import warnings
 
-import mpmath
 import numpy as np
-import sympy as sp
 from OCP.Standard import Standard_Failure
 from OCP.StdFail import StdFail_NotDone
 from scipy.interpolate import interp1d
 
-from ..utils import create_wire_workplane_from_points
+from ..utils import (
+    create_wire_workplane_from_points,
+    rotate_to_rotation_start_angle,
+    validate_positive,
+    validate_positive_integer,
+    validate_rotation_angle,
+)
 
 
 def make_callable(attribute, start_angle, stop_angle):
@@ -139,65 +143,14 @@ def create_offset_points(
         list: list of points [[R1, Z1, connection1], [R2, Z2, connection2],
         ...]
     """
-    # create sympy objects and derivatives
-
-    overlapping_shape = False
-    theta_sp = sp.Symbol("theta")
-
-    R_sp, Z_sp = distribution(
-        major_radius,
-        minor_radius,
-        triangularity,
-        elongation,
-        vertical_displacement,
-        theta_sp,
-        pkg=sp,
+    thetas = np.asarray(thetas, dtype=float)
+    # offset may be a user function that only accepts a single angle
+    offsets = np.array([offset(theta) for theta in thetas], dtype=float)
+    R, Z = offset_curve_coordinates(
+        major_radius, minor_radius, triangularity, elongation, vertical_displacement, thetas, offsets
     )
-    R_derivative = sp.diff(R_sp, theta_sp)
-    Z_derivative = sp.diff(Z_sp, theta_sp)
-    points = []
-
-    for theta in thetas:
-        # get local value of derivatives
-        val_R_derivative = float(R_derivative.subs("theta", theta))
-        val_Z_derivative = float(Z_derivative.subs("theta", theta))
-
-        # get normal vector components
-        nx = val_Z_derivative
-        ny = -val_R_derivative
-
-        # normalise normal vector
-        normal_vector_norm = (nx**2 + ny**2) ** 0.5
-        nx /= normal_vector_norm
-        ny /= normal_vector_norm
-
-        # calculate outer points
-        val_R_outer = (
-            distribution(
-                major_radius,
-                minor_radius,
-                triangularity,
-                elongation,
-                vertical_displacement,
-                theta,
-            )[0]
-            + offset(theta) * nx
-        )
-        val_Z_outer = (
-            distribution(
-                major_radius,
-                minor_radius,
-                triangularity,
-                elongation,
-                vertical_displacement,
-                theta,
-            )[1]
-            + offset(theta) * ny
-        )
-        if float(val_R_outer) > 0:
-            points.append([float(val_R_outer), float(val_Z_outer), "spline"])
-        else:
-            overlapping_shape = True
+    points = [[float(r), float(z), "spline"] for r, z in zip(R, Z) if r > 0]
+    overlapping_shape = len(points) < len(thetas)
     return points, overlapping_shape
 
 
@@ -210,7 +163,7 @@ def offset_curve_coordinates(
     thetas,
     offsets,
 ):
-    """Vectorised equivalent of create_offset_points. Returns the R and Z
+    """Returns the R and Z
     coordinates of the plasma surface offset along its outward normal.
 
     Args:
@@ -266,26 +219,19 @@ def poloidal_arc_length_table(
     return thetas, arc_lengths
 
 
-def distribution(major_radius, minor_radius, triangularity, elongation, vertical_displacement, theta, pkg=np):
+def distribution(major_radius, minor_radius, triangularity, elongation, vertical_displacement, theta):
     """Plasma distribution theta in degrees
 
     Args:
-        theta (float or np.array or sp.Symbol): the angle(s) in degrees.
-        pkg (module, optional): Module to use in the function. If sp, as
-            sympy object will be returned. If np, a np.array or a float
-            will be returned. Defaults to np.
+        theta (float or np.array): the angle(s) in degrees.
 
     Returns:
-        (float, float) or (sympy.Add, sympy.Mul) or
-            (numpy.array, numpy.array): The R and Z coordinates of the
-            point with angle theta
+        (float, float) or (numpy.array, numpy.array): The R and Z
+            coordinates of the point with angle theta
     """
-    if pkg == np:
-        theta = np.radians(theta)
-    else:
-        theta = mpmath.radians(theta)
-    R = major_radius + minor_radius * pkg.cos(theta + triangularity * pkg.sin(theta))
-    Z = elongation * minor_radius * pkg.sin(theta) + vertical_displacement
+    theta = np.radians(theta)
+    R = major_radius + minor_radius * np.cos(theta + triangularity * np.sin(theta))
+    Z = elongation * minor_radius * np.sin(theta) + vertical_displacement
     return R, Z
 
 
@@ -312,6 +258,7 @@ def blanket_from_plasma(
     obj=None,
     allow_overlapping_shape=False,
     connect_to_center=False,
+    rotation_start_angle: float = 0.0,
 ):
     """A blanket volume created from plasma parameters. It might be necessary
     to increase the num_points when making long but thin geometry with this
@@ -324,13 +271,12 @@ def blanket_from_plasma(
             a tuple of floats, blanket thickness will vary linearly between the
             two values. If thickness is callable, then the blanket thickness
             will be a function of poloidal angle (in degrees). If thickness is
-            a list of two lists (thicknesses and angles) then these will be
+            a list of two lists (angles and thicknesses) then these will be
             used together with linear interpolation.
         start_angle: the angle in degrees to start the blanket, measured anti
             clockwise from 3 o'clock.
         stop_angle: the angle in degrees to stop the blanket, measured anti
             clockwise from 3 o'clock.
-        plasma: If not None, the parameters of the plasma Object will be used.
         minor_radius: the minor radius of the plasma (cm).
         major_radius: the major radius of the plasma (cm).
         triangularity: the triangularity of the plasma.
@@ -343,15 +289,20 @@ def blanket_from_plasma(
             (angles and offsets) then these will be used together with linear
             interpolation.
         num_points: number of points that will describe the shape.
-        allow_overlapping_shape: allows parameters to create a shape that
-            overlaps itself.
+        allow_overlapping_shape: if False (the default) a warning is given
+            when the offset makes some points of the profile reach past the
+            Z axis (a negative R). Those points are always left out of the
+            profile, setting this to True only stops the warning.
+        rotation_start_angle: the angle in degrees the revolution starts from,
+            measured around the revolve axis from the workplane. The shape covers
+            rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+            between -360 and 360. Defaults to 0.
     """
-    if major_radius <= 0:
-        raise ValueError(f"major_radius must be positive, got {major_radius}.")
-    if minor_radius <= 0:
-        raise ValueError(f"minor_radius must be positive, got {minor_radius}.")
-    if elongation <= 0:
-        raise ValueError(f"elongation must be positive, got {elongation}.")
+    validate_positive_integer(num_points, "num_points")
+    validate_rotation_angle(rotation_angle)
+    validate_positive(major_radius, "major_radius")
+    validate_positive(minor_radius, "minor_radius")
+    validate_positive(elongation, "elongation")
     if not (-1.0 <= triangularity <= 1.0):
         raise ValueError(f"triangularity must be between -1 and 1, got {triangularity}.")
 
@@ -380,6 +331,7 @@ def blanket_from_plasma(
             "blanket_from_plasma: could not revolve the profile, "
             "the geometry is probably self-overlapping"
         ) from e
+    solid = rotate_to_rotation_start_angle(solid, wire, rotation_start_angle)
     solid.name = name
     solid.color = color
     return solid
