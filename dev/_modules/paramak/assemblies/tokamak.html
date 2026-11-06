@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.assemblies.tokamak &#8212; Paramak 0.10.1.dev10+g19fd10286 documentation</title>
+    <title>paramak.assemblies.tokamak &#8212; Paramak 0.10.1.dev11+gb0be9417b documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=227e245f"></script>
+    <script src="../../../_static/documentation_options.js?v=60feca84"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev10+g19fd10286" />
+  <meta name="docsearch:version" content="0.10.1.dev11+gb0be9417b" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -591,6 +591,7 @@ function render(data, parent_element, ratio){
     <span class="n">SegmentBuild</span><span class="p">,</span>
     <span class="n">check_not_empty</span><span class="p">,</span>
     <span class="n">get_poloidal_segment_angles</span><span class="p">,</span>
+    <span class="n">cut_with_shapes</span><span class="p">,</span>
     <span class="n">intersect_with_each_part</span><span class="p">,</span>
     <span class="n">resolve_vertical_build</span><span class="p">,</span>
     <span class="n">validate_segment_build</span><span class="p">,</span>
@@ -1228,7 +1229,7 @@ function render(data, parent_element, ratio){
                 <span class="n">reactor_compound</span> <span class="o">=</span> <span class="n">reactor_compound</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
 
         <span class="c1"># adds the extra intersect shapes to the assembly</span>
-        <span class="k">for</span> <span class="n">entry</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">extra_intersect_shapes</span><span class="p">,</span> <span class="n">intersect_names</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">extra_intersect_shapes</span><span class="p">,</span> <span class="n">intersect_names</span><span class="p">)):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">segmented</span><span class="p">:</span>
                 <span class="n">reactor_entry_intersection</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">reactor_compound</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -1236,6 +1237,11 @@ function render(data, parent_element, ratio){
                 <span class="c1"># makes fusing all the parts unreliable, so the shape is intersected</span>
                 <span class="c1"># with each part and the pieces are kept together in a compound</span>
                 <span class="n">reactor_entry_intersection</span> <span class="o">=</span> <span class="n">intersect_with_each_part</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">inner_radial_build</span> <span class="o">+</span> <span class="n">blanket_layers</span><span class="p">)</span>
+            <span class="c1"># the cut shapes are parts of the assembly and the earlier intersect shapes have</span>
+            <span class="c1"># already taken their share of the reactor, so both are removed to avoid overlaps</span>
+            <span class="n">reactor_entry_intersection</span> <span class="o">=</span> <span class="n">cut_with_shapes</span><span class="p">(</span>
+                <span class="n">reactor_entry_intersection</span><span class="p">,</span> <span class="p">[</span><span class="o">*</span><span class="n">extra_cut_shapes</span><span class="p">,</span> <span class="o">*</span><span class="n">extra_intersect_shapes</span><span class="p">[:</span><span class="n">index</span><span class="p">]]</span>
+            <span class="p">)</span>
             <span class="n">my_assembly</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">reactor_entry_intersection</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cq</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="o">*</span><span class="n">resolve_assembly_color</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="p">)))</span>
 
     <span class="c1"># cut the core layers with any extra shapes (a no-op when there are none)</span>
