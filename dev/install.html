@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Install &#8212; Paramak 0.11.0 documentation</title>
+    <title>Install &#8212; Paramak 0.11.1.dev2+ga0e28eaf5 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="_static/documentation_options.js?v=f3b36f1a"></script>
+    <script src="_static/documentation_options.js?v=de6bf71c"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/vtk.js?v=415cc427"></script>
@@ -125,8 +125,15 @@ window.addEventListener('resize', resize);
 document.addEventListener('scroll', recomputeViewports);
 
 
+// listens on the body but reports the canvas size, which vtk.js uses to convert mouse positions
+const eventContainer = {
+  addEventListener: (...args) => document.body.addEventListener(...args),
+  removeEventListener: (...args) => document.body.removeEventListener(...args),
+  getBoundingClientRect: () => openglRenderWindow.getCanvas().getBoundingClientRect(),
+};
+
 function enterCurrentRenderer(e) {
-  interactor.bindEvents(document.body);
+  interactor.bindEvents(eventContainer);
   interact_style.setEnabled(true);
   interactor.setCurrentRenderer(RENDERERS[e.target.id]);
 }
@@ -210,12 +217,12 @@ function render(data, parent_element, ratio){
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://raw.githubusercontent.com/fusion-energy/paramak/main/docs/version_switcher.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.11.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             true;
         </script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
-    <script src="_static/cq_viewer.js?v=9325bd07"></script>
+    <script src="_static/cq_viewer.js?v=479d9c9f"></script>
     <link rel="icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -224,7 +231,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.11.0" />
+  <meta name="docsearch:version" content="0.11.1.dev2+ga0e28eaf5" />
   
     
     <script src="_static/searchtools.js"></script>
