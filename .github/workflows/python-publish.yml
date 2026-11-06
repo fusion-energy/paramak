@@ -11,6 +11,10 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+      - name: Check the docs version switcher lists this release
+        run: |
+          jq -e --arg v "$GITHUB_REF_NAME" 'any(.[]; .version == $v)' docs/version_switcher.json > /dev/null \
+            || { echo "::error::$GITHUB_REF_NAME is missing from docs/version_switcher.json"; exit 1; }
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
