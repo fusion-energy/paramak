@@ -42,7 +42,7 @@ Reactors from published papers (SPARC, ITER and EU DEMO) can also be made, with 
 .. raw:: html
 
     <div style="display: flex; justify-content: center;">
-        <video width="90%" controls autoplay loop muted playsinline title="Reactors from papers: SPARC (paramak.sparc_from_2020_paper, based on Figure 4 of Overview of the SPARC tokamak, 2020), ITER (paramak.iter_from_2020_paper, based on the diagram in ITER Project: International Cooperation and Energy Investment, 2020) and EU DEMO (paramak.eu_demo_from_2015_paper, based on Figure 2 of Definition of the basic DEMO tokamak geometry based on systems code studies, 2015). The animation varies the rotation_angle of each reactor from 1 to 360 degrees and back.">
+        <video width="45%" controls autoplay loop muted playsinline title="Reactors from papers, shown one after the other: SPARC (paramak.sparc_from_2020_paper, based on Figure 4 of Overview of the SPARC tokamak, 2020), ITER (paramak.iter_from_2020_paper, based on the diagram in ITER Project: International Cooperation and Energy Investment, 2020) and EU DEMO (paramak.eu_demo_from_2015_paper, based on Figure 2 of Definition of the basic DEMO tokamak geometry based on systems code studies, 2015). The animation varies the rotation_angle of each reactor in turn from 1 to 360 degrees and back.">
             <source src="_static/paper_reactors_animation.webm" type="video/webm">
             <source src="_static/paper_reactors_animation.mp4" type="video/mp4">
             Your browser does not support the video tag.

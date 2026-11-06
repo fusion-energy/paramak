@@ -1,16 +1,17 @@
 """Makes the reactors from papers animation on the front page of the
-documentation. The SPARC, ITER and EU DEMO reactors are shown side by side,
-each built with a rotation_angle that sweeps from 1 to 360 degrees and back
-again.
+documentation. The SPARC, ITER and EU DEMO reactors are shown one after the
+other, each built with a rotation_angle that sweeps from 1 to 360 degrees and
+back again.
 
 This writes an mp4 on a white background and a webm with a transparent
 background (so the animation also works on dark pages), in the same format as
-the tokamak and spherical tokamak animations. Each reactor is built and
-rendered in parallel processes, then the three renders are placed side by side
-in each frame. Requires Pillow, VTK (installed with CadQuery) and ffmpeg.
+the tokamak and spherical tokamak animations. The frames are built and
+rendered in parallel processes. Requires Pillow, VTK (installed with
+CadQuery) and ffmpeg.
 """
 
 import os
+import shutil
 from concurrent.futures import ProcessPoolExecutor
 
 import cadquery as cq
@@ -31,7 +32,6 @@ REACTORS = {
 ANGLES = [1, 5] + list(range(10, 361, 10))
 PAUSE_FRAMES = 10  # number of frames to hold the fully built and the thinnest reactors
 ZOOM = 1.2
-WATERMARKED_REACTOR = "iter"  # the watermark goes under the middle reactor only
 
 
 def add_watermark(reactor, z):
@@ -50,7 +50,6 @@ def camera_settings(label):
     bb = reactor.toCompound().BoundingBox()
     # low enough to stay visible below the near side of the complete reactor
     watermark_z = bb.zmin - bb.xmax * 0.9
-    # every reactor is framed as if it had a watermark, so they all line up
     add_watermark(reactor, watermark_z)
     bb = reactor.toCompound().BoundingBox()
     return watermark_z, (bb.xmin, bb.xmax, bb.ymin, bb.ymax, bb.zmin, bb.zmax)
@@ -97,8 +96,7 @@ def build_and_render(job):
     a transparent background (used for the webm)."""
     label, angle, watermark_z, bounds = job
     reactor = REACTORS[label](rotation_angle=angle)
-    if label == WATERMARKED_REACTOR:
-        add_watermark(reactor, watermark_z)
+    add_watermark(reactor, watermark_z)
     file_path, alpha_file_path = frame_paths(label, angle)
     # the difference between renders on black and white backgrounds gives the
     # transparency of each pixel (including anti aliased edges and the partly
@@ -120,17 +118,16 @@ if __name__ == "__main__":
         jobs = [(label, angle, *settings[label]) for label in REACTORS for angle in ANGLES]
         list(executor.map(build_and_render, jobs))
 
-    # builds up to 360 degrees, holds, then goes back down to 1 degree and holds
+    # each reactor in turn builds up to 360 degrees, holds, then goes back down
+    # to 1 degree and holds
     sequence = ANGLES + [ANGLES[-1]] * PAUSE_FRAMES + ANGLES[::-1] + [ANGLES[0]] * PAUSE_FRAMES
-    for frame, angle in enumerate(sequence):
-        # the white and transparent renders of the reactors side by side
-        for index, name in enumerate([f"frame_{frame:03d}.png", f"alpha_frame_{frame:03d}.png"]):
-            panels = [Image.open(frame_paths(label, angle)[index]).convert("RGBA") for label in REACTORS]
-            background = (255, 255, 255, 255) if index == 0 else (0, 0, 0, 0)
-            combined = Image.new("RGBA", (sum(p.width for p in panels), panels[0].height), background)
-            for position, panel in enumerate(panels):
-                combined.paste(panel, (position * panel.width, 0))
-            combined.save(name)
+    frame = 0
+    for label in REACTORS:
+        for angle in sequence:
+            file_path, alpha_file_path = frame_paths(label, angle)
+            shutil.copy(file_path, f"frame_{frame:03d}.png")
+            shutil.copy(alpha_file_path, f"alpha_frame_{frame:03d}.png")
+            frame += 1
 
     # mp4 on a white background, and webm with a transparent background for
     # browsers that support it
