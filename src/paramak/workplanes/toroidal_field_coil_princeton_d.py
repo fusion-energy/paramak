@@ -4,8 +4,6 @@ import math
 import typing
 
 import numpy as np
-from scipy import integrate
-from scipy.optimize import brentq
 
 from ..utils import (
     create_wire_workplane_from_points,
@@ -20,42 +18,42 @@ from ..workplanes.cutting_wedge import cutting_wedge
 def _compute_inner_points(R1, R2):
     """Computes the inner curve points
 
+    The constant tension (Princeton D) curve has
+    dz/dr = -ln(r / r0) / sqrt(k**2 - ln(r / r0)**2) with r0 = sqrt(R1 * R2)
+    and k = ln(R2 / R1) / 2, which has a vertical tangent at R1 and R2.
+    Substituting r = r0 * exp(k * sin(phi)) gives the smooth integrand
+    dz/dphi = -r0 * k * sin(phi) * exp(k * sin(phi)), so the height is found
+    by integrating that from the top of the curve (phi = 0) without an ODE
+    solver.
+
     Args:
         R1 (float): smallest radius (cm)
         R2 (float): largest radius (cm)
 
     Returns:
-        (list, list, list): R, Z and derivative lists for outer curve
-        points
+        (list, list): R and Z lists for the inner curve points
     """
-
-    def error(z_0):
-        segment = get_segment(R0, R2, z_0)
-        return segment[1][-1]
-
-    def get_segment(a, b, z_0, num=5):
-        a_R = np.linspace(a, b, num=num, endpoint=True)
-        asol = integrate.odeint(solvr, [z_0, 0], a_R)
-        return a_R, asol[:, 0], asol[:, 1]
-
-    def solvr(Y, R):
-        return [Y[1], -1 / (k * R) * (1 + Y[1] ** 2) ** (3 / 2)]
-
     R0 = (R1 * R2) ** 0.5
     k = 0.5 * np.log(R2 / R1)
 
-    def find_intersect():
-        z_lo, z_hi = -10.0, 10.0
-        while error(z_lo) * error(z_hi) > 0:
-            z_lo *= 2.0
-            z_hi *= 2.0
-        return brentq(error, z_lo, z_hi)
+    def drop_from_top(r):
+        """height of the top of the curve above the curve at radius r"""
+        phi = np.arcsin(np.clip(np.log(r / R0) / k, -1.0, 1.0))
+        grid = np.linspace(0.0, phi, 2001)
+        values = np.sin(grid) * np.exp(k * np.sin(grid))
+        # trapezoidal rule, written out as np.trapezoid needs numpy 2
+        return R0 * k * np.sum((values[1:] + values[:-1]) * np.diff(grid)) / 2
 
-    z_0 = find_intersect()
+    # the curve is at z=0 where it meets the outboard leg at R2
+    z_0 = drop_from_top(R2)
+
+    def get_segment(a, b, num=5):
+        a_R = np.linspace(a, b, num=num, endpoint=True)
+        return a_R, np.array([z_0 - drop_from_top(r) for r in a_R])
 
     # compute inner and outer segments
-    segment1 = get_segment(R0, R1, z_0)
-    segment2 = get_segment(R0, R2, z_0)
+    segment1 = get_segment(R0, R1)
+    segment2 = get_segment(R0, R2)
 
     r_values = np.concatenate(
         [
@@ -188,8 +186,9 @@ def toroidal_field_coil_princeton_d(
     Creates a toroidal field coil with a Princeton-D shape.
 
     Args:
-        r1 (float, optional): Inner radius of the coil. Defaults to 100.
-        r2 (float, optional): Outer radius of the coil. Defaults to 300.
+        r1 (float, optional): Inner radius of the coil, the inner face of the inner leg. Defaults to 100.
+        r2 (float, optional): Radius of the inner face of the outer leg, the coil extends to
+            r2 + thickness. Must be greater than r1 + thickness. Defaults to 300.
         thickness (float, optional): Thickness of the coil. Defaults to 30.
         distance (float, optional): Distance to extrude the coil. Defaults to 20.
         rotation_angle (float): angle of rotation in degrees, this cuts the resulting shape with a wedge. Useful for sector models.
@@ -213,9 +212,12 @@ def toroidal_field_coil_princeton_d(
     validate_rotation_angle(rotation_angle)
     validate_positive(r1, "r1")
     validate_positive(r2, "r2")
-    if r2 <= r1:
-        raise ValueError(f"r2 ({r2}) must be greater than r1 ({r1}).")
     validate_positive(thickness, "thickness")
+    if r2 <= r1 + thickness:
+        raise ValueError(
+            f"r2 ({r2}) must be greater than r1 + thickness ({r1 + thickness}), as the inner surface of the "
+            "coil runs from r1 + thickness to r2."
+        )
     validate_positive(distance, "distance")
     validate_rotation_start_angle(rotation_start_angle)
         

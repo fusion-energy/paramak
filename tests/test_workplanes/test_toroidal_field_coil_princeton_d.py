@@ -1,3 +1,5 @@
+import pytest
+
 import paramak
 
 
@@ -20,3 +22,22 @@ def test_rotation_angle():
         / (0.5 * solid_180_uncut.val().Volume())
         < 0.00001
     )
+
+
+def test_no_integration_warnings():
+    import warnings
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        paramak.toroidal_field_coil_princeton_d()
+
+
+def test_r2_must_be_beyond_the_inner_leg():
+    with pytest.raises(ValueError, match="r2 .120. must be greater than r1 . thickness .130."):
+        paramak.toroidal_field_coil_princeton_d(r1=100, r2=120, thickness=30)
+
+
+def test_coil_extends_from_r1_to_r2_plus_thickness():
+    bb = paramak.toroidal_field_coil_princeton_d(r1=100, r2=300, thickness=30).val().BoundingBox()
+    assert bb.xmin == pytest.approx(100, abs=1e-3)
+    assert bb.xmax == pytest.approx(330, rel=0.01)
