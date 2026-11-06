@@ -22,6 +22,8 @@ Paramak provides parameter driven creation of Tokamak and Spherical Tokamak CAD 
 
 The style of reactor, sizes of components, plasma shape and number of radial or vertical layers can be specified. Reactors from published papers (SPARC, ITER and EU DEMO) can also be made.
 
+`CAD-to-DAGMC <https://github.com/fusion-energy/cad_to_dagmc>`_, `Stellarmesh <https://github.com/stellarmesh/stellarmesh>`_ and `CAD-to-OpenMC <https://github.com/openmsr/CAD_to_OpenMC>`_ can be used to convert these CAD models to `DAGMC <https://github.com/svalinn/DAGMC>`_ compatible meshes for use in neutronics simulations with `OpenMC <https://github.com/openmc-dev/openmc>`_.
+
 .. raw:: html
 
     <div style="display: flex; justify-content: center;">
