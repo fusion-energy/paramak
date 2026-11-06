@@ -19,7 +19,10 @@ def test_creation_different_angles(rotation_angle):
 
 
 @pytest.mark.parametrize("rotation_angle", [60, 360])
-@pytest.mark.skipif(not importlib.util.find_spec("cad_to_dagmc"), reason="Skipping transport tests")
+@pytest.mark.skipif(
+    not (importlib.util.find_spec("cad_to_dagmc") and importlib.util.find_spec("openmc")),
+    reason="transport tests need cad_to_dagmc and openmc, install them with the transport extra",
+)
 def test_transport_different_angles(rotation_angle):
     from cad_to_dagmc import CadToDagmc
 
