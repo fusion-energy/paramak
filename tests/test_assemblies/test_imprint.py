@@ -70,9 +70,7 @@ def segments(arc_length, number_of_segments, gap, name):
 
 
 def tokamak_from_plasma(**kwargs):
-    return paramak.tokamak_from_plasma(
-        radial_build=TOKAMAK_RADIAL_BUILD, elongation=2, triangularity=0.55, **kwargs
-    )
+    return paramak.tokamak_from_plasma(radial_build=TOKAMAK_RADIAL_BUILD, elongation=2, triangularity=0.55, **kwargs)
 
 
 def spherical_tokamak_from_plasma(**kwargs):
@@ -101,9 +99,7 @@ def tokamak():
 
 
 def with_divertor():
-    divertor = (
-        cq.Workplane("XZ").polyline([(300, -700), (300, 0), (400, 0), (400, -700)]).close().revolve(180)
-    )
+    divertor = cq.Workplane("XZ").polyline([(300, -700), (300, 0), (400, 0), (400, -700)]).close().revolve(180)
     return tokamak_from_plasma(rotation_angle=180, extra_intersect_shapes=[divertor])
 
 
