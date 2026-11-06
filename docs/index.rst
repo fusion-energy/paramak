@@ -24,6 +24,8 @@ The style of reactor, sizes of components, plasma shape and number of radial or 
 
 `CAD-to-DAGMC <https://github.com/fusion-energy/cad_to_dagmc>`_, `Stellarmesh <https://github.com/stellarmesh/stellarmesh>`_ and `CAD-to-OpenMC <https://github.com/openmsr/CAD_to_OpenMC>`_ can be used to convert these CAD models to `DAGMC <https://github.com/svalinn/DAGMC>`_ compatible meshes for use in neutronics simulations with `OpenMC <https://github.com/openmc-dev/openmc>`_.
 
+Paramak is open source and the source code is available on `GitHub <https://github.com/fusion-energy/paramak>`_.
+
 .. raw:: html
 
     <div style="display: flex; justify-content: center;">
