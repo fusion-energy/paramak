@@ -4,22 +4,66 @@ import pytest
 from paramak.assemblies.assembly import Assembly
 
 
-def test_remove_and_names():
-
-    sphere1 = cq.Workplane().moveTo(2, 2).sphere(1)
-    box1 = cq.Workplane().box(1, 1, 1)
+def _box_and_sphere_assembly():
     assembly = Assembly()
-    assembly.add(box1, name="box1", color=cq.Color(0.5, 0.5, 0.5))
-    assembly.add(sphere1, name="sphere")
+    assembly.add(cq.Workplane().box(1, 1, 1), name="box1", color=cq.Color(0.5, 0.5, 0.5))
+    assembly.add(cq.Workplane().moveTo(2, 2).sphere(1), name="sphere")
+    return assembly
 
-    assembly2 = assembly.remove('sphere')
-    assembly3 = assembly.remove('box1')
-    assembly4 = assembly.remove('bosdfsdf')
+
+def test_names():
+    assert _box_and_sphere_assembly().names() == ['box1', 'sphere']
+
+
+def test_remove_uses_cadquery_remove():
+    # paramak relies on cadquery's Assembly.remove rather than overriding it
+    assert Assembly.remove is cq.Assembly.remove
+
+
+def test_remove_is_in_place_and_returns_self():
+    assembly = _box_and_sphere_assembly()
+
+    result = assembly.remove('sphere')
+
+    assert result is assembly
+    assert isinstance(result, Assembly)
+    assert assembly.names() == ['box1']
+    assert 'sphere' not in assembly.objects
+    assert len(assembly.toCompound().Solids()) == 1
+
+
+def test_remove_each_part():
+    assembly = _box_and_sphere_assembly()
+    assert assembly.remove('box1').names() == ['sphere']
+
+    assembly = _box_and_sphere_assembly()
+    assert assembly.remove('sphere').remove('box1').names() == []
+
+
+def test_remove_missing_name_raises():
+    assembly = _box_and_sphere_assembly()
+
+    with pytest.raises(ValueError, match='bosdfsdf'):
+        assembly.remove('bosdfsdf')
 
     assert assembly.names() == ['box1', 'sphere']
-    assert assembly2.names() == ['box1']
-    assert assembly3.names() == ['sphere']
-    assert assembly4.names() == ['box1', 'sphere']
+
+
+def test_remove_nested_part_and_subassembly():
+    sub = Assembly(name="magnets")
+    sub.add(cq.Workplane().box(1, 1, 1), name="coil_1")
+    sub.add(cq.Workplane().moveTo(5, 0).box(1, 1, 1), name="coil_2")
+
+    assembly = _box_and_sphere_assembly()
+    assembly.add(sub)
+
+    assembly.remove('magnets/coil_1')
+    assert assembly.names() == ['box1', 'sphere', 'coil_2']
+
+    assembly.remove('magnets')
+    assert assembly.names() == ['box1', 'sphere']
+    assert not any(key.startswith('magnets') for key in assembly.objects)
+
 
 def test_split_solids():
     # A compound with 2 solids (two spheres at different positions)
