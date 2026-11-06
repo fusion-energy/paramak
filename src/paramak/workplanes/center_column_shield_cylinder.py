@@ -32,7 +32,8 @@ def center_column_shield_cylinder(
     Args:
         height: height of the center column shield.
         inner_radius: the inner radius of the center column shield.
-        thickness: the outer radius of the center column shield.
+        thickness: the radial thickness of the center column shield, so the
+            outer radius is inner_radius + thickness.
         reference_point: the vertical coordinates to build the vessel from and
             description of the reference point. Can be either the 'center'
             with a numerical value or 'lower' with a numerical value.
