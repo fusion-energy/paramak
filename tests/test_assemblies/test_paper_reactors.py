@@ -1,7 +1,9 @@
 import importlib
+from collections import defaultdict
 from pathlib import Path
 
 import pytest
+from cadquery.occ_impl.assembly import imprint
 
 import paramak
 
@@ -191,3 +193,21 @@ def test_transport(reactor_function, rotation_angle, tmp_path, monkeypatch):
         cross_sections_xml=cross_sections_xml,
     )
     assert flux > 0.0
+
+
+def test_eu_demo_vessel_sits_against_the_blanket_and_divertor():
+    """The vessel is in contact with the blanket and divertor and shares the
+    surfaces between them once imprinted, as DAGMC needs."""
+    reactor = paramak.eu_demo_from_2015_paper(rotation_angle=180)
+    shapes = {name.split("/")[-1]: shape.moved(loc) for shape, name, loc, _color in reactor}
+    assert shapes["vessel"].distance(shapes["blanket"]) == pytest.approx(0, abs=1e-6)
+    assert shapes["vessel"].distance(shapes["divertor"]) == pytest.approx(0, abs=1e-6)
+
+    _, origins = imprint(reactor)
+    parts_on_face = defaultdict(set)
+    for solid, solid_origins in origins.items():
+        assert len(solid_origins) == 1, f"overlapping parts {solid_origins}"
+        for face in solid.Faces():
+            parts_on_face[face].add(solid_origins[0].split("/")[-1])
+    shared = {tuple(sorted(parts)) for parts in parts_on_face.values() if len(parts) == 2}
+    assert {("blanket", "vessel"), ("divertor", "vessel")} <= shared
