@@ -148,9 +148,10 @@ def sparc_from_2020_paper(
 
     The geometry is based on Figure 4 of A. J. Creely et al., "Overview of the
     SPARC tokamak", Journal of Plasma Physics, 86(5), 865860502 (2020),
-    doi:10.1017/S0022377820001257. The coordinates were read off the figure,
-    so they are approximate and the model does not exactly match the
-    reactor.
+    `doi:10.1017/S0022377820001257
+    <https://doi.org/10.1017/S0022377820001257>`_. The coordinates were read
+    off the figure, so they are approximate and the model does not exactly
+    match the reactor.
 
     The assembly contains the plasma, the central solenoid and poloidal field
     coils, the divertor and vertical stability coils, the ICRF antenna, the
@@ -376,9 +377,10 @@ def iter_from_2020_paper(
 
     The geometry is based on the diagram in "ITER Project: International
     Cooperation and Energy Investment" (2020),
-    https://link.springer.com/chapter/10.1007/978-3-030-42913-3_26 . Several
-    parts use paramak parametric shapes, so the model does not exactly match
-    the diagram or the reactor.
+    `doi:10.1007/978-3-030-42913-3_26
+    <https://doi.org/10.1007/978-3-030-42913-3_26>`_. Several parts use
+    paramak parametric shapes, so the model does not exactly match the
+    diagram or the reactor.
 
     The assembly contains the plasma, a blanket that follows the plasma, a
     single null divertor, the vacuum vessel, the central solenoid, the
@@ -623,9 +625,10 @@ def eu_demo_from_2015_paper(
 
     The geometry is based on Figure 2 of R. Kemp et al., "Definition of the
     basic DEMO tokamak geometry based on systems code studies", Fusion
-    Engineering and Design (2015), doi:10.1016/j.fusengdes.2015.06.097 . The
-    coordinates were read off the figure, so they are approximate and the
-    model does not exactly match the reactor.
+    Engineering and Design (2015), `doi:10.1016/j.fusengdes.2015.06.097
+    <https://doi.org/10.1016/j.fusengdes.2015.06.097>`_. The coordinates were
+    read off the figure, so they are approximate and the model does not
+    exactly match the reactor.
 
     The assembly contains the plasma, the blanket, a single null divertor,
     the vacuum vessel, the central solenoid, the poloidal field coils and the
