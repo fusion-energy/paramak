@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.workplanes.blanket_from_plasma &#8212; Paramak 0.10.0 documentation</title>
+    <title>paramak.workplanes.blanket_from_plasma &#8212; Paramak 0.11.0 documentation</title>
   
   
   
@@ -25,20 +25,21 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=64cc4de3f052d77215f0" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=64cc4de3f052d77215f0" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/paramak.css?v=67693341" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../../_static/scripts/fontawesome.js?digest=64cc4de3f052d77215f0"></script>
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=82662543"></script>
+    <script src="../../../_static/documentation_options.js?v=f3b36f1a"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -206,19 +207,21 @@ function render(data, parent_element, ratio){
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/paramak/workplanes/blanket_from_plasma';</script>
     <script>
-        DOCUMENTATION_OPTIONS.theme_version = '0.22.0';
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://raw.githubusercontent.com/fusion-energy/paramak/main/docs/version_switcher.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.10';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.11.0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             true;
         </script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../../../_static/cq_viewer.js?v=9325bd07"></script>
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.0" />
+  <meta name="docsearch:version" content="0.11.0" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -266,7 +269,7 @@ function render(data, parent_element, ratio){
   
     <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
-  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
     <span class="fa-solid fa-bars"></span>
   </button>
   
@@ -361,14 +364,14 @@ function render(data, parent_element, ratio){
 
 <div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
   <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
-    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
   </button>
   <ul class="dropdown-menu dropdown-menu-end">
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
   </ul>
 </div></div>
       
@@ -415,7 +418,7 @@ function render(data, parent_element, ratio){
       
         
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
       <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
         
 
@@ -465,14 +468,14 @@ function render(data, parent_element, ratio){
 
 <div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
   <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
-    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
   </button>
   <ul class="dropdown-menu dropdown-menu-end">
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
   </ul>
 </div></div>
         
@@ -527,7 +530,7 @@ function render(data, parent_element, ratio){
     
     <li class="breadcrumb-item breadcrumb-home">
       <a href="../../../index.html" class="nav-link" aria-label="Home">
-        <i class="fa-solid fa-home"></i>
+        <i class="fa-solid fa-house"></i>
       </a>
     </li>
     
@@ -556,14 +559,18 @@ function render(data, parent_element, ratio){
 <span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">mpmath</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">OCP.Standard</span><span class="w"> </span><span class="kn">import</span> <span class="n">Standard_Failure</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">OCP.StdFail</span><span class="w"> </span><span class="kn">import</span> <span class="n">StdFail_NotDone</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">interp1d</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_wire_workplane_from_points</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">create_wire_workplane_from_points</span><span class="p">,</span>
+    <span class="n">rotate_to_rotation_start_angle</span><span class="p">,</span>
+    <span class="n">validate_positive</span><span class="p">,</span>
+    <span class="n">validate_positive_integer</span><span class="p">,</span>
+    <span class="n">validate_rotation_angle</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">make_callable</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="n">start_angle</span><span class="p">,</span> <span class="n">stop_angle</span><span class="p">):</span>
@@ -692,65 +699,14 @@ function render(data, parent_element, ratio){
 <span class="sd">        list: list of points [[R1, Z1, connection1], [R2, Z2, connection2],</span>
 <span class="sd">        ...]</span>
 <span class="sd">    """</span>
-    <span class="c1"># create sympy objects and derivatives</span>
-
-    <span class="n">overlapping_shape</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">theta_sp</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="s2">"theta"</span><span class="p">)</span>
-
-    <span class="n">R_sp</span><span class="p">,</span> <span class="n">Z_sp</span> <span class="o">=</span> <span class="n">distribution</span><span class="p">(</span>
-        <span class="n">major_radius</span><span class="p">,</span>
-        <span class="n">minor_radius</span><span class="p">,</span>
-        <span class="n">triangularity</span><span class="p">,</span>
-        <span class="n">elongation</span><span class="p">,</span>
-        <span class="n">vertical_displacement</span><span class="p">,</span>
-        <span class="n">theta_sp</span><span class="p">,</span>
-        <span class="n">pkg</span><span class="o">=</span><span class="n">sp</span><span class="p">,</span>
+    <span class="n">thetas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">thetas</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="c1"># offset may be a user function that only accepts a single angle</span>
+    <span class="n">offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">offset</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="k">for</span> <span class="n">theta</span> <span class="ow">in</span> <span class="n">thetas</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">R</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">offset_curve_coordinates</span><span class="p">(</span>
+        <span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">vertical_displacement</span><span class="p">,</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">offsets</span>
     <span class="p">)</span>
-    <span class="n">R_derivative</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">R_sp</span><span class="p">,</span> <span class="n">theta_sp</span><span class="p">)</span>
-    <span class="n">Z_derivative</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">Z_sp</span><span class="p">,</span> <span class="n">theta_sp</span><span class="p">)</span>
-    <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">for</span> <span class="n">theta</span> <span class="ow">in</span> <span class="n">thetas</span><span class="p">:</span>
-        <span class="c1"># get local value of derivatives</span>
-        <span class="n">val_R_derivative</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">R_derivative</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="s2">"theta"</span><span class="p">,</span> <span class="n">theta</span><span class="p">))</span>
-        <span class="n">val_Z_derivative</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">Z_derivative</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="s2">"theta"</span><span class="p">,</span> <span class="n">theta</span><span class="p">))</span>
-
-        <span class="c1"># get normal vector components</span>
-        <span class="n">nx</span> <span class="o">=</span> <span class="n">val_Z_derivative</span>
-        <span class="n">ny</span> <span class="o">=</span> <span class="o">-</span><span class="n">val_R_derivative</span>
-
-        <span class="c1"># normalise normal vector</span>
-        <span class="n">normal_vector_norm</span> <span class="o">=</span> <span class="p">(</span><span class="n">nx</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">ny</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
-        <span class="n">nx</span> <span class="o">/=</span> <span class="n">normal_vector_norm</span>
-        <span class="n">ny</span> <span class="o">/=</span> <span class="n">normal_vector_norm</span>
-
-        <span class="c1"># calculate outer points</span>
-        <span class="n">val_R_outer</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">distribution</span><span class="p">(</span>
-                <span class="n">major_radius</span><span class="p">,</span>
-                <span class="n">minor_radius</span><span class="p">,</span>
-                <span class="n">triangularity</span><span class="p">,</span>
-                <span class="n">elongation</span><span class="p">,</span>
-                <span class="n">vertical_displacement</span><span class="p">,</span>
-                <span class="n">theta</span><span class="p">,</span>
-            <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="o">+</span> <span class="n">offset</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">nx</span>
-        <span class="p">)</span>
-        <span class="n">val_Z_outer</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">distribution</span><span class="p">(</span>
-                <span class="n">major_radius</span><span class="p">,</span>
-                <span class="n">minor_radius</span><span class="p">,</span>
-                <span class="n">triangularity</span><span class="p">,</span>
-                <span class="n">elongation</span><span class="p">,</span>
-                <span class="n">vertical_displacement</span><span class="p">,</span>
-                <span class="n">theta</span><span class="p">,</span>
-            <span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="o">+</span> <span class="n">offset</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">ny</span>
-        <span class="p">)</span>
-        <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">val_R_outer</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">val_R_outer</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">val_Z_outer</span><span class="p">),</span> <span class="s2">"spline"</span><span class="p">])</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">overlapping_shape</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="s2">"spline"</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">Z</span><span class="p">)</span> <span class="k">if</span> <span class="n">r</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">overlapping_shape</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">points</span><span class="p">,</span> <span class="n">overlapping_shape</span>
 
 
@@ -763,7 +719,7 @@ function render(data, parent_element, ratio){
     <span class="n">thetas</span><span class="p">,</span>
     <span class="n">offsets</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Vectorised equivalent of create_offset_points. Returns the R and Z</span>
+<span class="w">    </span><span class="sd">"""Returns the R and Z</span>
 <span class="sd">    coordinates of the plasma surface offset along its outward normal.</span>
 
 <span class="sd">    Args:</span>
@@ -819,26 +775,19 @@ function render(data, parent_element, ratio){
     <span class="k">return</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">arc_lengths</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">distribution</span><span class="p">(</span><span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">vertical_displacement</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">pkg</span><span class="o">=</span><span class="n">np</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">distribution</span><span class="p">(</span><span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">vertical_displacement</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Plasma distribution theta in degrees</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        theta (float or np.array or sp.Symbol): the angle(s) in degrees.</span>
-<span class="sd">        pkg (module, optional): Module to use in the function. If sp, as</span>
-<span class="sd">            sympy object will be returned. If np, a np.array or a float</span>
-<span class="sd">            will be returned. Defaults to np.</span>
+<span class="sd">        theta (float or np.array): the angle(s) in degrees.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        (float, float) or (sympy.Add, sympy.Mul) or</span>
-<span class="sd">            (numpy.array, numpy.array): The R and Z coordinates of the</span>
-<span class="sd">            point with angle theta</span>
+<span class="sd">        (float, float) or (numpy.array, numpy.array): The R and Z</span>
+<span class="sd">            coordinates of the point with angle theta</span>
 <span class="sd">    """</span>
-    <span class="k">if</span> <span class="n">pkg</span> <span class="o">==</span> <span class="n">np</span><span class="p">:</span>
-        <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">theta</span> <span class="o">=</span> <span class="n">mpmath</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
-    <span class="n">R</span> <span class="o">=</span> <span class="n">major_radius</span> <span class="o">+</span> <span class="n">minor_radius</span> <span class="o">*</span> <span class="n">pkg</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">+</span> <span class="n">triangularity</span> <span class="o">*</span> <span class="n">pkg</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
-    <span class="n">Z</span> <span class="o">=</span> <span class="n">elongation</span> <span class="o">*</span> <span class="n">minor_radius</span> <span class="o">*</span> <span class="n">pkg</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">vertical_displacement</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">major_radius</span> <span class="o">+</span> <span class="n">minor_radius</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">+</span> <span class="n">triangularity</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">elongation</span> <span class="o">*</span> <span class="n">minor_radius</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">vertical_displacement</span>
     <span class="k">return</span> <span class="n">R</span><span class="p">,</span> <span class="n">Z</span>
 
 
@@ -867,6 +816,7 @@ function render(data, parent_element, ratio){
     <span class="n">obj</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">allow_overlapping_shape</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">connect_to_center</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">rotation_start_angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">"""A blanket volume created from plasma parameters. It might be necessary</span>
 <span class="sd">    to increase the num_points when making long but thin geometry with this</span>
@@ -879,13 +829,12 @@ function render(data, parent_element, ratio){
 <span class="sd">            a tuple of floats, blanket thickness will vary linearly between the</span>
 <span class="sd">            two values. If thickness is callable, then the blanket thickness</span>
 <span class="sd">            will be a function of poloidal angle (in degrees). If thickness is</span>
-<span class="sd">            a list of two lists (thicknesses and angles) then these will be</span>
+<span class="sd">            a list of two lists (angles and thicknesses) then these will be</span>
 <span class="sd">            used together with linear interpolation.</span>
 <span class="sd">        start_angle: the angle in degrees to start the blanket, measured anti</span>
 <span class="sd">            clockwise from 3 o'clock.</span>
 <span class="sd">        stop_angle: the angle in degrees to stop the blanket, measured anti</span>
 <span class="sd">            clockwise from 3 o'clock.</span>
-<span class="sd">        plasma: If not None, the parameters of the plasma Object will be used.</span>
 <span class="sd">        minor_radius: the minor radius of the plasma (cm).</span>
 <span class="sd">        major_radius: the major radius of the plasma (cm).</span>
 <span class="sd">        triangularity: the triangularity of the plasma.</span>
@@ -898,15 +847,20 @@ function render(data, parent_element, ratio){
 <span class="sd">            (angles and offsets) then these will be used together with linear</span>
 <span class="sd">            interpolation.</span>
 <span class="sd">        num_points: number of points that will describe the shape.</span>
-<span class="sd">        allow_overlapping_shape: allows parameters to create a shape that</span>
-<span class="sd">            overlaps itself.</span>
+<span class="sd">        allow_overlapping_shape: if False (the default) a warning is given</span>
+<span class="sd">            when the offset makes some points of the profile reach past the</span>
+<span class="sd">            Z axis (a negative R). Those points are always left out of the</span>
+<span class="sd">            profile, setting this to True only stops the warning.</span>
+<span class="sd">        rotation_start_angle: the angle in degrees the revolution starts from,</span>
+<span class="sd">            measured around the revolve axis from the workplane. The shape covers</span>
+<span class="sd">            rotation_start_angle to rotation_start_angle + rotation_angle. Must be</span>
+<span class="sd">            between -360 and 360. Defaults to 0.</span>
 <span class="sd">    """</span>
-    <span class="k">if</span> <span class="n">major_radius</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"major_radius must be positive, got </span><span class="si">{</span><span class="n">major_radius</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">minor_radius</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"minor_radius must be positive, got </span><span class="si">{</span><span class="n">minor_radius</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">elongation</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"elongation must be positive, got </span><span class="si">{</span><span class="n">elongation</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+    <span class="n">validate_positive_integer</span><span class="p">(</span><span class="n">num_points</span><span class="p">,</span> <span class="s2">"num_points"</span><span class="p">)</span>
+    <span class="n">validate_rotation_angle</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">major_radius</span><span class="p">,</span> <span class="s2">"major_radius"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">minor_radius</span><span class="p">,</span> <span class="s2">"minor_radius"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">elongation</span><span class="p">,</span> <span class="s2">"elongation"</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">&lt;=</span> <span class="n">triangularity</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"triangularity must be between -1 and 1, got </span><span class="si">{</span><span class="n">triangularity</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
 
@@ -935,6 +889,7 @@ function render(data, parent_element, ratio){
             <span class="s2">"blanket_from_plasma: could not revolve the profile, "</span>
             <span class="s2">"the geometry is probably self-overlapping"</span>
         <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+    <span class="n">solid</span> <span class="o">=</span> <span class="n">rotate_to_rotation_start_angle</span><span class="p">(</span><span class="n">solid</span><span class="p">,</span> <span class="n">wire</span><span class="p">,</span> <span class="n">rotation_start_angle</span><span class="p">)</span>
     <span class="n">solid</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
     <span class="n">solid</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span>
     <span class="k">return</span> <span class="n">solid</span></div>
@@ -968,8 +923,8 @@ function render(data, parent_element, ratio){
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0"></script>
-<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -989,7 +944,7 @@ function render(data, parent_element, ratio){
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
   </p>
 </div>
       
@@ -1002,7 +957,7 @@ function render(data, parent_element, ratio){
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.22.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
 </p></div>
       
     </div>

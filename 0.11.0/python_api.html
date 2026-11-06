@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Python API reference &#8212; Paramak 0.11.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/paramak.css?v=67693341" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="_static/documentation_options.js?v=f3b36f1a"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/vtk.js?v=415cc427"></script>
+    <script>
+const RENDERERS = {};
+var ID =  0;
+
+const renderWindow = vtk.Rendering.Core.vtkRenderWindow.newInstance();
+const openglRenderWindow = vtk.Rendering.OpenGL.vtkRenderWindow.newInstance();
+renderWindow.addView(openglRenderWindow);
+
+const rootContainer = document.createElement('div');
+rootContainer.style.position = 'fixed';
+//rootContainer.style.zIndex = -1;
+rootContainer.style.left = 0;
+rootContainer.style.top = 0;
+rootContainer.style.pointerEvents = 'none';
+rootContainer.style.width = '100%';
+rootContainer.style.height = '100%';
+
+openglRenderWindow.setContainer(rootContainer);
+
+const interact_style = vtk.Interaction.Style.vtkInteractorStyleManipulator.newInstance();
+
+const manips = {
+    rot: vtk.Interaction.Manipulators.vtkMouseCameraTrackballRotateManipulator.newInstance(),
+    pan: vtk.Interaction.Manipulators.vtkMouseCameraTrackballPanManipulator.newInstance(),
+    zoom1: vtk.Interaction.Manipulators.vtkMouseCameraTrackballZoomManipulator.newInstance(),
+    zoom2: vtk.Interaction.Manipulators.vtkMouseCameraTrackballZoomManipulator.newInstance(),
+    roll: vtk.Interaction.Manipulators.vtkMouseCameraTrackballRollManipulator.newInstance(),
+};
+
+manips.rot.setUseFocalPointAsCenterOfRotation(true);
+manips.zoom1.setControl(true);
+manips.zoom2.setButton(3);
+manips.roll.setShift(true);
+manips.pan.setButton(2);
+
+for (var k in manips){{
+    interact_style.addMouseManipulator(manips[k]);
+}};
+
+const interactor = vtk.Rendering.Core.vtkRenderWindowInteractor.newInstance();
+interactor.setView(openglRenderWindow);
+interactor.initialize();
+interactor.setInteractorStyle(interact_style);
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.body.appendChild(rootContainer);
+});
+
+function updateViewPort(element, renderer) {
+  const { innerHeight, innerWidth } = window;
+  const { x, y, width, height } = element.getBoundingClientRect();
+  const viewport = [
+    x / innerWidth,
+    1 - (y + height) / innerHeight,
+    (x + width) / innerWidth,
+    1 - y / innerHeight,
+  ];
+  renderer.setViewport(...viewport);
+}
+
+function recomputeViewports() {
+  const rendererElems = document.querySelectorAll('.renderer');
+  for (let i = 0; i < rendererElems.length; i++) {
+    const elem = rendererElems[i];
+    const { id } = elem;
+    const renderer = RENDERERS[id];
+    updateViewPort(elem, renderer);
+  }
+  renderWindow.render();
+}
+
+function resize() {
+  rootContainer.style.width = `${window.innerWidth}px`;
+  openglRenderWindow.setSize(window.innerWidth, window.innerHeight);
+  recomputeViewports();
+}
+
+window.addEventListener('resize', resize);
+document.addEventListener('scroll', recomputeViewports);
+
+
+function enterCurrentRenderer(e) {
+  interactor.bindEvents(document.body);
+  interact_style.setEnabled(true);
+  interactor.setCurrentRenderer(RENDERERS[e.target.id]);
+}
+
+function exitCurrentRenderer(e) {
+  interactor.setCurrentRenderer(null);
+  interact_style.setEnabled(false);
+  interactor.unbindEvents();
+}
+
+
+function applyStyle(element) {
+  element.classList.add('renderer');
+  element.style.width = '100%';
+  element.style.height = '100%';
+  element.style.display = 'inline-block';
+  element.style.boxSizing = 'border';
+  return element;
+}
+
+window.addEventListener('load', resize);
+
+function render(data, parent_element, ratio){
+
+    // Initial setup
+    const renderer = vtk.Rendering.Core.vtkRenderer.newInstance({ background: [1, 1, 1 ] });
+
+    // iterate over all children children
+    for (var el of data){
+        var trans = el.position;
+        var rot = el.orientation;
+        var rgba = el.color;
+        var shape = el.shape;
+
+        // load the inline data
+        var reader = vtk.IO.XML.vtkXMLPolyDataReader.newInstance();
+        const textEncoder = new TextEncoder();
+        reader.parseAsArrayBuffer(textEncoder.encode(shape));
+
+        // setup actor,mapper and add
+        const mapper = vtk.Rendering.Core.vtkMapper.newInstance();
+        mapper.setInputConnection(reader.getOutputPort());
+        mapper.setResolveCoincidentTopologyToPolygonOffset();
+        mapper.setResolveCoincidentTopologyPolygonOffsetParameters(0.5,100);
+
+        const actor = vtk.Rendering.Core.vtkActor.newInstance();
+        actor.setMapper(mapper);
+
+        // set color and position
+        actor.getProperty().setColor(rgba.slice(0,3));
+        actor.getProperty().setOpacity(rgba[3]);
+
+        actor.rotateZ(rot[2]*180/Math.PI);
+        actor.rotateY(rot[1]*180/Math.PI);
+        actor.rotateX(rot[0]*180/Math.PI);
+
+        actor.setPosition(trans);
+
+        renderer.addActor(actor);
+
+    };
+
+    //add the container
+    const container = applyStyle(document.createElement("div"));
+    parent_element.appendChild(container);
+    container.addEventListener('mouseenter', enterCurrentRenderer);
+    container.addEventListener('mouseleave', exitCurrentRenderer);
+    container.id = ID;
+
+    renderWindow.addRenderer(renderer);
+    updateViewPort(container, renderer);
+    renderer.getActiveCamera().set({ position: [1, -1, 1], viewUp: [0, 0, 1] });
+    renderer.resetCamera();
+
+    RENDERERS[ID] = renderer;
+    ID++;
+};
+</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'python_api';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://raw.githubusercontent.com/fusion-energy/paramak/main/docs/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.11.0';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="_static/cq_viewer.js?v=9325bd07"></script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Reactors from papers" href="examples_paper_reactors.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.11.0" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+    
+      <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="examples.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#" aria-current="page">
+    Python API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="examples.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#" aria-current="page">
+    Python API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"></div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Python API reference</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="python-api-reference">
+<h1>Python API reference<a class="headerlink" href="#python-api-reference" title="Link to this heading">#</a></h1>
+<section id="assemblies">
+<h2>Assemblies<a class="headerlink" href="#assemblies" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.tokamak">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">tokamak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poloidal_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toroidal_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_start_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/tokamak.html#tokamak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.tokamak" title="Link to this definition">#</a></dt>
+<dd><p>Creates a tokamak fusion reactor from a radial and vertical build.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radial_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span>) – sequence of tuples containing the radial build of the
+reactor. Each tuple should contain a LayerType, a float and the string is optional.</p></li>
+<li><p><strong>vertical_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span>) – sequence of tuples containing the vertical build of the
+reactor. Each tuple should contain a LayerType, a float and the string is optional.
+Entries are ordered from the top of the reactor to the bottom, so
+the entries before the plasma are above it. There must be at
+least one entry above and below the plasma for each radial_build
+entry after the plasma.</p></li>
+<li><p><strong>triangularity</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The triangularity of the plasma. Defaults to 0.55.</p></li>
+<li><p><strong>rotation_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The rotation angle of the plasma. Defaults to 180.0.</p></li>
+<li><p><strong>rotation_start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The angle in degrees the reactor starts from, measured
+around the Z axis from the XZ plane in the direction the reactor is
+revolved, so the reactor covers rotation_start_angle to
+rotation_start_angle + rotation_angle. extra_cut_shapes and
+extra_intersect_shapes are used where they are and are not rotated.
+Must be between -360 and 360. Defaults to 0.</p></li>
+<li><p><strong>extra_cut_shapes</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Workplane</span></code>]]</span>) – A list of extra shapes to cut the reactor with. Defaults to [].</p></li>
+<li><p><strong>extra_intersect_shapes</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Workplane</span></code>]]</span>) – A list of extra shapes to intersect the reactor with. Defaults to [].</p></li>
+<li><p><strong>colors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span>) – the colors to assign to the assembly parts. Defaults to {}.
+Each dictionary entry should be a key that matches the assembly part name
+(e.g. ‘plasma’, or ‘layer_1’) and a tuple of 3 or 4 floats between 0 and 1
+representing the RGB or RGBA values.</p></li>
+<li><p><strong>poloidal_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]]]]</span>) – optional poloidal segmentation of the layers. A list
+with one entry per radial_build entry after the plasma, ordered
+from the plasma outwards, so each entry covers the matching
+inboard and outboard layer pair. Entries are None for layers that
+are not segmented (and must be None for LayerType.GAP entries),
+otherwise a list of segments in the same format as radial_build
+entries: (paramak.LayerType.SOLID, arc_length, name) for a solid
+segment (the name is optional) or (paramak.LayerType.GAP,
+arc_length) for a gap that produces no solid. Arc lengths are
+measured along the plasma facing surface (the inner surface of
+the first solid layer after the plasma) for every layer, starting
+at the outboard midplane and proceeding counter clockwise
+(upwards on the outboard side). Each entry must sum to the arc
+length returned by paramak.poloidal_arc_length (within 0.1
+percent). Cuts between segments follow the normal to the plasma
+surface, so layers given the same segments line up. Solid
+segments are named “&lt;layer name&gt;_&lt;segment name&gt;”, unnamed solid
+segments are called “segment”, and repeated names within a layer
+get a “_1”, “_2” suffix. Defaults to None.</p></li>
+<li><p><strong>toroidal_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]]]]</span>) – optional toroidal segmentation of the layers, for
+example into sectors separated by assembly gaps. A list with one
+entry per radial_build entry after the plasma, ordered from the
+plasma outwards, like poloidal_build. Entries are None for layers
+that are not segmented (and must be None for LayerType.GAP
+entries), otherwise a list of segments: (paramak.LayerType.SOLID,
+arc_length, name) for a sector (the name is optional) or
+(paramak.LayerType.GAP, width) for a gap. Arc lengths are measured
+around the plasma facing surface at the outboard midplane,
+starting at rotation_start_angle (the XZ plane by default) and
+going in the direction the reactor is revolved, and each entry
+must sum to the arc length returned by paramak.toroidal_arc_length
+(within 0.1 percent). Gaps are slots
+with parallel sides, so a gap has the same width at every radius.
+Sectors are named “&lt;layer name&gt;_&lt;sector name&gt;”, or
+“&lt;layer name&gt;_&lt;poloidal segment name&gt;_&lt;sector name&gt;” when the
+layer also has a poloidal_build entry. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A CadQuery Assembly object representing the tokamak fusion reactor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Assembly</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.tokamak_from_plasma">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">tokamak_from_plasma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poloidal_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toroidal_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_start_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/tokamak.html#tokamak_from_plasma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.tokamak_from_plasma" title="Link to this definition">#</a></dt>
+<dd><p>Creates a tokamak fusion reactor from a radial build and plasma parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radial_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span>) – sequence of tuples containing the radial build of the
+reactor. Each tuple should contain a LayerType, a float and a string.</p></li>
+<li><p><strong>elongation</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The elongation of the plasma. Defaults to 2.0.</p></li>
+<li><p><strong>triangularity</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The triangularity of the plasma. Defaults to 0.55.</p></li>
+<li><p><strong>rotation_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The rotation angle of the plasma. Defaults to 180.0.</p></li>
+<li><p><strong>rotation_start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The angle in degrees the reactor starts from, measured
+around the Z axis from the XZ plane in the direction the reactor is
+revolved, so the reactor covers rotation_start_angle to
+rotation_start_angle + rotation_angle. extra_cut_shapes and
+extra_intersect_shapes are used where they are and are not rotated.
+Must be between -360 and 360. Defaults to 0.</p></li>
+<li><p><strong>extra_cut_shapes</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Workplane</span></code>]]</span>) – A list of extra shapes to cut the reactor with. Defaults to [].</p></li>
+<li><p><strong>extra_intersect_shapes</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Workplane</span></code>]]</span>) – A list of extra shapes to intersect the reactor with. Defaults to [].</p></li>
+<li><p><strong>colors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span>) – the colors to assign to the assembly parts. Defaults to {}.
+Each dictionary entry should be a key that matches the assembly part name
+(e.g. ‘plasma’, or ‘layer_1’) and a tuple of 3 or 4 floats between 0 and 1
+representing the RGB or RGBA values.</p></li>
+<li><p><strong>poloidal_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]]]]</span>) – optional poloidal segmentation of the layers. A list
+with one entry per radial_build entry after the plasma, ordered
+from the plasma outwards, so each entry covers the matching
+inboard and outboard layer pair. Entries are None for layers that
+are not segmented (and must be None for LayerType.GAP entries),
+otherwise a list of segments in the same format as radial_build
+entries: (paramak.LayerType.SOLID, arc_length, name) for a solid
+segment (the name is optional) or (paramak.LayerType.GAP,
+arc_length) for a gap that produces no solid. Arc lengths are
+measured along the plasma facing surface (the inner surface of
+the first solid layer after the plasma) for every layer, starting
+at the outboard midplane and proceeding counter clockwise
+(upwards on the outboard side). Each entry must sum to the arc
+length returned by paramak.poloidal_arc_length (within 0.1
+percent). Cuts between segments follow the normal to the plasma
+surface, so layers given the same segments line up. Solid
+segments are named “&lt;layer name&gt;_&lt;segment name&gt;”, unnamed solid
+segments are called “segment”, and repeated names within a layer
+get a “_1”, “_2” suffix. Defaults to None.</p></li>
+<li><p><strong>toroidal_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]]]]</span>) – optional toroidal segmentation of the layers, for
+example into sectors separated by assembly gaps. A list with one
+entry per radial_build entry after the plasma, ordered from the
+plasma outwards, like poloidal_build. Entries are None for layers
+that are not segmented (and must be None for LayerType.GAP
+entries), otherwise a list of segments: (paramak.LayerType.SOLID,
+arc_length, name) for a sector (the name is optional) or
+(paramak.LayerType.GAP, width) for a gap. Arc lengths are measured
+around the plasma facing surface at the outboard midplane,
+starting at rotation_start_angle (the XZ plane by default) and
+going in the direction the reactor is revolved, and each entry
+must sum to the arc length returned by paramak.toroidal_arc_length
+(within 0.1 percent). Gaps are slots
+with parallel sides, so a gap has the same width at every radius.
+Sectors are named “&lt;layer name&gt;_&lt;sector name&gt;”, or
+“&lt;layer name&gt;_&lt;poloidal segment name&gt;_&lt;sector name&gt;” when the
+layer also has a poloidal_build entry. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A CadQuery Assembly object representing the tokamak fusion reactor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Assembly</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.spherical_tokamak">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">spherical_tokamak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poloidal_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toroidal_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_start_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/spherical_tokamak.html#spherical_tokamak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.spherical_tokamak" title="Link to this definition">#</a></dt>
+<dd><p>Creates a spherical tokamak fusion reactor from a radial build and vertical build.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radial_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span>) – sequence of tuples containing the radial build of the
+reactor. Each tuple should contain a LayerType, a float and the string is optional.</p></li>
+<li><p><strong>vertical_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span>) – sequence of tuples containing the vertical build of the
+reactor. Each tuple should contain a LayerType, a float and the string is optional.
+Entries are ordered from the top of the reactor to the bottom, so
+the entries before the plasma are above it. There must be at
+least one entry above and below the plasma for each radial_build
+entry after the plasma.</p></li>
+<li><p><strong>triangularity</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The triangularity of the plasma. Defaults to 0.55.</p></li>
+<li><p><strong>rotation_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The rotation angle of the reactor in degrees. Defaults to 180.0.</p></li>
+<li><p><strong>rotation_start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The angle in degrees the reactor starts from, measured
+around the Z axis from the XZ plane in the direction the reactor is
+revolved, so the reactor covers rotation_start_angle to
+rotation_start_angle + rotation_angle. extra_cut_shapes and
+extra_intersect_shapes are used where they are and are not rotated.
+Must be between -360 and 360. Defaults to 0.</p></li>
+<li><p><strong>extra_cut_shapes</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Workplane</span></code>]]</span>) – A list of extra shapes to cut the reactor with. Defaults to [].</p></li>
+<li><p><strong>extra_intersect_shapes</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Workplane</span></code>]]</span>) – A list of extra shapes to intersect the reactor with. Defaults to [].</p></li>
+<li><p><strong>colors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span>) – the colors to assign to the assembly parts. Defaults to {}.
+Each dictionary entry should be a key that matches the assembly part name
+(e.g. ‘plasma’, or ‘layer_1’) and a tuple of 3 or 4 floats between 0 and 1
+representing the RGB or RGBA values.</p></li>
+<li><p><strong>poloidal_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]]]]</span>) – optional poloidal segmentation of the layers after
+the plasma. A list with one entry per radial_build entry after the
+plasma, ordered from the plasma outwards. Entries are None for
+layers that are not segmented (and must be None for
+LayerType.GAP entries), otherwise a list of segments in the same
+format as radial_build entries: (paramak.LayerType.SOLID,
+arc_length, name) for a solid segment (the name is optional) or
+(paramak.LayerType.GAP, arc_length) for a gap that produces no
+solid. Arc lengths are measured along the plasma facing surface
+(the inner surface of the first solid layer after the plasma) for
+every layer, starting where the layer meets the centre column at
+the bottom and going along the bottom, up the outboard side and
+along the top back to the centre column. Each entry must sum to
+the arc length returned by paramak.spherical_poloidal_arc_length
+(within 0.1 percent). Cuts between segments are vertical along the
+top and bottom and follow the normal to the plasma surface on the
+outboard side, so layers given the same segments line up. Solid
+segments are named “&lt;layer name&gt;_&lt;segment name&gt;”, unnamed solid
+segments are called “segment”, and repeated names within a layer
+get a “_1”, “_2” suffix. Defaults to None.</p></li>
+<li><p><strong>toroidal_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]]]]</span>) – optional toroidal segmentation of the layers, for
+example into sectors separated by assembly gaps. A list with one
+entry per radial_build entry after the plasma, ordered from the
+plasma outwards, like poloidal_build. Entries are None for layers
+that are not segmented (and must be None for LayerType.GAP
+entries), otherwise a list of segments: (paramak.LayerType.SOLID,
+arc_length, name) for a sector (the name is optional) or
+(paramak.LayerType.GAP, width) for a gap. Arc lengths are measured
+around the plasma facing surface at the outboard midplane,
+starting at rotation_start_angle (the XZ plane by default) and
+going in the direction the reactor is revolved, and each entry
+must sum to the arc length returned by paramak.toroidal_arc_length
+(within 0.1 percent). Gaps are slots
+with parallel sides, so a gap has the same width at every radius.
+Sectors are named “&lt;layer name&gt;_&lt;sector name&gt;”, or
+“&lt;layer name&gt;_&lt;poloidal segment name&gt;_&lt;sector name&gt;” when the
+layer also has a poloidal_build entry. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A CadQuery Assembly object representing the spherical tokamak fusion reactor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Assembly</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.spherical_tokamak_from_plasma">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">spherical_tokamak_from_plasma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_cut_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_intersect_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poloidal_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toroidal_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_start_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/spherical_tokamak.html#spherical_tokamak_from_plasma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.spherical_tokamak_from_plasma" title="Link to this definition">#</a></dt>
+<dd><p>Creates a spherical tokamak fusion reactor from a radial build and plasma parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radial_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span>) – sequence of tuples containing the radial build of the
+reactor. Each tuple should contain a LayerType, a float and the string is optional.</p></li>
+<li><p><strong>elongation</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The elongation of the plasma. Defaults to 2.0.</p></li>
+<li><p><strong>triangularity</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The triangularity of the plasma. Defaults to 0.55.</p></li>
+<li><p><strong>rotation_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The rotation angle of the reactor in degrees. Defaults to 180.0.</p></li>
+<li><p><strong>rotation_start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The angle in degrees the reactor starts from, measured
+around the Z axis from the XZ plane in the direction the reactor is
+revolved, so the reactor covers rotation_start_angle to
+rotation_start_angle + rotation_angle. extra_cut_shapes and
+extra_intersect_shapes are used where they are and are not rotated.
+Must be between -360 and 360. Defaults to 0.</p></li>
+<li><p><strong>extra_cut_shapes</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Workplane</span></code>]]</span>) – A list of extra shapes to cut the reactor with. Defaults to [].</p></li>
+<li><p><strong>colors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span>) – the colors to assign to the assembly parts. Defaults to {}.
+Each dictionary entry should be a key that matches the assembly part name
+(e.g. ‘plasma’, or ‘layer_1’) and a tuple of 3 or 4 floats between 0 and 1
+representing the RGB or RGBA values.</p></li>
+<li><p><strong>poloidal_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]]]]</span>) – optional poloidal segmentation of the layers after
+the plasma. A list with one entry per radial_build entry after the
+plasma, ordered from the plasma outwards. Entries are None for
+layers that are not segmented (and must be None for
+LayerType.GAP entries), otherwise a list of segments in the same
+format as radial_build entries: (paramak.LayerType.SOLID,
+arc_length, name) for a solid segment (the name is optional) or
+(paramak.LayerType.GAP, arc_length) for a gap that produces no
+solid. Arc lengths are measured along the plasma facing surface
+(the inner surface of the first solid layer after the plasma) for
+every layer, starting where the layer meets the centre column at
+the bottom and going along the bottom, up the outboard side and
+along the top back to the centre column. Each entry must sum to
+the arc length returned by paramak.spherical_poloidal_arc_length
+(within 0.1 percent). Cuts between segments are vertical along the
+top and bottom and follow the normal to the plasma surface on the
+outboard side, so layers given the same segments line up. Solid
+segments are named “&lt;layer name&gt;_&lt;segment name&gt;”, unnamed solid
+segments are called “segment”, and repeated names within a layer
+get a “_1”, “_2” suffix. Defaults to None.</p></li>
+<li><p><strong>toroidal_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]]]]</span>) – optional toroidal segmentation of the layers, for
+example into sectors separated by assembly gaps. A list with one
+entry per radial_build entry after the plasma, ordered from the
+plasma outwards, like poloidal_build. Entries are None for layers
+that are not segmented (and must be None for LayerType.GAP
+entries), otherwise a list of segments: (paramak.LayerType.SOLID,
+arc_length, name) for a sector (the name is optional) or
+(paramak.LayerType.GAP, width) for a gap. Arc lengths are measured
+around the plasma facing surface at the outboard midplane,
+starting at rotation_start_angle (the XZ plane by default) and
+going in the direction the reactor is revolved, and each entry
+must sum to the arc length returned by paramak.toroidal_arc_length
+(within 0.1 percent). Gaps are slots
+with parallel sides, so a gap has the same width at every radius.
+Sectors are named “&lt;layer name&gt;_&lt;sector name&gt;”, or
+“&lt;layer name&gt;_&lt;poloidal segment name&gt;_&lt;sector name&gt;” when the
+layer also has a poloidal_build entry. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A CadQuery Assembly object representing the spherical tokamak fusion reactor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Assembly</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="reactors-from-papers">
+<h2>Reactors from papers<a class="headerlink" href="#reactors-from-papers" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.sparc_from_2020_paper">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">sparc_from_2020_paper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_tf_coils</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">18</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pf_coil_case_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/paper_reactors.html#sparc_from_2020_paper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.sparc_from_2020_paper" title="Link to this definition">#</a></dt>
+<dd><p>Creates a simplified SPARC reactor from a figure in a published paper.</p>
+<p>The geometry is based on Figure 4 of A. J. Creely et al., “Overview of the
+SPARC tokamak”, Journal of Plasma Physics, 86(5), 865860502 (2020),
+<a class="reference external" href="https://doi.org/10.1017/S0022377820001257">doi:10.1017/S0022377820001257</a>. The coordinates were read
+off the figure, so they are approximate and the model does not exactly
+match the reactor.</p>
+<p>The assembly contains the plasma, the central solenoid, the poloidal field
+coils (each a winding pack inside a case), the divertor and vertical
+stability coils, the ICRF antenna, the vacuum vessel, the inner vessel
+components and the toroidal field coils.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rotation_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees of the sector to build, between
+0 (exclusive) and 360.</p></li>
+<li><p><strong>number_of_tf_coils</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – the number of toroidal field coils, equally spaced
+around 360 degrees. Only the coils inside the sector are kept.</p></li>
+<li><p><strong>pf_coil_case_thickness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the thickness (cm) of the case around each
+poloidal field coil winding pack. The outer size of each coil (with
+its case) is taken from the paper figure.</p></li>
+<li><p><strong>colors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span>) – optional dictionary of RGB(A) colors keyed by part name, used
+in place of the default colors.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Assembly</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A paramak Assembly with a named part for each component.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.iter_from_2020_paper">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">iter_from_2020_paper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_tf_coils</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">18</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pf_coil_case_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/paper_reactors.html#iter_from_2020_paper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.iter_from_2020_paper" title="Link to this definition">#</a></dt>
+<dd><p>Creates a simplified ITER reactor from a figure in a published paper.</p>
+<p>The geometry is based on the diagram in “ITER Project: International
+Cooperation and Energy Investment” (2020),
+<a class="reference external" href="https://doi.org/10.1007/978-3-030-42913-3_26">doi:10.1007/978-3-030-42913-3_26</a>. Several parts use
+paramak parametric shapes, so the model does not exactly match the
+diagram or the reactor.</p>
+<p>The assembly contains the plasma, a blanket that follows the plasma, a
+single null divertor, the vacuum vessel, the central solenoid, the
+poloidal field coils (each a winding pack inside a case) and the toroidal
+field coils.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rotation_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees of the sector to build, between
+0 (exclusive) and 360.</p></li>
+<li><p><strong>number_of_tf_coils</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – the number of toroidal field coils, equally spaced
+around 360 degrees. Only the coils inside the sector are kept.</p></li>
+<li><p><strong>pf_coil_case_thickness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the thickness (cm) of the case around each
+poloidal field coil winding pack. The outer size of each coil (with
+its case) is taken from the paper figure.</p></li>
+<li><p><strong>colors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span>) – optional dictionary of RGB(A) colors keyed by part name, used
+in place of the default colors.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Assembly</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A paramak Assembly with a named part for each component.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.eu_demo_from_2015_paper">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">eu_demo_from_2015_paper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_tf_coils</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pf_coil_case_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/paper_reactors.html#eu_demo_from_2015_paper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.eu_demo_from_2015_paper" title="Link to this definition">#</a></dt>
+<dd><p>Creates a simplified EU DEMO reactor from a figure in a published paper.</p>
+<p>The geometry is based on Figure 2 of R. Kemp et al., “Definition of the
+basic DEMO tokamak geometry based on systems code studies”, Fusion
+Engineering and Design (2015), <a class="reference external" href="https://doi.org/10.1016/j.fusengdes.2015.06.097">doi:10.1016/j.fusengdes.2015.06.097</a>. The coordinates were
+read off the figure, so they are approximate and the model does not
+exactly match the reactor.</p>
+<p>The assembly contains the plasma, the blanket, a single null divertor,
+the vacuum vessel, the central solenoid, the poloidal field coils (each a
+winding pack inside a case) and the toroidal field coil casings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rotation_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees of the sector to build, between
+0 (exclusive) and 360.</p></li>
+<li><p><strong>number_of_tf_coils</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – the number of toroidal field coils, equally spaced
+around 360 degrees. Only the coils inside the sector are kept.</p></li>
+<li><p><strong>pf_coil_case_thickness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the thickness (cm) of the case around each
+poloidal field coil winding pack. The outer size of each coil (with
+its case) is taken from the paper figure.</p></li>
+<li><p><strong>colors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span>) – optional dictionary of RGB(A) colors keyed by part name, used
+in place of the default colors.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Assembly</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A paramak Assembly with a named part for each component.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.poloidal_arc_length">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">poloidal_arc_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/tokamak.html#poloidal_arc_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.poloidal_arc_length" title="Link to this definition">#</a></dt>
+<dd><p>Returns the poloidal arc length that the segments in a poloidal_build
+must sum to.</p>
+<p>The arc length is measured around the full poloidal loop of the plasma
+facing surface, which is the inner surface of the first solid layer after
+the plasma. All poloidal_build entries are measured on this surface, so
+layers given the same segments line up.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radial_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span>) – the radial build of the reactor, as passed to
+tokamak_from_plasma or tokamak.</p></li>
+<li><p><strong>elongation</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span>) – the elongation of the plasma, as passed to
+tokamak_from_plasma. Defaults to 2.0. Must not be set when a
+vertical_build is provided, as the elongation is then calculated
+from the builds.</p></li>
+<li><p><strong>triangularity</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the triangularity of the plasma. Defaults to 0.55.</p></li>
+<li><p><strong>vertical_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]]</span>) – the vertical build of the reactor, as passed to
+tokamak. Leave as None for tokamak_from_plasma.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the poloidal arc length of the plasma facing surface.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.spherical_poloidal_arc_length">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">spherical_poloidal_arc_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_build</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/spherical_tokamak.html#spherical_poloidal_arc_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.spherical_poloidal_arc_length" title="Link to this definition">#</a></dt>
+<dd><p>Returns the arc length that the segments in a spherical tokamak
+poloidal_build must sum to.</p>
+<p>The arc length is measured along the plasma facing surface, which is the
+inner surface of the first solid layer after the plasma. This surface runs
+from the centre column along the bottom of the layer, around the outboard
+side of the plasma and back along the top of the layer to the centre
+column. All poloidal_build entries are measured on this surface, so layers
+given the same segments line up.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radial_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span>) – the radial build of the reactor, as passed to
+spherical_tokamak_from_plasma or spherical_tokamak.</p></li>
+<li><p><strong>elongation</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span>) – the elongation of the plasma, as passed to
+spherical_tokamak_from_plasma. Defaults to 2.0. Must not be set
+when a vertical_build is provided, as the elongation is then
+calculated from the builds.</p></li>
+<li><p><strong>triangularity</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the triangularity of the plasma. Defaults to 0.55.</p></li>
+<li><p><strong>vertical_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]]</span>) – the vertical build of the reactor, as passed to
+spherical_tokamak. Leave as None for spherical_tokamak_from_plasma.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the arc length of the plasma facing surface.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.toroidal_arc_length">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">toroidal_arc_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radial_build</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/toroidal.html#toroidal_arc_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.toroidal_arc_length" title="Link to this definition">#</a></dt>
+<dd><p>Returns the toroidal arc length that the segments in a toroidal_build
+must sum to.</p>
+<p>The arc length is measured around the plasma facing surface (the inner
+surface of the first solid layer after the plasma) at the outboard
+midplane, over the rotation_angle of the reactor. This works for all the
+reactor types, as the outboard midplane radius only depends on the
+radial_build.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radial_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span>) – the radial build of the reactor, as passed to the
+reactor function.</p></li>
+<li><p><strong>rotation_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the rotation angle of the reactor in degrees, as
+passed to the reactor function. Defaults to 180.0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the toroidal arc length.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="workplanes">
+<h2>Workplanes<a class="headerlink" href="#workplanes" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.blanket_from_plasma">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">blanket_from_plasma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minor_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">150.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">major_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">450.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_displacement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_from_plasma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blanket_from_plasma'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.333,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">90.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_overlapping_shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connect_to_center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_start_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/blanket_from_plasma.html#blanket_from_plasma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.blanket_from_plasma" title="Link to this definition">#</a></dt>
+<dd><p>A blanket volume created from plasma parameters. It might be necessary
+to increase the num_points when making long but thin geometry with this
+component.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>thickness</strong> (<em>float</em><em> or </em><em>[</em><em>float</em><em>] or </em><em>callable</em><em> or </em><em>[</em><em>(</em><em>float</em><em>)</em><em>, </em><em>(</em><em>float</em><em>)</em><em>]</em>) – the thickness of the blanket (cm). If the thickness is a float then
+this produces a blanket of constant thickness. If the thickness is
+a tuple of floats, blanket thickness will vary linearly between the
+two values. If thickness is callable, then the blanket thickness
+will be a function of poloidal angle (in degrees). If thickness is
+a list of two lists (angles and thicknesses) then these will be
+used together with linear interpolation.</p></li>
+<li><p><strong>start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees to start the blanket, measured anti
+clockwise from 3 o’clock.</p></li>
+<li><p><strong>stop_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees to stop the blanket, measured anti
+clockwise from 3 o’clock.</p></li>
+<li><p><strong>minor_radius</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the minor radius of the plasma (cm).</p></li>
+<li><p><strong>major_radius</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the major radius of the plasma (cm).</p></li>
+<li><p><strong>triangularity</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the triangularity of the plasma.</p></li>
+<li><p><strong>elongation</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the elongation of the plasma.</p></li>
+<li><p><strong>vertical_displacement</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the vertical_displacement of the plasma (cm).</p></li>
+<li><p><strong>offset_from_plasma</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</span>) – the distance between the plasma and the blanket
+(cm). If float, constant offset. If list of floats, offset will
+vary linearly between the values. If callable, offset will be a
+function of poloidal angle (in degrees). If a list of two lists
+(angles and offsets) then these will be used together with linear
+interpolation.</p></li>
+<li><p><strong>num_points</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – number of points that will describe the shape.</p></li>
+<li><p><strong>allow_overlapping_shape</strong> – if False (the default) a warning is given
+when the offset makes some points of the profile reach past the
+Z axis (a negative R). Those points are always left out of the
+profile, setting this to True only stops the warning.</p></li>
+<li><p><strong>rotation_start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees the revolution starts from,
+measured around the revolve axis from the workplane. The shape covers
+rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+between -360 and 360. Defaults to 0.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.center_column_shield_cylinder">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">center_column_shield_cylinder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inner_radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('center',</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'center_column_shield_cylinder'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.333,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">90</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_start_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/center_column_shield_cylinder.html#center_column_shield_cylinder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.center_column_shield_cylinder" title="Link to this definition">#</a></dt>
+<dd><p>A cylindrical center column shield volume with constant thickness.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>height</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – height of the center column shield.</p></li>
+<li><p><strong>inner_radius</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the inner radius of the center column shield.</p></li>
+<li><p><strong>thickness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the radial thickness of the center column shield, so the
+outer radius is inner_radius + thickness.</p></li>
+<li><p><strong>reference_point</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></span>) – the vertical coordinates to build the vessel from and
+description of the reference point. Can be either the ‘center’
+with a numerical value or ‘lower’ with a numerical value.</p></li>
+<li><p><strong>rotation_start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees the revolution starts from,
+measured around the revolve axis from the workplane. The shape covers
+rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+between -360 and 360. Defaults to 0.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.constant_thickness_dome">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">constant_thickness_dome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chord_center_height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chord_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chord_height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_or_lower</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'upper'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'constant_thickness_dome'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.333,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">90</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_start_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/constant_thickness_dome.html#constant_thickness_dome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.constant_thickness_dome" title="Link to this definition">#</a></dt>
+<dd><p>A cylindrical vessel volume with constant thickness with a simple dished
+head. This style of tank head has no knuckle radius or straight flange. The
+dished shape is made from a chord of a circle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>thickness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the radial thickness of the dome.</p></li>
+<li><p><strong>chord_center_height</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the vertical position of the chord center</p></li>
+<li><p><strong>chord_width</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the width of the chord base</p></li>
+<li><p><strong>chord_height</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the height of the chord which is also distance between
+the chord_center_height and the inner surface of the dome</p></li>
+<li><p><strong>upper_or_lower</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Curves the dish with a positive or negative direction
+to allow the upper section or lower section of vacuum vessel
+domes to be made.</p></li>
+<li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – the name of the shape, used in the graph legend and as a
+filename prefix when exporting.</p></li>
+<li><p><strong>rotation_start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees the revolution starts from,
+measured around the revolve axis from the workplane. The shape covers
+rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+between -360 and 360. Defaults to 0.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.cutting_wedge">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">cutting_wedge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.333,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cutting_wedge'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_start_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/cutting_wedge.html#cutting_wedge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.cutting_wedge" title="Link to this definition">#</a></dt>
+<dd><p>Creates a wedge from height, radius and rotation angle arguments than
+can be useful for cutting sector models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>height</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the vertical (z axis) height of the coil (cm).</p></li>
+<li><p><strong>radius</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the horizontal (x axis) width of the coil (cm).</p></li>
+<li><p><strong>rotation_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Defaults to 180.0.</p></li>
+<li><p><strong>rotation_start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees the revolution starts from,
+measured around the revolve axis from the workplane. The shape covers
+rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+between -360 and 360. Defaults to 0.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.dished_vacuum_vessel">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">dished_vacuum_vessel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('center',</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dish_height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(20,</span> <span class="pre">50)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cylinder_height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">90</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dished_vessel'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.333,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_start_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/dished_vacuum_vessel.html#dished_vacuum_vessel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.dished_vacuum_vessel" title="Link to this definition">#</a></dt>
+<dd><p>A cylindrical vessel volume with constant thickness with a simple dished
+head. This style of tank head has no knuckle radius or straight flange.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the radius from which the centres of the vessel meets the outer
+circumference.</p></li>
+<li><p><strong>reference_point</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></span>) – the x,z coordinates to build the vessel from. Can be
+either the ‘center’ with a value or ‘lower’ with a
+value. For example</p></li>
+<li><p><strong>dish_height</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – the height of the lower and upper dish sections.</p></li>
+<li><p><strong>cylinder_height</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the height of the cylindrical section of the vacuum
+vessel.</p></li>
+<li><p><strong>thickness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the radial thickness of the vessel in cm.</p></li>
+<li><p><strong>color</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span>]</span>) – the RGB(A) color of the parts. Defaults to (0.0, 0.333, 0.0).</p></li>
+<li><p><strong>origin</strong> – the origin of the workplane, which moves all the parts.
+Defaults to (0, 0, 0).</p></li>
+<li><p><strong>rotation_start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees the revolution starts from,
+measured around the revolve axis from the workplane. The shape covers
+rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+between -360 and 360. Defaults to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the lower dome, cylinder and upper dome as three CadQuery
+Workplanes. They are kept separate as fusing them can fail.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.plasma_simplified">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">plasma_simplified</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elongation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">major_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">450.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minor_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">150.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_displacement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tokamak_plasma'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.333,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">90</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_start_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/plasma_simplified.html#plasma_simplified"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.plasma_simplified" title="Link to this definition">#</a></dt>
+<dd><p>Creates a double null tokamak plasma shape that is controlled by 4
+shaping parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>elongation</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the elongation of the plasma.</p></li>
+<li><p><strong>major_radius</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the major radius of the plasma (cm).</p></li>
+<li><p><strong>minor_radius</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the minor radius of the plasma (cm).</p></li>
+<li><p><strong>triangularity</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the triangularity of the plasma.</p></li>
+<li><p><strong>vertical_displacement</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the vertical_displacement of the plasma (cm)..</p></li>
+<li><p><strong>num_points</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – number of points to describe the shape.</p></li>
+<li><p><strong>rotation_start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees the revolution starts from,
+measured around the revolve axis from the workplane. The shape covers
+rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+between -360 and 360. Defaults to 0.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.poloidal_field_coil_case">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">poloidal_field_coil_case</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coil_height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coil_width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">casing_thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'poloidal_field_coil_case'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1.0,</span> <span class="pre">1.0,</span> <span class="pre">0.498)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">90</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_start_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/poloidal_field_coil_case.html#poloidal_field_coil_case"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.poloidal_field_coil_case" title="Link to this definition">#</a></dt>
+<dd><p>Constant thickness casing for a rectangular poloidal coil.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coil_height</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the vertical (z axis) height of the coil (cm).</p></li>
+<li><p><strong>coil_width</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the horizontal (x axis) width of the coil (cm).</p></li>
+<li><p><strong>center_point</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – the center of the coil (x,z) values (cm).</p></li>
+<li><p><strong>casing_thickness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the thickness of the coil casing (cm).</p></li>
+<li><p><strong>rotation_start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees the revolution starts from,
+measured around the revolve axis from the workplane. The shape covers
+rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+between -360 and 360. Defaults to 0.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.poloidal_field_coil">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">poloidal_field_coil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'poloidal_field_coil'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.333,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">90</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_start_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/poloidal_field_coil.html#poloidal_field_coil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.poloidal_field_coil" title="Link to this definition">#</a></dt>
+<dd><p>A rectangular poloidal field coil.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>height</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the vertical (z axis) height of the coil.</p></li>
+<li><p><strong>width</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the horizontal (x axis) width of the coil.</p></li>
+<li><p><strong>center_point</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – the center of the coil (x,z) values.</p></li>
+<li><p><strong>rotation_start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees the revolution starts from,
+measured around the revolve axis from the workplane. The shape covers
+rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+between -360 and 360. Defaults to 0.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.revolved_shape">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">revolved_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">360.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'revolved_shape'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_start_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/revolved_shape.html#revolved_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.revolved_shape" title="Link to this definition">#</a></dt>
+<dd><p>Creates a solid by revolving an arbitrary closed 2D profile around the axis.</p>
+<p>The profile is described by a list of points where each point is a
+<code class="docutils literal notranslate"><span class="pre">(R,</span> <span class="pre">Z,</span> <span class="pre">connection)</span></code> tuple. <code class="docutils literal notranslate"><span class="pre">connection</span></code> is one of <code class="docutils literal notranslate"><span class="pre">&quot;straight&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;spline&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;circle&quot;</span></code> and describes how that point joins to the next
+one. This is the same profile description used internally by paramak’s
+blanket and dome components, so splines and arcs produce smooth curved
+profiles rather than blocky polylines.</p>
+<p>The profile is closed automatically, so the first point should not be
+repeated at the end of the list. This is convenient for building custom
+shapes to pass to the <code class="docutils literal notranslate"><span class="pre">extra_intersect_shapes</span></code> or <code class="docutils literal notranslate"><span class="pre">extra_cut_shapes</span></code>
+arguments of the reactor assemblies, for example a curved divertor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – the profile points as <code class="docutils literal notranslate"><span class="pre">(R,</span> <span class="pre">Z,</span> <span class="pre">connection)</span></code> tuples, ordered
+around the outline. Do not repeat the first point; the profile is
+closed automatically.</p></li>
+<li><p><strong>rotation_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees to revolve the profile around the
+axis. Defaults to 360.</p></li>
+<li><p><strong>rotation_start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees the revolution starts from,
+measured around the revolve axis from the workplane. The shape covers
+rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+between -360 and 360. Defaults to 0.</p></li>
+<li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – the name assigned to the resulting solid.</p></li>
+<li><p><strong>color</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span>]</span>) – the RGB(A) color assigned to the resulting solid.</p></li>
+<li><p><strong>plane</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – the plane to build the profile on, e.g. “XZ”.</p></li>
+<li><p><strong>origin</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – the origin of the workplane.</p></li>
+<li><p><strong>obj</strong> – an optional existing CadQuery object to build upon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workplane</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A CadQuery Workplane containing the revolved solid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.toroidal_field_coil_rectangle">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">toroidal_field_coil_rectangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">horizontal_start_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(20,</span> <span class="pre">200)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_mid_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(350,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">360.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'toroidal_field_coil'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_inner_leg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azimuthal_placement_angles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertical_displacement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.0,</span> <span class="pre">1.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_start_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/toroidal_field_coil_rectangle.html#toroidal_field_coil_rectangle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.toroidal_field_coil_rectangle" title="Link to this definition">#</a></dt>
+<dd><p>Creates a rectangular shaped toroidal field coil.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>horizontal_start_point</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – the (x,z) coordinates of the inner upper
+point (cm).</p></li>
+<li><p><strong>vertical_mid_point</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – the (x,z) coordinates of the mid point of the
+vertical section (cm). The coil is symmetric about this height,
+so the bottom is the horizontal_start_point mirrored about it.</p></li>
+<li><p><strong>thickness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the thickness of the toroidal field coil.</p></li>
+<li><p><strong>distance</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the extrusion distance.</p></li>
+<li><p><strong>rotation_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – angle of rotation in degrees, this cuts the resulting shape with a wedge. Useful for sector models.</p></li>
+<li><p><strong>rotation_start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees the wedge that cuts the shape starts
+from, measured around the Z axis from the XZ plane, so the sector kept covers
+rotation_start_angle to rotation_start_angle + rotation_angle. The coils are
+still placed at azimuthal_placement_angles. Must be between -360 and 360.
+Defaults to 0.</p></li>
+<li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – the name of the coil. Defaults to “toroidal_field_coil”.</p></li>
+<li><p><strong>with_inner_leg</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – include the inner tf leg. Defaults to True.</p></li>
+<li><p><strong>azimuthal_placement_angles</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</span>) – the angles in degrees around the Z axis to
+place a coil at. Defaults to [0].</p></li>
+<li><p><strong>vertical_displacement</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the vertical distance to move the coil (cm).
+Defaults to 0.</p></li>
+<li><p><strong>color</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span>]</span>) – the RGB(A) color of the coil. Defaults to (0.0, 0.0, 1.0).</p></li>
+<li><p><strong>plane</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – the plane the coil profile is drawn on. Defaults to “XZ”.</p></li>
+<li><p><strong>origin</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – the origin of the workplane. Defaults to (0.0, 0.0, 0.0).</p></li>
+<li><p><strong>obj</strong> – an optional existing CadQuery object to build upon.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.u_shaped_dome">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">u_shaped_dome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">310</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('lower',</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dish_height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cylinder_height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'u_shaped_dome'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'XZ'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_or_lower</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'upper'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.0,</span> <span class="pre">0.333,</span> <span class="pre">0.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_start_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/workplanes/u_shaped_dome.html#u_shaped_dome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.u_shaped_dome" title="Link to this definition">#</a></dt>
+<dd><p>A cylindrical u shaped dome with constant thickness.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the radius from which the centres of the vessel meets the outer
+circumference.</p></li>
+<li><p><strong>reference_point</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></span>) – the vertical position to build the vessel from,
+either (“center”, z) for the middle of the cylinder or
+(“lower”, z) for the lowest point of the shape (the bottom of
+the cylinder for an upper dome, the bottom of the dish for a
+lower dome).</p></li>
+<li><p><strong>dish_height</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the height of the dish section.</p></li>
+<li><p><strong>cylinder_height</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the height of the cylindrical section of the vacuum
+vessel.</p></li>
+<li><p><strong>thickness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the radial thickness of the vessel in cm.</p></li>
+<li><p><strong>color</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span>]</span>) – the RGB(A) color of the parts. Defaults to (0.0, 0.333, 0.0).</p></li>
+<li><p><strong>origin</strong> – the origin of the workplane, which moves all the parts.
+Defaults to (0, 0, 0).</p></li>
+<li><p><strong>rotation_start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees the revolution starts from,
+measured around the revolve axis from the workplane. The shape covers
+rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+between -360 and 360. Defaults to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the dome and cylinder as two CadQuery Workplanes.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="examples_paper_reactors.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Reactors from papers</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assemblies">Assemblies</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.tokamak"><code class="docutils literal notranslate"><span class="pre">tokamak()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.tokamak_from_plasma"><code class="docutils literal notranslate"><span class="pre">tokamak_from_plasma()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.spherical_tokamak"><code class="docutils literal notranslate"><span class="pre">spherical_tokamak()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.spherical_tokamak_from_plasma"><code class="docutils literal notranslate"><span class="pre">spherical_tokamak_from_plasma()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reactors-from-papers">Reactors from papers</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.sparc_from_2020_paper"><code class="docutils literal notranslate"><span class="pre">sparc_from_2020_paper()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.iter_from_2020_paper"><code class="docutils literal notranslate"><span class="pre">iter_from_2020_paper()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.eu_demo_from_2015_paper"><code class="docutils literal notranslate"><span class="pre">eu_demo_from_2015_paper()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utilities">Utilities</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.poloidal_arc_length"><code class="docutils literal notranslate"><span class="pre">poloidal_arc_length()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.spherical_poloidal_arc_length"><code class="docutils literal notranslate"><span class="pre">spherical_poloidal_arc_length()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.toroidal_arc_length"><code class="docutils literal notranslate"><span class="pre">toroidal_arc_length()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workplanes">Workplanes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.blanket_from_plasma"><code class="docutils literal notranslate"><span class="pre">blanket_from_plasma()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.center_column_shield_cylinder"><code class="docutils literal notranslate"><span class="pre">center_column_shield_cylinder()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.constant_thickness_dome"><code class="docutils literal notranslate"><span class="pre">constant_thickness_dome()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.cutting_wedge"><code class="docutils literal notranslate"><span class="pre">cutting_wedge()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.dished_vacuum_vessel"><code class="docutils literal notranslate"><span class="pre">dished_vacuum_vessel()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.plasma_simplified"><code class="docutils literal notranslate"><span class="pre">plasma_simplified()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.poloidal_field_coil_case"><code class="docutils literal notranslate"><span class="pre">poloidal_field_coil_case()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.poloidal_field_coil"><code class="docutils literal notranslate"><span class="pre">poloidal_field_coil()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.revolved_shape"><code class="docutils literal notranslate"><span class="pre">revolved_shape()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.toroidal_field_coil_rectangle"><code class="docutils literal notranslate"><span class="pre">toroidal_field_coil_rectangle()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.u_shaped_dome"><code class="docutils literal notranslate"><span class="pre">u_shaped_dome()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="_sources/python_api.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, Fusion Energy.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

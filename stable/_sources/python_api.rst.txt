@@ -12,6 +12,13 @@ Assemblies
 .. autofunction:: spherical_tokamak
 .. autofunction:: spherical_tokamak_from_plasma
 
+Reactors from papers
+--------------------
+
+.. autofunction:: sparc_from_2020_paper
+.. autofunction:: iter_from_2020_paper
+.. autofunction:: eu_demo_from_2015_paper
+
 Utilities
 ---------
 

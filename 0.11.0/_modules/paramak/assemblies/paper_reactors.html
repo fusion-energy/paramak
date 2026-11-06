@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>paramak.assemblies.paper_reactors &#8212; Paramak 0.11.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/paramak.css?v=67693341" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../../../_static/documentation_options.js?v=f3b36f1a"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/vtk.js?v=415cc427"></script>
+    <script>
+const RENDERERS = {};
+var ID =  0;
+
+const renderWindow = vtk.Rendering.Core.vtkRenderWindow.newInstance();
+const openglRenderWindow = vtk.Rendering.OpenGL.vtkRenderWindow.newInstance();
+renderWindow.addView(openglRenderWindow);
+
+const rootContainer = document.createElement('div');
+rootContainer.style.position = 'fixed';
+//rootContainer.style.zIndex = -1;
+rootContainer.style.left = 0;
+rootContainer.style.top = 0;
+rootContainer.style.pointerEvents = 'none';
+rootContainer.style.width = '100%';
+rootContainer.style.height = '100%';
+
+openglRenderWindow.setContainer(rootContainer);
+
+const interact_style = vtk.Interaction.Style.vtkInteractorStyleManipulator.newInstance();
+
+const manips = {
+    rot: vtk.Interaction.Manipulators.vtkMouseCameraTrackballRotateManipulator.newInstance(),
+    pan: vtk.Interaction.Manipulators.vtkMouseCameraTrackballPanManipulator.newInstance(),
+    zoom1: vtk.Interaction.Manipulators.vtkMouseCameraTrackballZoomManipulator.newInstance(),
+    zoom2: vtk.Interaction.Manipulators.vtkMouseCameraTrackballZoomManipulator.newInstance(),
+    roll: vtk.Interaction.Manipulators.vtkMouseCameraTrackballRollManipulator.newInstance(),
+};
+
+manips.rot.setUseFocalPointAsCenterOfRotation(true);
+manips.zoom1.setControl(true);
+manips.zoom2.setButton(3);
+manips.roll.setShift(true);
+manips.pan.setButton(2);
+
+for (var k in manips){{
+    interact_style.addMouseManipulator(manips[k]);
+}};
+
+const interactor = vtk.Rendering.Core.vtkRenderWindowInteractor.newInstance();
+interactor.setView(openglRenderWindow);
+interactor.initialize();
+interactor.setInteractorStyle(interact_style);
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.body.appendChild(rootContainer);
+});
+
+function updateViewPort(element, renderer) {
+  const { innerHeight, innerWidth } = window;
+  const { x, y, width, height } = element.getBoundingClientRect();
+  const viewport = [
+    x / innerWidth,
+    1 - (y + height) / innerHeight,
+    (x + width) / innerWidth,
+    1 - y / innerHeight,
+  ];
+  renderer.setViewport(...viewport);
+}
+
+function recomputeViewports() {
+  const rendererElems = document.querySelectorAll('.renderer');
+  for (let i = 0; i < rendererElems.length; i++) {
+    const elem = rendererElems[i];
+    const { id } = elem;
+    const renderer = RENDERERS[id];
+    updateViewPort(elem, renderer);
+  }
+  renderWindow.render();
+}
+
+function resize() {
+  rootContainer.style.width = `${window.innerWidth}px`;
+  openglRenderWindow.setSize(window.innerWidth, window.innerHeight);
+  recomputeViewports();
+}
+
+window.addEventListener('resize', resize);
+document.addEventListener('scroll', recomputeViewports);
+
+
+function enterCurrentRenderer(e) {
+  interactor.bindEvents(document.body);
+  interact_style.setEnabled(true);
+  interactor.setCurrentRenderer(RENDERERS[e.target.id]);
+}
+
+function exitCurrentRenderer(e) {
+  interactor.setCurrentRenderer(null);
+  interact_style.setEnabled(false);
+  interactor.unbindEvents();
+}
+
+
+function applyStyle(element) {
+  element.classList.add('renderer');
+  element.style.width = '100%';
+  element.style.height = '100%';
+  element.style.display = 'inline-block';
+  element.style.boxSizing = 'border';
+  return element;
+}
+
+window.addEventListener('load', resize);
+
+function render(data, parent_element, ratio){
+
+    // Initial setup
+    const renderer = vtk.Rendering.Core.vtkRenderer.newInstance({ background: [1, 1, 1 ] });
+
+    // iterate over all children children
+    for (var el of data){
+        var trans = el.position;
+        var rot = el.orientation;
+        var rgba = el.color;
+        var shape = el.shape;
+
+        // load the inline data
+        var reader = vtk.IO.XML.vtkXMLPolyDataReader.newInstance();
+        const textEncoder = new TextEncoder();
+        reader.parseAsArrayBuffer(textEncoder.encode(shape));
+
+        // setup actor,mapper and add
+        const mapper = vtk.Rendering.Core.vtkMapper.newInstance();
+        mapper.setInputConnection(reader.getOutputPort());
+        mapper.setResolveCoincidentTopologyToPolygonOffset();
+        mapper.setResolveCoincidentTopologyPolygonOffsetParameters(0.5,100);
+
+        const actor = vtk.Rendering.Core.vtkActor.newInstance();
+        actor.setMapper(mapper);
+
+        // set color and position
+        actor.getProperty().setColor(rgba.slice(0,3));
+        actor.getProperty().setOpacity(rgba[3]);
+
+        actor.rotateZ(rot[2]*180/Math.PI);
+        actor.rotateY(rot[1]*180/Math.PI);
+        actor.rotateX(rot[0]*180/Math.PI);
+
+        actor.setPosition(trans);
+
+        renderer.addActor(actor);
+
+    };
+
+    //add the container
+    const container = applyStyle(document.createElement("div"));
+    parent_element.appendChild(container);
+    container.addEventListener('mouseenter', enterCurrentRenderer);
+    container.addEventListener('mouseleave', exitCurrentRenderer);
+    container.id = ID;
+
+    renderWindow.addRenderer(renderer);
+    updateViewPort(container, renderer);
+    renderer.getActiveCamera().set({ position: [1, -1, 1], viewUp: [0, 0, 1] });
+    renderer.resetCamera();
+
+    RENDERERS[ID] = renderer;
+    ID++;
+};
+</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/paramak/assemblies/paper_reactors';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://raw.githubusercontent.com/fusion-energy/paramak/main/docs/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.11.0';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../../../_static/cq_viewer.js?v=9325bd07"></script>
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.11.0" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+    
+      <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../examples.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../python_api.html">
+    Python API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../examples.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../python_api.html">
+    Python API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/fusion-energy/paramak" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">paramak.assemblies.paper_reactors</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for paramak.assemblies.paper_reactors</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Reactors with fixed geometry taken from figures in published papers.</span>
+
+<span class="sd">The coordinates were read off published diagrams, so they are approximate and</span>
+<span class="sd">the models do not exactly represent the real machines. They are useful as</span>
+<span class="sd">realistic looking example geometries, for example for neutronics workflows.</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">cadquery</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cq</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">OCP.Standard</span><span class="w"> </span><span class="kn">import</span> <span class="n">Standard_ConstructionError</span><span class="p">,</span> <span class="n">Standard_Failure</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_wire_workplane_from_points</span><span class="p">,</span> <span class="n">resolve_assembly_color</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..workplanes.blanket_from_plasma</span><span class="w"> </span><span class="kn">import</span> <span class="n">blanket_from_plasma</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..workplanes.blanket_from_plasma</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_points</span> <span class="k">as</span> <span class="n">blanket_find_points</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..workplanes.cutting_wedge</span><span class="w"> </span><span class="kn">import</span> <span class="n">cutting_wedge</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..workplanes.plasma_simplified</span><span class="w"> </span><span class="kn">import</span> <span class="n">plasma_simplified</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..workplanes.poloidal_field_coil</span><span class="w"> </span><span class="kn">import</span> <span class="n">poloidal_field_coil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..workplanes.poloidal_field_coil_case</span><span class="w"> </span><span class="kn">import</span> <span class="n">poloidal_field_coil_case</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..workplanes.revolved_shape</span><span class="w"> </span><span class="kn">import</span> <span class="n">revolved_shape</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..workplanes.toroidal_field_coil_princeton_d</span><span class="w"> </span><span class="kn">import</span> <span class="n">toroidal_field_coil_princeton_d</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.assembly</span><span class="w"> </span><span class="kn">import</span> <span class="n">Assembly</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">number_of_tf_coils</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">rotation_angle</span> <span class="o">&lt;=</span> <span class="mi">360</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"rotation_angle must be greater than 0 and at most 360, got </span><span class="si">{</span><span class="n">rotation_angle</span><span class="si">}</span><span class="s2">."</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">number_of_tf_coils</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">number_of_tf_coils</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">number_of_tf_coils</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">))</span>
+        <span class="ow">or</span> <span class="n">number_of_tf_coils</span> <span class="o">&lt;</span> <span class="mi">1</span>
+    <span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"number_of_tf_coils must be an integer of at least 1, got </span><span class="si">{</span><span class="n">number_of_tf_coils</span><span class="si">}</span><span class="s2">."</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_straight</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[(</span><span class="n">r</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">points</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_spline</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[(</span><span class="n">r</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">points</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_revolve</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Revolves a closed profile, see paramak.revolved_shape. A full 360</span>
+<span class="sd">    degree revolution is made from two 180 degree halves joined together, so</span>
+<span class="sd">    the surfaces have seam edges. Without these a profile made of a single</span>
+<span class="sd">    closed spline gives a surface that is periodic in both directions, which</span>
+<span class="sd">    can not be meshed for neutronics."""</span>
+    <span class="k">if</span> <span class="n">rotation_angle</span> <span class="o">&lt;</span> <span class="mi">360</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">revolved_shape</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">)</span>
+    <span class="n">half</span> <span class="o">=</span> <span class="n">revolved_shape</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="o">=</span><span class="mi">180</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">half</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">half</span><span class="o">.</span><span class="n">rotate</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">180</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_profile_face</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cq</span><span class="o">.</span><span class="n">Face</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Makes a planar face in the XZ plane from a closed profile, optionally</span>
+<span class="sd">    offset outwards in 2D by the given distance."""</span>
+    <span class="n">wire</span> <span class="o">=</span> <span class="n">create_wire_workplane_from_points</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">plane</span><span class="o">=</span><span class="s2">"XZ"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">offset</span><span class="p">:</span>
+        <span class="n">wire</span> <span class="o">=</span> <span class="n">wire</span><span class="o">.</span><span class="n">offset2D</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+    <span class="n">face</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Face</span><span class="o">.</span><span class="n">makeFromWires</span><span class="p">(</span><span class="n">wire</span><span class="o">.</span><span class="n">val</span><span class="p">())</span>
+    <span class="c1"># profiles drawn clockwise give a face with the opposite normal, all faces</span>
+    <span class="c1"># are given the same orientation so 2D booleans merge them correctly</span>
+    <span class="k">if</span> <span class="n">face</span><span class="o">.</span><span class="n">normalAt</span><span class="p">()</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">face</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Face</span><span class="p">(</span><span class="n">face</span><span class="o">.</span><span class="n">wrapped</span><span class="o">.</span><span class="n">Reversed</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">face</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_single_face</span><span class="p">(</span><span class="n">shape</span><span class="p">:</span> <span class="n">cq</span><span class="o">.</span><span class="n">Shape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cq</span><span class="o">.</span><span class="n">Face</span><span class="p">:</span>
+    <span class="n">faces</span> <span class="o">=</span> <span class="n">shape</span><span class="o">.</span><span class="n">Faces</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">faces</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Expected the 2D profile operation to give a single face, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">faces</span><span class="p">)</span><span class="si">}</span><span class="s2">."</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_revolve_face</span><span class="p">(</span><span class="n">face</span><span class="p">:</span> <span class="n">cq</span><span class="o">.</span><span class="n">Face</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Revolves a face in the XZ plane around the Z axis. A full 360 degree</span>
+<span class="sd">    revolution is made from two halves, see _revolve."""</span>
+    <span class="n">axis_start</span><span class="p">,</span> <span class="n">axis_end</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">cq</span><span class="o">.</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rotation_angle</span> <span class="o">&lt;</span> <span class="mi">360</span><span class="p">:</span>
+        <span class="n">solid</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Solid</span><span class="o">.</span><span class="n">revolve</span><span class="p">(</span><span class="n">face</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">,</span> <span class="n">axis_start</span><span class="p">,</span> <span class="n">axis_end</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">half</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Solid</span><span class="o">.</span><span class="n">revolve</span><span class="p">(</span><span class="n">face</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="n">axis_start</span><span class="p">,</span> <span class="n">axis_end</span><span class="p">)</span>
+        <span class="n">solid</span> <span class="o">=</span> <span class="n">half</span><span class="o">.</span><span class="n">fuse</span><span class="p">(</span><span class="n">half</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">axis_start</span><span class="p">,</span> <span class="n">axis_end</span><span class="p">,</span> <span class="mi">180</span><span class="p">))</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">(</span><span class="s2">"XZ"</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">solid</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_tf_placement_angles</span><span class="p">(</span><span class="n">number_of_tf_coils</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">360</span><span class="p">,</span> <span class="n">number_of_tf_coils</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_clip_to_sector</span><span class="p">(</span><span class="n">solid</span><span class="p">:</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Intersects a solid with a wedge so only the part inside the sector remains."""</span>
+    <span class="k">if</span> <span class="n">rotation_angle</span> <span class="o">&gt;=</span> <span class="mi">360</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">solid</span>
+    <span class="n">bb</span> <span class="o">=</span> <span class="n">solid</span><span class="o">.</span><span class="n">val</span><span class="p">()</span><span class="o">.</span><span class="n">BoundingBox</span><span class="p">()</span>
+    <span class="n">radius</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">xmin</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">xmax</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">ymin</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">ymax</span><span class="p">))</span> <span class="o">*</span> <span class="mf">2.1</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">zmin</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">zmax</span><span class="p">))</span> <span class="o">*</span> <span class="mf">2.1</span>
+    <span class="k">return</span> <span class="n">solid</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">cutting_wedge</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">))</span>
+
+
+<span class="n">PF_COIL_CASE_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_pf_coils_with_cases</span><span class="p">(</span><span class="n">center_points</span><span class="p">,</span> <span class="n">widths</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">case_thickness</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Makes each poloidal field coil as a winding pack inside a case of</span>
+<span class="sd">    constant thickness. The widths and heights are the outer size of each</span>
+<span class="sd">    coil (including the case), as read off the paper figures.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        a list of (name, solid) tuples, a pf_coil_N winding pack and a</span>
+<span class="sd">        pf_coil_case_N case for each coil.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">case_thickness</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">case_thickness</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">))</span>
+        <span class="ow">or</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">case_thickness</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="n">case_thickness</span> <span class="o">&lt;=</span> <span class="mi">0</span>
+    <span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"pf_coil_case_thickness must be a positive number, got </span><span class="si">{</span><span class="n">case_thickness</span><span class="si">}</span><span class="s2">."</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="n">smallest_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">widths</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">heights</span><span class="p">))</span>
+    <span class="k">if</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">case_thickness</span> <span class="o">&gt;=</span> <span class="n">smallest_size</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"pf_coil_case_thickness must be less than half the size of the smallest poloidal field coil "</span>
+            <span class="sa">f</span><span class="s2">"(</span><span class="si">{</span><span class="n">smallest_size</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="si">}</span><span class="s2"> cm) so there is room for the winding pack, got </span><span class="si">{</span><span class="n">case_thickness</span><span class="si">}</span><span class="s2">."</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">counter</span><span class="p">,</span> <span class="p">(</span><span class="n">center_point</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">center_points</span><span class="p">,</span> <span class="n">widths</span><span class="p">,</span> <span class="n">heights</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">core_width</span><span class="p">,</span> <span class="n">core_height</span> <span class="o">=</span> <span class="n">width</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">case_thickness</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">case_thickness</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"pf_coil_</span><span class="si">{</span><span class="n">counter</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="n">poloidal_field_coil</span><span class="p">(</span>
+                    <span class="n">height</span><span class="o">=</span><span class="n">core_height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">core_width</span><span class="p">,</span> <span class="n">center_point</span><span class="o">=</span><span class="n">center_point</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"pf_coil_case_</span><span class="si">{</span><span class="n">counter</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="n">poloidal_field_coil_case</span><span class="p">(</span>
+                    <span class="n">coil_height</span><span class="o">=</span><span class="n">core_height</span><span class="p">,</span>
+                    <span class="n">coil_width</span><span class="o">=</span><span class="n">core_width</span><span class="p">,</span>
+                    <span class="n">casing_thickness</span><span class="o">=</span><span class="n">case_thickness</span><span class="p">,</span>
+                    <span class="n">center_point</span><span class="o">=</span><span class="n">center_point</span><span class="p">,</span>
+                    <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">parts</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_assembly</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="n">cuts</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">default_colors</span><span class="p">,</span> <span class="n">plasma_parameters</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Assembly</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Adds the named parts to an Assembly.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        parts: a list of (name, solid) tuples.</span>
+<span class="sd">        cuts: a dictionary mapping a part name to the names of the parts that</span>
+<span class="sd">            are cut from it, used where the outlines from the figures overlap.</span>
+<span class="sd">            The overlaps are listed explicitly because automatic detection</span>
+<span class="sd">            with boolean operations is not reliable for the nearly touching</span>
+<span class="sd">            spline surfaces in these models.</span>
+<span class="sd">        colors: user colors keyed by part name.</span>
+<span class="sd">        default_colors: colors keyed by part name used when no user color is</span>
+<span class="sd">            given, other parts get a color based on their name.</span>
+<span class="sd">        plasma_parameters: plasma shape attributes to set on the assembly.</span>
+<span class="sd">    """</span>
+    <span class="n">solids</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+    <span class="n">assembly</span> <span class="o">=</span> <span class="n">Assembly</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">solid</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">cutter_name</span> <span class="ow">in</span> <span class="n">cuts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="c1"># boolean operations can change the tolerances of their arguments</span>
+            <span class="c1"># in place, so a copy of the cutting part is used</span>
+            <span class="n">cutter</span> <span class="o">=</span> <span class="n">solids</span><span class="p">[</span><span class="n">cutter_name</span><span class="p">]</span><span class="o">.</span><span class="n">val</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">solid</span> <span class="o">=</span> <span class="n">solid</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">cutter</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="n">Standard_Failure</span><span class="p">,</span> <span class="n">Standard_ConstructionError</span><span class="p">):</span>
+                <span class="c1"># merging the faces of the result can fail for some spline</span>
+                <span class="c1"># surfaces, the cut is still valid without it</span>
+                <span class="n">solid</span> <span class="o">=</span> <span class="n">solid</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">cutter</span><span class="p">,</span> <span class="n">clean</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">solids</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">solid</span>
+        <span class="n">default_color</span> <span class="o">=</span> <span class="n">default_colors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">default_color</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"pf_coil_case"</span><span class="p">):</span>
+            <span class="n">default_color</span> <span class="o">=</span> <span class="n">PF_COIL_CASE_COLOR</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="n">colors</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">default_color</span><span class="p">)</span> <span class="ow">or</span> <span class="n">resolve_assembly_color</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">assembly</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">solid</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cq</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="o">*</span><span class="n">color</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">plasma_parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">assembly</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">assembly</span>
+
+
+<div class="viewcode-block" id="sparc_from_2020_paper">
+<a class="viewcode-back" href="../../../python_api.html#paramak.sparc_from_2020_paper">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sparc_from_2020_paper</span><span class="p">(</span>
+    <span class="n">rotation_angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">180.0</span><span class="p">,</span>
+    <span class="n">number_of_tf_coils</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">18</span><span class="p">,</span>
+    <span class="n">pf_coil_case_thickness</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.0</span><span class="p">,</span>
+    <span class="n">colors</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Assembly</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Creates a simplified SPARC reactor from a figure in a published paper.</span>
+
+<span class="sd">    The geometry is based on Figure 4 of A. J. Creely et al., "Overview of the</span>
+<span class="sd">    SPARC tokamak", Journal of Plasma Physics, 86(5), 865860502 (2020),</span>
+<span class="sd">    `doi:10.1017/S0022377820001257</span>
+<span class="sd">    &lt;https://doi.org/10.1017/S0022377820001257&gt;`_. The coordinates were read</span>
+<span class="sd">    off the figure, so they are approximate and the model does not exactly</span>
+<span class="sd">    match the reactor.</span>
+
+<span class="sd">    The assembly contains the plasma, the central solenoid, the poloidal field</span>
+<span class="sd">    coils (each a winding pack inside a case), the divertor and vertical</span>
+<span class="sd">    stability coils, the ICRF antenna, the vacuum vessel, the inner vessel</span>
+<span class="sd">    components and the toroidal field coils.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        rotation_angle: the angle in degrees of the sector to build, between</span>
+<span class="sd">            0 (exclusive) and 360.</span>
+<span class="sd">        number_of_tf_coils: the number of toroidal field coils, equally spaced</span>
+<span class="sd">            around 360 degrees. Only the coils inside the sector are kept.</span>
+<span class="sd">        pf_coil_case_thickness: the thickness (cm) of the case around each</span>
+<span class="sd">            poloidal field coil winding pack. The outer size of each coil (with</span>
+<span class="sd">            its case) is taken from the paper figure.</span>
+<span class="sd">        colors: optional dictionary of RGB(A) colors keyed by part name, used</span>
+<span class="sd">            in place of the default colors.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A paramak Assembly with a named part for each component.</span>
+<span class="sd">    """</span>
+    <span class="n">_validate</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">,</span> <span class="n">number_of_tf_coils</span><span class="p">)</span>
+
+    <span class="n">major_radius</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">triangularity</span> <span class="o">=</span> <span class="mf">185.0</span><span class="p">,</span> <span class="mf">1.97</span><span class="p">,</span> <span class="mf">0.31</span>
+    <span class="c1"># the paper gives a minor radius of 57 cm, the plasma is made slightly</span>
+    <span class="c1"># smaller so that it does not touch the inner vessel components. The</span>
+    <span class="c1"># modelled value is used for the plasma and reported on the assembly.</span>
+    <span class="n">paper_minor_radius</span> <span class="o">=</span> <span class="mf">57.0</span>
+    <span class="n">minor_radius</span> <span class="o">=</span> <span class="n">paper_minor_radius</span> <span class="o">-</span> <span class="mi">6</span>
+
+    <span class="n">plasma</span> <span class="o">=</span> <span class="n">plasma_simplified</span><span class="p">(</span>
+        <span class="n">major_radius</span><span class="o">=</span><span class="n">major_radius</span><span class="p">,</span>
+        <span class="n">minor_radius</span><span class="o">=</span><span class="n">minor_radius</span><span class="p">,</span>
+        <span class="n">elongation</span><span class="o">=</span><span class="n">elongation</span><span class="p">,</span>
+        <span class="n">triangularity</span><span class="o">=</span><span class="n">triangularity</span><span class="p">,</span>
+        <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">rectangular_coils</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">center_points</span><span class="p">,</span> <span class="n">widths</span><span class="p">,</span> <span class="n">heights</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">counter</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="n">poloidal_field_coil</span><span class="p">(</span>
+                    <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">center_point</span><span class="o">=</span><span class="n">center_point</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">counter</span><span class="p">,</span> <span class="p">(</span><span class="n">center_point</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">center_points</span><span class="p">,</span> <span class="n">widths</span><span class="p">,</span> <span class="n">heights</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">]</span>
+
+    <span class="n">vs_coils</span> <span class="o">=</span> <span class="n">rectangular_coils</span><span class="p">(</span><span class="s2">"vs_coil"</span><span class="p">,</span> <span class="p">[(</span><span class="mi">240</span><span class="p">,</span> <span class="mi">70</span><span class="p">),</span> <span class="p">(</span><span class="mi">240</span><span class="p">,</span> <span class="o">-</span><span class="mi">70</span><span class="p">)],</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+    <span class="n">central_solenoid</span> <span class="o">=</span> <span class="n">rectangular_coils</span><span class="p">(</span>
+        <span class="s2">"central_solenoid"</span><span class="p">,</span>
+        <span class="p">[(</span><span class="mf">53.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">169.58</span><span class="p">),</span> <span class="p">(</span><span class="mf">53.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">118.43</span><span class="p">),</span> <span class="p">(</span><span class="mf">53.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">46.54</span><span class="p">),</span> <span class="p">(</span><span class="mf">53.5</span><span class="p">,</span> <span class="mf">46.54</span><span class="p">),</span> <span class="p">(</span><span class="mf">53.5</span><span class="p">,</span> <span class="mf">118.43</span><span class="p">),</span> <span class="p">(</span><span class="mf">53.5</span><span class="p">,</span> <span class="mf">169.58</span><span class="p">)],</span>
+        <span class="p">[</span><span class="mf">27.7</span><span class="p">]</span> <span class="o">*</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="p">[</span><span class="mf">41.5</span><span class="p">,</span> <span class="mf">40.5</span><span class="p">,</span> <span class="mf">82.95</span><span class="p">,</span> <span class="mf">82.95</span><span class="p">,</span> <span class="mf">40.5</span><span class="p">,</span> <span class="mf">41.5</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">pf_coils</span> <span class="o">=</span> <span class="n">_pf_coils_with_cases</span><span class="p">(</span>
+        <span class="p">[(</span><span class="mi">86</span><span class="p">,</span> <span class="mi">230</span><span class="p">),</span> <span class="p">(</span><span class="mi">86</span><span class="p">,</span> <span class="o">-</span><span class="mi">230</span><span class="p">),</span> <span class="p">(</span><span class="mi">164</span><span class="p">,</span> <span class="mi">241</span><span class="p">),</span> <span class="p">(</span><span class="mi">164</span><span class="p">,</span> <span class="o">-</span><span class="mi">241</span><span class="p">),</span> <span class="p">(</span><span class="mi">263</span><span class="p">,</span> <span class="mi">222</span><span class="p">),</span> <span class="p">(</span><span class="mi">263</span><span class="p">,</span> <span class="o">-</span><span class="mi">222</span><span class="p">),</span> <span class="p">(</span><span class="mi">373</span><span class="p">,</span> <span class="mi">131</span><span class="p">),</span> <span class="p">(</span><span class="mi">373</span><span class="p">,</span> <span class="o">-</span><span class="mi">131</span><span class="p">)],</span>
+        <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">43</span><span class="p">,</span> <span class="mi">43</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">48</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mi">37</span><span class="p">],</span>
+        <span class="n">pf_coil_case_thickness</span><span class="p">,</span>
+        <span class="n">rotation_angle</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">divertor_coils</span> <span class="o">=</span> <span class="n">rectangular_coils</span><span class="p">(</span>
+        <span class="s2">"divertor_coil"</span><span class="p">,</span> <span class="p">[(</span><span class="mi">207</span><span class="p">,</span> <span class="mi">144</span><span class="p">),</span> <span class="p">(</span><span class="mi">207</span><span class="p">,</span> <span class="mi">125</span><span class="p">),</span> <span class="p">(</span><span class="mi">207</span><span class="p">,</span> <span class="o">-</span><span class="mi">144</span><span class="p">),</span> <span class="p">(</span><span class="mi">207</span><span class="p">,</span> <span class="o">-</span><span class="mi">125</span><span class="p">)],</span> <span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span>
+    <span class="p">)</span>
+
+    <span class="n">efccu_lower</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[(</span><span class="mf">235.57</span><span class="p">,</span> <span class="o">-</span><span class="mf">127.65</span><span class="p">),</span> <span class="p">(</span><span class="mf">240.18</span><span class="p">,</span> <span class="o">-</span><span class="mf">121.20</span><span class="p">),</span> <span class="p">(</span><span class="mf">246.65</span><span class="p">,</span> <span class="o">-</span><span class="mf">125.81</span><span class="p">),</span> <span class="p">(</span><span class="mf">242.03</span><span class="p">,</span> <span class="o">-</span><span class="mf">132.26</span><span class="p">)],</span>
+        <span class="p">[(</span><span class="mf">262.36</span><span class="p">,</span> <span class="o">-</span><span class="mf">90.78</span><span class="p">),</span> <span class="p">(</span><span class="mf">266.97</span><span class="p">,</span> <span class="o">-</span><span class="mf">84.33</span><span class="p">),</span> <span class="p">(</span><span class="mf">273.44</span><span class="p">,</span> <span class="o">-</span><span class="mf">88.94</span><span class="p">),</span> <span class="p">(</span><span class="mf">268.82</span><span class="p">,</span> <span class="o">-</span><span class="mf">94.47</span><span class="p">)],</span>
+        <span class="p">[(</span><span class="mf">281.76</span><span class="p">,</span> <span class="o">-</span><span class="mf">71.43</span><span class="p">),</span> <span class="p">(</span><span class="mf">289.15</span><span class="p">,</span> <span class="o">-</span><span class="mf">71.43</span><span class="p">),</span> <span class="p">(</span><span class="mf">289.15</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.80</span><span class="p">),</span> <span class="p">(</span><span class="mf">281.76</span><span class="p">,</span> <span class="o">-</span><span class="mf">78.80</span><span class="p">)],</span>
+    <span class="p">]</span>
+    <span class="c1"># the upper coils are a mirror of the lower coils, reversed so the</span>
+    <span class="c1"># profile keeps the same winding direction</span>
+    <span class="n">efccu_upper</span> <span class="o">=</span> <span class="p">[[(</span><span class="n">r</span><span class="p">,</span> <span class="o">-</span><span class="n">z</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">coil</span><span class="p">)]</span> <span class="k">for</span> <span class="n">coil</span> <span class="ow">in</span> <span class="n">efccu_lower</span><span class="p">]</span>
+    <span class="n">efccu_coils</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="sa">f</span><span class="s2">"efccu_coil_</span><span class="si">{</span><span class="n">counter</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">_revolve</span><span class="p">(</span><span class="n">_straight</span><span class="p">(</span><span class="n">points</span><span class="p">),</span> <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">counter</span><span class="p">,</span> <span class="n">points</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">efccu_lower</span> <span class="o">+</span> <span class="n">efccu_upper</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="n">antenna</span> <span class="o">=</span> <span class="n">_revolve</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="p">(</span><span class="mf">263.28</span><span class="p">,</span> <span class="mf">46.54</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">263.28</span><span class="p">,</span> <span class="o">-</span><span class="mf">46.54</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">231.87</span><span class="p">,</span> <span class="o">-</span><span class="mf">46.54</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">243.88</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">231.87</span><span class="p">,</span> <span class="mf">46.54</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># the vacuum vessel is a shell between an outer and an inner wall</span>
+    <span class="n">vessel_outer_wall</span> <span class="o">=</span> <span class="n">_revolve</span><span class="p">(</span>
+        <span class="n">_straight</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">(</span><span class="mf">117.32</span><span class="p">,</span> <span class="mf">126.73</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">163.51</span><span class="p">,</span> <span class="mf">170.05</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">181.99</span><span class="p">,</span> <span class="mf">171.89</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">196.77</span><span class="p">,</span> <span class="mf">169.12</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">196.77</span><span class="p">,</span> <span class="mf">115.67</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">236.49</span><span class="p">,</span> <span class="mf">114.75</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">273.44</span><span class="p">,</span> <span class="mf">65.90</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">272.52</span><span class="p">,</span> <span class="o">-</span><span class="mf">65.90</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">236.49</span><span class="p">,</span> <span class="o">-</span><span class="mf">115.67</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">196.77</span><span class="p">,</span> <span class="o">-</span><span class="mf">115.67</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">196.77</span><span class="p">,</span> <span class="o">-</span><span class="mf">169.12</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">181.99</span><span class="p">,</span> <span class="o">-</span><span class="mf">172.81</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">163.51</span><span class="p">,</span> <span class="o">-</span><span class="mf">170.05</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">117.32</span><span class="p">,</span> <span class="o">-</span><span class="mf">126.73</span><span class="p">),</span>
+            <span class="p">]</span>
+        <span class="p">),</span>
+        <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">vessel_inner_wall</span> <span class="o">=</span> <span class="n">_revolve</span><span class="p">(</span>
+        <span class="n">_straight</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">(</span><span class="mf">123.79</span><span class="p">,</span> <span class="mf">123.04</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">123.79</span><span class="p">,</span> <span class="o">-</span><span class="mf">123.96</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">165.36</span><span class="p">,</span> <span class="o">-</span><span class="mf">162.67</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">181.99</span><span class="p">,</span> <span class="o">-</span><span class="mf">164.52</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">190.30</span><span class="p">,</span> <span class="o">-</span><span class="mf">162.67</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">190.30</span><span class="p">,</span> <span class="o">-</span><span class="mf">112.90</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">194.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">109.22</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">232.79</span><span class="p">,</span> <span class="o">-</span><span class="mf">109.22</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">266.97</span><span class="p">,</span> <span class="o">-</span><span class="mf">63.13</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">266.05</span><span class="p">,</span> <span class="mf">62.21</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">232.79</span><span class="p">,</span> <span class="mf">109.22</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">194.00</span><span class="p">,</span> <span class="mf">109.22</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">190.30</span><span class="p">,</span> <span class="mf">111.98</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">190.30</span><span class="p">,</span> <span class="mf">162.67</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">181.99</span><span class="p">,</span> <span class="mf">164.52</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">165.36</span><span class="p">,</span> <span class="mf">162.67</span><span class="p">),</span>
+            <span class="p">]</span>
+        <span class="p">),</span>
+        <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">vessel</span> <span class="o">=</span> <span class="n">vessel_outer_wall</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">vessel_inner_wall</span><span class="p">)</span>
+
+    <span class="n">inner_vessel</span> <span class="o">=</span> <span class="n">_revolve</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="p">(</span><span class="mf">269.75</span><span class="p">,</span> <span class="o">-</span><span class="mf">46.54</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">231.87</span><span class="p">,</span> <span class="o">-</span><span class="mf">46.54</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">223.56</span><span class="p">,</span> <span class="o">-</span><span class="mf">62.21</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">207.85</span><span class="p">,</span> <span class="o">-</span><span class="mf">80.65</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">166.28</span><span class="p">,</span> <span class="o">-</span><span class="mf">115.67</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">164.43</span><span class="p">,</span> <span class="o">-</span><span class="mf">119.35</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">164.43</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.12</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">173.67</span><span class="p">,</span> <span class="o">-</span><span class="mf">140.55</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">184.76</span><span class="p">,</span> <span class="o">-</span><span class="mf">140.55</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">184.76</span><span class="p">,</span> <span class="o">-</span><span class="mf">158.99</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">181.99</span><span class="p">,</span> <span class="o">-</span><span class="mf">159.91</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">147.81</span><span class="p">,</span> <span class="o">-</span><span class="mf">118.43</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">129.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">123.04</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">145.96</span><span class="p">,</span> <span class="o">-</span><span class="mf">111.06</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">126.56</span><span class="p">,</span> <span class="o">-</span><span class="mf">50.23</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">127.48</span><span class="p">,</span> <span class="mf">50.23</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">145.96</span><span class="p">,</span> <span class="mf">110.14</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">128.41</span><span class="p">,</span> <span class="mf">123.04</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">147.81</span><span class="p">,</span> <span class="mf">117.51</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">181.99</span><span class="p">,</span> <span class="mf">159.91</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">185.68</span><span class="p">,</span> <span class="mf">158.99</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">184.76</span><span class="p">,</span> <span class="mf">140.55</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">172.75</span><span class="p">,</span> <span class="mf">140.55</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">164.43</span><span class="p">,</span> <span class="mf">121.20</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">164.43</span><span class="p">,</span> <span class="mf">118.43</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">165.36</span><span class="p">,</span> <span class="mf">115.67</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">173.67</span><span class="p">,</span> <span class="mf">111.06</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">207.85</span><span class="p">,</span> <span class="mf">80.65</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">220.79</span><span class="p">,</span> <span class="mf">66.82</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">231.87</span><span class="p">,</span> <span class="mf">46.54</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">268.82</span><span class="p">,</span> <span class="mf">46.54</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">268.82</span><span class="p">,</span> <span class="mf">63.13</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">233.72</span><span class="p">,</span> <span class="mf">111.98</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">194.00</span><span class="p">,</span> <span class="mf">112.90</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">192.15</span><span class="p">,</span> <span class="mf">164.52</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">163.51</span><span class="p">,</span> <span class="mf">166.36</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">121.94</span><span class="p">,</span> <span class="mf">123.96</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">121.02</span><span class="p">,</span> <span class="o">-</span><span class="mf">125.81</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">163.51</span><span class="p">,</span> <span class="o">-</span><span class="mf">166.36</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">192.15</span><span class="p">,</span> <span class="o">-</span><span class="mf">166.36</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">194.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">112.90</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">234.64</span><span class="p">,</span> <span class="o">-</span><span class="mf">111.98</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">269.75</span><span class="p">,</span> <span class="o">-</span><span class="mf">63.13</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">tf_coils</span> <span class="o">=</span> <span class="n">toroidal_field_coil_princeton_d</span><span class="p">(</span>
+        <span class="n">r1</span><span class="o">=</span><span class="mi">72</span><span class="p">,</span>
+        <span class="n">r2</span><span class="o">=</span><span class="mi">339</span><span class="p">,</span>
+        <span class="n">thickness</span><span class="o">=</span><span class="mi">33</span><span class="p">,</span>
+        <span class="n">distance</span><span class="o">=</span><span class="mi">33</span><span class="p">,</span>
+        <span class="n">azimuthal_placement_angles</span><span class="o">=</span><span class="n">_tf_placement_angles</span><span class="p">(</span><span class="n">number_of_tf_coils</span><span class="p">),</span>
+        <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parts</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">[(</span><span class="s2">"plasma"</span><span class="p">,</span> <span class="n">plasma</span><span class="p">)]</span>
+        <span class="o">+</span> <span class="n">vs_coils</span>
+        <span class="o">+</span> <span class="p">[(</span><span class="s2">"antenna"</span><span class="p">,</span> <span class="n">antenna</span><span class="p">),</span> <span class="p">(</span><span class="s2">"vessel"</span><span class="p">,</span> <span class="n">vessel</span><span class="p">),</span> <span class="p">(</span><span class="s2">"inner_vessel"</span><span class="p">,</span> <span class="n">inner_vessel</span><span class="p">)]</span>
+        <span class="o">+</span> <span class="n">central_solenoid</span>
+        <span class="o">+</span> <span class="n">pf_coils</span>
+        <span class="o">+</span> <span class="n">divertor_coils</span>
+        <span class="o">+</span> <span class="n">efccu_coils</span>
+        <span class="o">+</span> <span class="p">[(</span><span class="s2">"toroidal_field_coil"</span><span class="p">,</span> <span class="n">tf_coils</span><span class="p">)]</span>
+    <span class="p">)</span>
+    <span class="n">default_colors</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"vessel"</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+        <span class="s2">"inner_vessel"</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+        <span class="s2">"antenna"</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">_build_assembly</span><span class="p">(</span>
+        <span class="n">parts</span><span class="p">,</span>
+        <span class="p">{</span><span class="s2">"inner_vessel"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"vessel"</span><span class="p">,</span> <span class="s2">"antenna"</span><span class="p">,</span> <span class="s2">"vs_coil_1"</span><span class="p">,</span> <span class="s2">"vs_coil_2"</span><span class="p">]},</span>
+        <span class="n">colors</span><span class="p">,</span>
+        <span class="n">default_colors</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">"major_radius"</span><span class="p">:</span> <span class="n">major_radius</span><span class="p">,</span>
+            <span class="s2">"minor_radius"</span><span class="p">:</span> <span class="n">minor_radius</span><span class="p">,</span>
+            <span class="s2">"elongation"</span><span class="p">:</span> <span class="n">elongation</span><span class="p">,</span>
+            <span class="s2">"triangularity"</span><span class="p">:</span> <span class="n">triangularity</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="iter_from_2020_paper">
+<a class="viewcode-back" href="../../../python_api.html#paramak.iter_from_2020_paper">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">iter_from_2020_paper</span><span class="p">(</span>
+    <span class="n">rotation_angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">180.0</span><span class="p">,</span>
+    <span class="n">number_of_tf_coils</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">18</span><span class="p">,</span>
+    <span class="n">pf_coil_case_thickness</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">colors</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Assembly</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Creates a simplified ITER reactor from a figure in a published paper.</span>
+
+<span class="sd">    The geometry is based on the diagram in "ITER Project: International</span>
+<span class="sd">    Cooperation and Energy Investment" (2020),</span>
+<span class="sd">    `doi:10.1007/978-3-030-42913-3_26</span>
+<span class="sd">    &lt;https://doi.org/10.1007/978-3-030-42913-3_26&gt;`_. Several parts use</span>
+<span class="sd">    paramak parametric shapes, so the model does not exactly match the</span>
+<span class="sd">    diagram or the reactor.</span>
+
+<span class="sd">    The assembly contains the plasma, a blanket that follows the plasma, a</span>
+<span class="sd">    single null divertor, the vacuum vessel, the central solenoid, the</span>
+<span class="sd">    poloidal field coils (each a winding pack inside a case) and the toroidal</span>
+<span class="sd">    field coils.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        rotation_angle: the angle in degrees of the sector to build, between</span>
+<span class="sd">            0 (exclusive) and 360.</span>
+<span class="sd">        number_of_tf_coils: the number of toroidal field coils, equally spaced</span>
+<span class="sd">            around 360 degrees. Only the coils inside the sector are kept.</span>
+<span class="sd">        pf_coil_case_thickness: the thickness (cm) of the case around each</span>
+<span class="sd">            poloidal field coil winding pack. The outer size of each coil (with</span>
+<span class="sd">            its case) is taken from the paper figure.</span>
+<span class="sd">        colors: optional dictionary of RGB(A) colors keyed by part name, used</span>
+<span class="sd">            in place of the default colors.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A paramak Assembly with a named part for each component.</span>
+<span class="sd">    """</span>
+    <span class="n">_validate</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">,</span> <span class="n">number_of_tf_coils</span><span class="p">)</span>
+
+    <span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">triangularity</span> <span class="o">=</span> <span class="mf">620.0</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="mf">0.33</span>
+    <span class="n">vertical_displacement</span> <span class="o">=</span> <span class="mf">57.0</span>
+
+    <span class="n">plasma</span> <span class="o">=</span> <span class="n">plasma_simplified</span><span class="p">(</span>
+        <span class="n">major_radius</span><span class="o">=</span><span class="n">major_radius</span><span class="p">,</span>
+        <span class="n">minor_radius</span><span class="o">=</span><span class="n">minor_radius</span><span class="p">,</span>
+        <span class="n">elongation</span><span class="o">=</span><span class="n">elongation</span><span class="p">,</span>
+        <span class="n">triangularity</span><span class="o">=</span><span class="n">triangularity</span><span class="p">,</span>
+        <span class="n">vertical_displacement</span><span class="o">=</span><span class="n">vertical_displacement</span><span class="p">,</span>
+        <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">blanket_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"thickness"</span><span class="p">:</span> <span class="mf">54.0</span><span class="p">,</span>
+        <span class="s2">"start_angle"</span><span class="p">:</span> <span class="o">-</span><span class="mi">70</span><span class="p">,</span>
+        <span class="s2">"stop_angle"</span><span class="p">:</span> <span class="mi">230</span><span class="p">,</span>
+        <span class="s2">"offset_from_plasma"</span><span class="p">:</span> <span class="p">[[</span><span class="o">-</span><span class="mi">70</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">230</span><span class="p">],</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">59</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">50</span><span class="p">]],</span>
+        <span class="s2">"major_radius"</span><span class="p">:</span> <span class="n">major_radius</span><span class="p">,</span>
+        <span class="s2">"minor_radius"</span><span class="p">:</span> <span class="n">minor_radius</span><span class="p">,</span>
+        <span class="s2">"elongation"</span><span class="p">:</span> <span class="n">elongation</span><span class="p">,</span>
+        <span class="s2">"triangularity"</span><span class="p">:</span> <span class="n">triangularity</span><span class="p">,</span>
+        <span class="s2">"vertical_displacement"</span><span class="p">:</span> <span class="n">vertical_displacement</span><span class="p">,</span>
+        <span class="s2">"num_points"</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">blanket</span> <span class="o">=</span> <span class="n">blanket_from_plasma</span><span class="p">(</span><span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span> <span class="o">**</span><span class="n">blanket_parameters</span><span class="p">)</span>
+
+    <span class="c1"># outline of an ITER like divertor with inner and outer vertical targets</span>
+    <span class="c1"># and a dome, generated with the ITERtypeDivertor class from earlier</span>
+    <span class="c1"># paramak versions</span>
+    <span class="n">divertor</span> <span class="o">=</span> <span class="n">_revolve</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="p">(</span><span class="mf">392.71</span><span class="p">,</span> <span class="o">-</span><span class="mf">230.32</span><span class="p">,</span> <span class="s2">"circle"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">437.93</span><span class="p">,</span> <span class="o">-</span><span class="mf">269.98</span><span class="p">,</span> <span class="s2">"circle"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">434.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">330.00</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">411.50</span><span class="p">,</span> <span class="o">-</span><span class="mf">368.97</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">470.20</span><span class="p">,</span> <span class="o">-</span><span class="mf">349.67</span><span class="p">,</span> <span class="s2">"circle"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">503.97</span><span class="p">,</span> <span class="o">-</span><span class="mf">356.64</span><span class="p">,</span> <span class="s2">"circle"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">528.19</span><span class="p">,</span> <span class="o">-</span><span class="mf">381.19</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">558.62</span><span class="p">,</span> <span class="o">-</span><span class="mf">448.95</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">556.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">374.00</span><span class="p">,</span> <span class="s2">"circle"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">588.95</span><span class="p">,</span> <span class="o">-</span><span class="mf">315.16</span><span class="p">,</span> <span class="s2">"circle"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">656.36</span><span class="p">,</span> <span class="o">-</span><span class="mf">317.22</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">573.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">456.95</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">559.14</span><span class="p">,</span> <span class="o">-</span><span class="mf">463.95</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">407.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">376.77</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">396.79</span><span class="p">,</span> <span class="o">-</span><span class="mf">360.97</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># the inside of the vacuum vessel follows the outer surface of the blanket</span>
+    <span class="c1"># and the underside of the divertor</span>
+    <span class="n">blanket_points</span> <span class="o">=</span> <span class="n">blanket_find_points</span><span class="p">(</span><span class="n">connect_to_center</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_overlapping_shape</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">blanket_parameters</span><span class="p">)</span>
+    <span class="n">blanket_outer_points</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">blanket_points</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">blanket_points</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span> <span class="p">:]]</span>
+    <span class="n">divertor_casing_points</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mf">573.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">456.95</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">559.14</span><span class="p">,</span> <span class="o">-</span><span class="mf">463.95</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">407.00</span><span class="p">,</span> <span class="o">-</span><span class="mf">376.77</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">396.79</span><span class="p">,</span> <span class="o">-</span><span class="mf">360.97</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+    <span class="p">]</span>
+    <span class="n">vessel_cavity</span> <span class="o">=</span> <span class="n">_revolve</span><span class="p">(</span><span class="n">blanket_outer_points</span> <span class="o">+</span> <span class="n">divertor_casing_points</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">)</span>
+
+    <span class="n">vessel</span> <span class="o">=</span> <span class="n">_revolve</span><span class="p">(</span>
+        <span class="n">_spline</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="mf">36.5</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="mf">73.38</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="mf">108.31</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="mf">143.25</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="mf">178.18</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="mf">213.11</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="mf">248.05</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="mf">282.98</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="mf">317.92</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">328.61</span><span class="p">,</span> <span class="mf">368.24</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">336.18</span><span class="p">,</span> <span class="mf">422.43</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">350.48</span><span class="p">,</span> <span class="mf">457.54</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">371.96</span><span class="p">,</span> <span class="mf">492.47</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">404.32</span><span class="p">,</span> <span class="mf">522.02</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">439.65</span><span class="p">,</span> <span class="mf">544.46</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">474.98</span><span class="p">,</span> <span class="mf">556.36</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">510.22</span><span class="p">,</span> <span class="mf">564.09</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">545.64</span><span class="p">,</span> <span class="mf">565.12</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">565.83</span><span class="p">,</span> <span class="mf">563.19</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">580.97</span><span class="p">,</span> <span class="mf">559.44</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">616.31</span><span class="p">,</span> <span class="mf">548.41</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">651.64</span><span class="p">,</span> <span class="mf">533.22</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">686.97</span><span class="p">,</span> <span class="mf">515.3</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">722.3</span><span class="p">,</span> <span class="mf">492.24</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">757.63</span><span class="p">,</span> <span class="mf">466.87</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">792.96</span><span class="p">,</span> <span class="mf">437.11</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">825.77</span><span class="p">,</span> <span class="mf">403.72</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">853.53</span><span class="p">,</span> <span class="mf">369.42</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">877.92</span><span class="p">,</span> <span class="mf">333.91</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">898.95</span><span class="p">,</span> <span class="mf">300.52</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">916.62</span><span class="p">,</span> <span class="mf">265.24</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">932.6</span><span class="p">,</span> <span class="mf">230.72</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">946.06</span><span class="p">,</span> <span class="mf">193.11</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">956.15</span><span class="p">,</span> <span class="mf">156.88</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">962.88</span><span class="p">,</span> <span class="mf">118.11</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">967.93</span><span class="p">,</span> <span class="mf">80.39</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">968.77</span><span class="p">,</span> <span class="mf">38.25</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">968.77</span><span class="p">,</span> <span class="mf">25.77</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">964.57</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.67</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">956.99</span><span class="p">,</span> <span class="o">-</span><span class="mf">29.94</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">956.15</span><span class="p">,</span> <span class="o">-</span><span class="mf">34.6</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">946.06</span><span class="p">,</span> <span class="o">-</span><span class="mf">71.15</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">931.76</span><span class="p">,</span> <span class="o">-</span><span class="mf">104.26</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">914.93</span><span class="p">,</span> <span class="o">-</span><span class="mf">139.91</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">898.95</span><span class="p">,</span> <span class="o">-</span><span class="mf">174.48</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">883.81</span><span class="p">,</span> <span class="o">-</span><span class="mf">213.64</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">867.83</span><span class="p">,</span> <span class="o">-</span><span class="mf">248.22</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">851.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">284.21</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">834.18</span><span class="p">,</span> <span class="o">-</span><span class="mf">319.95</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">818.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">359.1</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">800.53</span><span class="p">,</span> <span class="o">-</span><span class="mf">391.23</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">776.13</span><span class="p">,</span> <span class="o">-</span><span class="mf">427.87</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">744.17</span><span class="p">,</span> <span class="o">-</span><span class="mf">460.46</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">708.84</span><span class="p">,</span> <span class="o">-</span><span class="mf">490.03</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">673.51</span><span class="p">,</span> <span class="o">-</span><span class="mf">512.7</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">638.18</span><span class="p">,</span> <span class="o">-</span><span class="mf">528.37</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">602.85</span><span class="p">,</span> <span class="o">-</span><span class="mf">539.05</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">567.52</span><span class="p">,</span> <span class="o">-</span><span class="mf">546.12</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">532.18</span><span class="p">,</span> <span class="o">-</span><span class="mf">548.96</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">496.85</span><span class="p">,</span> <span class="o">-</span><span class="mf">547.75</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">461.52</span><span class="p">,</span> <span class="o">-</span><span class="mf">541.4</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">426.19</span><span class="p">,</span> <span class="o">-</span><span class="mf">527.6</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">390.86</span><span class="p">,</span> <span class="o">-</span><span class="mf">501.28</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">360.58</span><span class="p">,</span> <span class="o">-</span><span class="mf">468.05</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">340.39</span><span class="p">,</span> <span class="o">-</span><span class="mf">431.44</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">329.87</span><span class="p">,</span> <span class="o">-</span><span class="mf">399.07</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="o">-</span><span class="mf">357.48</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="o">-</span><span class="mf">311.73</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="o">-</span><span class="mf">276.8</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="o">-</span><span class="mf">241.86</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="o">-</span><span class="mf">206.93</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="o">-</span><span class="mf">172.0</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="o">-</span><span class="mf">137.06</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="o">-</span><span class="mf">102.13</span><span class="p">),</span>
+                <span class="p">(</span><span class="mf">327.77</span><span class="p">,</span> <span class="o">-</span><span class="mf">67.19</span><span class="p">),</span>
+            <span class="p">]</span>
+        <span class="p">),</span>
+        <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">vessel_cavity</span><span class="p">)</span>
+
+    <span class="c1"># outboard coils, given by their lower left and upper right corners</span>
+    <span class="n">pf_coil_corners</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">((</span><span class="mf">345.54</span><span class="p">,</span> <span class="o">-</span><span class="mf">788.05</span><span class="p">),</span> <span class="p">(</span><span class="mf">511.99</span><span class="p">,</span> <span class="o">-</span><span class="mf">690.40</span><span class="p">)),</span>
+        <span class="p">((</span><span class="mf">800.65</span><span class="p">,</span> <span class="o">-</span><span class="mf">703.37</span><span class="p">),</span> <span class="p">(</span><span class="mf">880.71</span><span class="p">,</span> <span class="o">-</span><span class="mf">611.83</span><span class="p">)),</span>
+        <span class="p">((</span><span class="mf">1160.94</span><span class="p">,</span> <span class="o">-</span><span class="mf">272.69</span><span class="p">),</span> <span class="p">(</span><span class="mf">1222.04</span><span class="p">,</span> <span class="o">-</span><span class="mf">162.38</span><span class="p">)),</span>
+        <span class="p">((</span><span class="mf">1158.83</span><span class="p">,</span> <span class="mf">268.98</span><span class="p">),</span> <span class="p">(</span><span class="mf">1230.47</span><span class="p">,</span> <span class="mf">379.28</span><span class="p">)),</span>
+        <span class="p">((</span><span class="mf">798.54</span><span class="p">,</span> <span class="mf">621.64</span><span class="p">),</span> <span class="p">(</span><span class="mf">861.75</span><span class="p">,</span> <span class="mf">681.95</span><span class="p">)),</span>
+        <span class="p">((</span><span class="mf">345.54</span><span class="p">,</span> <span class="mf">707.78</span><span class="p">),</span> <span class="p">(</span><span class="mf">446.68</span><span class="p">,</span> <span class="mf">803.45</span><span class="p">)),</span>
+    <span class="p">]</span>
+    <span class="n">pf_coils</span> <span class="o">=</span> <span class="n">_pf_coils_with_cases</span><span class="p">(</span>
+        <span class="p">[((</span><span class="n">lower</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">upper</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="n">lower</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">upper</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="ow">in</span> <span class="n">pf_coil_corners</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">upper</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">lower</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="ow">in</span> <span class="n">pf_coil_corners</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">upper</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">lower</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="ow">in</span> <span class="n">pf_coil_corners</span><span class="p">],</span>
+        <span class="n">pf_coil_case_thickness</span><span class="p">,</span>
+        <span class="n">rotation_angle</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># the central solenoid is made of 6 stacked modules</span>
+    <span class="n">cs_inner</span><span class="p">,</span> <span class="n">cs_outer</span> <span class="o">=</span> <span class="mf">132.74</span><span class="p">,</span> <span class="mf">202.27</span>
+    <span class="n">central_solenoid</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"central_solenoid_</span><span class="si">{</span><span class="n">counter</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="n">poloidal_field_coil</span><span class="p">(</span>
+                <span class="n">height</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">cs_outer</span> <span class="o">-</span> <span class="n">cs_inner</span><span class="p">,</span>
+                <span class="n">center_point</span><span class="o">=</span><span class="p">((</span><span class="n">cs_inner</span> <span class="o">+</span> <span class="n">cs_outer</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">z_bottom</span> <span class="o">+</span> <span class="mi">100</span><span class="p">),</span>
+                <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">counter</span><span class="p">,</span> <span class="n">z_bottom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">600</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="n">r1</span> <span class="o">=</span> <span class="mi">219</span>
+    <span class="n">coil_thickness</span> <span class="o">=</span> <span class="n">r1</span> <span class="o">-</span> <span class="mi">130</span>
+    <span class="n">tf_coils</span> <span class="o">=</span> <span class="n">toroidal_field_coil_princeton_d</span><span class="p">(</span>
+        <span class="n">r1</span><span class="o">=</span><span class="n">r1</span><span class="p">,</span>
+        <span class="n">r2</span><span class="o">=</span><span class="mi">1056</span><span class="p">,</span>
+        <span class="n">thickness</span><span class="o">=</span><span class="n">coil_thickness</span><span class="p">,</span>
+        <span class="n">distance</span><span class="o">=</span><span class="n">coil_thickness</span><span class="p">,</span>
+        <span class="n">azimuthal_placement_angles</span><span class="o">=</span><span class="n">_tf_placement_angles</span><span class="p">(</span><span class="n">number_of_tf_coils</span><span class="p">),</span>
+        <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parts</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">[(</span><span class="s2">"plasma"</span><span class="p">,</span> <span class="n">plasma</span><span class="p">),</span> <span class="p">(</span><span class="s2">"blanket"</span><span class="p">,</span> <span class="n">blanket</span><span class="p">),</span> <span class="p">(</span><span class="s2">"divertor"</span><span class="p">,</span> <span class="n">divertor</span><span class="p">),</span> <span class="p">(</span><span class="s2">"vessel"</span><span class="p">,</span> <span class="n">vessel</span><span class="p">)]</span>
+        <span class="o">+</span> <span class="n">central_solenoid</span>
+        <span class="o">+</span> <span class="n">pf_coils</span>
+        <span class="o">+</span> <span class="p">[(</span><span class="s2">"toroidal_field_coil"</span><span class="p">,</span> <span class="n">tf_coils</span><span class="p">)]</span>
+    <span class="p">)</span>
+    <span class="n">default_colors</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"blanket"</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+        <span class="s2">"vessel"</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">_build_assembly</span><span class="p">(</span>
+        <span class="n">parts</span><span class="p">,</span>
+        <span class="p">{</span><span class="s2">"divertor"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"blanket"</span><span class="p">]},</span>
+        <span class="n">colors</span><span class="p">,</span>
+        <span class="n">default_colors</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">"major_radius"</span><span class="p">:</span> <span class="n">major_radius</span><span class="p">,</span>
+            <span class="s2">"minor_radius"</span><span class="p">:</span> <span class="n">minor_radius</span><span class="p">,</span>
+            <span class="s2">"elongation"</span><span class="p">:</span> <span class="n">elongation</span><span class="p">,</span>
+            <span class="s2">"triangularity"</span><span class="p">:</span> <span class="n">triangularity</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="eu_demo_from_2015_paper">
+<a class="viewcode-back" href="../../../python_api.html#paramak.eu_demo_from_2015_paper">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">eu_demo_from_2015_paper</span><span class="p">(</span>
+    <span class="n">rotation_angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">180.0</span><span class="p">,</span>
+    <span class="n">number_of_tf_coils</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="n">pf_coil_case_thickness</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">colors</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Assembly</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Creates a simplified EU DEMO reactor from a figure in a published paper.</span>
+
+<span class="sd">    The geometry is based on Figure 2 of R. Kemp et al., "Definition of the</span>
+<span class="sd">    basic DEMO tokamak geometry based on systems code studies", Fusion</span>
+<span class="sd">    Engineering and Design (2015), `doi:10.1016/j.fusengdes.2015.06.097</span>
+<span class="sd">    &lt;https://doi.org/10.1016/j.fusengdes.2015.06.097&gt;`_. The coordinates were</span>
+<span class="sd">    read off the figure, so they are approximate and the model does not</span>
+<span class="sd">    exactly match the reactor.</span>
+
+<span class="sd">    The assembly contains the plasma, the blanket, a single null divertor,</span>
+<span class="sd">    the vacuum vessel, the central solenoid, the poloidal field coils (each a</span>
+<span class="sd">    winding pack inside a case) and the toroidal field coil casings.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        rotation_angle: the angle in degrees of the sector to build, between</span>
+<span class="sd">            0 (exclusive) and 360.</span>
+<span class="sd">        number_of_tf_coils: the number of toroidal field coils, equally spaced</span>
+<span class="sd">            around 360 degrees. Only the coils inside the sector are kept.</span>
+<span class="sd">        pf_coil_case_thickness: the thickness (cm) of the case around each</span>
+<span class="sd">            poloidal field coil winding pack. The outer size of each coil (with</span>
+<span class="sd">            its case) is taken from the paper figure.</span>
+<span class="sd">        colors: optional dictionary of RGB(A) colors keyed by part name, used</span>
+<span class="sd">            in place of the default colors.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A paramak Assembly with a named part for each component.</span>
+<span class="sd">    """</span>
+    <span class="n">_validate</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">,</span> <span class="n">number_of_tf_coils</span><span class="p">)</span>
+
+    <span class="c1"># plasma shape from the inner and outer equatorial points and the high point</span>
+    <span class="n">inner_equatorial_r</span><span class="p">,</span> <span class="n">outer_equatorial_r</span><span class="p">,</span> <span class="n">high_point</span> <span class="o">=</span> <span class="mf">677.0</span><span class="p">,</span> <span class="mf">1118.0</span><span class="p">,</span> <span class="p">(</span><span class="mf">853.0</span><span class="p">,</span> <span class="mf">368.0</span><span class="p">)</span>
+    <span class="n">minor_radius</span> <span class="o">=</span> <span class="p">(</span><span class="n">outer_equatorial_r</span> <span class="o">-</span> <span class="n">inner_equatorial_r</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">major_radius</span> <span class="o">=</span> <span class="n">inner_equatorial_r</span> <span class="o">+</span> <span class="n">minor_radius</span>
+    <span class="n">elongation</span> <span class="o">=</span> <span class="n">high_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">minor_radius</span>
+    <span class="n">triangularity</span> <span class="o">=</span> <span class="p">(</span><span class="n">major_radius</span> <span class="o">-</span> <span class="n">high_point</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">minor_radius</span>
+
+    <span class="n">plasma</span> <span class="o">=</span> <span class="n">plasma_simplified</span><span class="p">(</span>
+        <span class="n">major_radius</span><span class="o">=</span><span class="n">major_radius</span><span class="p">,</span>
+        <span class="n">minor_radius</span><span class="o">=</span><span class="n">minor_radius</span><span class="p">,</span>
+        <span class="n">elongation</span><span class="o">=</span><span class="n">elongation</span><span class="p">,</span>
+        <span class="n">triangularity</span><span class="o">=</span><span class="n">triangularity</span><span class="p">,</span>
+        <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">blanket_points</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mf">1028.51</span><span class="p">,</span> <span class="o">-</span><span class="mf">506.44</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">1192.28</span><span class="p">,</span> <span class="o">-</span><span class="mf">281.28</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">1257.92</span><span class="p">,</span> <span class="o">-</span><span class="mf">56.44</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">1244.83</span><span class="p">,</span> <span class="mf">216.29</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">1153.67</span><span class="p">,</span> <span class="mf">400.52</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">988.24</span><span class="p">,</span> <span class="mf">520.33</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">807.6</span><span class="p">,</span> <span class="mf">539.8</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">670.53</span><span class="p">,</span> <span class="mf">475.18</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">584.85</span><span class="p">,</span> <span class="mf">334.51</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">574.29</span><span class="p">,</span> <span class="mf">81.77</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">579.38</span><span class="p">,</span> <span class="o">-</span><span class="mf">158.89</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">580.36</span><span class="p">,</span> <span class="o">-</span><span class="mf">363.47</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">686.3</span><span class="p">,</span> <span class="o">-</span><span class="mf">355.11</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">657.99</span><span class="p">,</span> <span class="o">-</span><span class="mf">182.71</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">657.41</span><span class="p">,</span> <span class="o">-</span><span class="mf">62.37</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">656.68</span><span class="p">,</span> <span class="mf">90.05</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">671.4</span><span class="p">,</span> <span class="mf">294.68</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">725.94</span><span class="p">,</span> <span class="mf">379.09</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">804.25</span><span class="p">,</span> <span class="mf">419.45</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">1036.13</span><span class="p">,</span> <span class="mf">356.02</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">1095.49</span><span class="p">,</span> <span class="mf">255.92</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">1127.49</span><span class="p">,</span> <span class="mf">131.68</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">1128.41</span><span class="p">,</span> <span class="o">-</span><span class="mf">60.86</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">1082.09</span><span class="p">,</span> <span class="o">-</span><span class="mf">221.46</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">945.66</span><span class="p">,</span> <span class="o">-</span><span class="mf">418.46</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+    <span class="p">]</span>
+    <span class="n">blanket</span> <span class="o">=</span> <span class="n">_revolve</span><span class="p">(</span><span class="n">blanket_points</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">)</span>
+
+    <span class="n">divertor_points</span> <span class="o">=</span> <span class="n">_straight</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="p">(</span><span class="mf">580.36</span><span class="p">,</span> <span class="o">-</span><span class="mf">363.47</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">678.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">367.16</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">698.21</span><span class="p">,</span> <span class="o">-</span><span class="mf">383.15</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">706.21</span><span class="p">,</span> <span class="o">-</span><span class="mf">415.21</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">698.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">443.32</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">694.74</span><span class="p">,</span> <span class="o">-</span><span class="mf">479.43</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">690.88</span><span class="p">,</span> <span class="o">-</span><span class="mf">491.48</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">726.22</span><span class="p">,</span> <span class="o">-</span><span class="mf">495.37</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">745.69</span><span class="p">,</span> <span class="o">-</span><span class="mf">463.22</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">769.22</span><span class="p">,</span> <span class="o">-</span><span class="mf">459.13</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">788.89</span><span class="p">,</span> <span class="o">-</span><span class="mf">467.09</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">808.57</span><span class="p">,</span> <span class="o">-</span><span class="mf">479.06</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">863.87</span><span class="p">,</span> <span class="o">-</span><span class="mf">551.09</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">891.4</span><span class="p">,</span> <span class="o">-</span><span class="mf">563.04</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">895.17</span><span class="p">,</span> <span class="o">-</span><span class="mf">530.93</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">883.26</span><span class="p">,</span> <span class="o">-</span><span class="mf">502.89</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">886.99</span><span class="p">,</span> <span class="o">-</span><span class="mf">462.77</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">945.66</span><span class="p">,</span> <span class="o">-</span><span class="mf">418.46</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1028.51</span><span class="p">,</span> <span class="o">-</span><span class="mf">506.44</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">985.89</span><span class="p">,</span> <span class="o">-</span><span class="mf">622.9</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">946.75</span><span class="p">,</span> <span class="o">-</span><span class="mf">647.1</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">801.53</span><span class="p">,</span> <span class="o">-</span><span class="mf">647.56</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">675.58</span><span class="p">,</span> <span class="o">-</span><span class="mf">575.76</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">612.38</span><span class="p">,</span> <span class="o">-</span><span class="mf">491.73</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">584.53</span><span class="p">,</span> <span class="o">-</span><span class="mf">415.6</span><span class="p">),</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">divertor</span> <span class="o">=</span> <span class="n">_revolve</span><span class="p">(</span><span class="n">divertor_points</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">)</span>
+
+    <span class="c1"># the space inside the vacuum vessel, which the blanket and divertor sit in</span>
+    <span class="n">vessel_cavity_points</span> <span class="o">=</span> <span class="n">_spline</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="p">(</span><span class="mf">574.13</span><span class="p">,</span> <span class="mf">101.11</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">574.69</span><span class="p">,</span> <span class="mf">165.88</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">576.22</span><span class="p">,</span> <span class="mf">183.81</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">578.25</span><span class="p">,</span> <span class="mf">276.25</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">592.98</span><span class="p">,</span> <span class="mf">356.14</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">618.39</span><span class="p">,</span> <span class="mf">410.17</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">660.06</span><span class="p">,</span> <span class="mf">462.71</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">711.89</span><span class="p">,</span> <span class="mf">503.99</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">763.71</span><span class="p">,</span> <span class="mf">528.24</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">800.81</span><span class="p">,</span> <span class="mf">535.07</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">957.82</span><span class="p">,</span> <span class="mf">529.16</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1009.65</span><span class="p">,</span> <span class="mf">511.73</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1061.48</span><span class="p">,</span> <span class="mf">484.36</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1113.31</span><span class="p">,</span> <span class="mf">445.67</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1160.05</span><span class="p">,</span> <span class="mf">396.81</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1196.13</span><span class="p">,</span> <span class="mf">343.45</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1221.54</span><span class="p">,</span> <span class="mf">290.07</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1239.32</span><span class="p">,</span> <span class="mf">234.98</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1251.52</span><span class="p">,</span> <span class="mf">177.4</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1259.9</span><span class="p">,</span> <span class="mf">119.15</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1262.9</span><span class="p">,</span> <span class="mf">91.48</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1257.76</span><span class="p">,</span> <span class="o">-</span><span class="mf">69.66</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1248.47</span><span class="p">,</span> <span class="o">-</span><span class="mf">117.97</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1236.27</span><span class="p">,</span> <span class="o">-</span><span class="mf">162.39</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1219.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">215.31</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1198.16</span><span class="p">,</span> <span class="o">-</span><span class="mf">267.66</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1171.74</span><span class="p">,</span> <span class="o">-</span><span class="mf">320.87</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1140.74</span><span class="p">,</span> <span class="o">-</span><span class="mf">372.28</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1102.63</span><span class="p">,</span> <span class="o">-</span><span class="mf">425.0</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1058.94</span><span class="p">,</span> <span class="o">-</span><span class="mf">476.29</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1022.86</span><span class="p">,</span> <span class="o">-</span><span class="mf">523.16</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">998.47</span><span class="p">,</span> <span class="o">-</span><span class="mf">582.32</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">961.88</span><span class="p">,</span> <span class="o">-</span><span class="mf">633.83</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">788.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">641.84</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">746.44</span><span class="p">,</span> <span class="o">-</span><span class="mf">626.41</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">694.61</span><span class="p">,</span> <span class="o">-</span><span class="mf">595.17</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">646.34</span><span class="p">,</span> <span class="o">-</span><span class="mf">549.17</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">610.77</span><span class="p">,</span> <span class="o">-</span><span class="mf">496.43</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">588.92</span><span class="p">,</span> <span class="o">-</span><span class="mf">442.35</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">578.15</span><span class="p">,</span> <span class="o">-</span><span class="mf">383.5</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">577.7</span><span class="p">,</span> <span class="o">-</span><span class="mf">343.84</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">576.22</span><span class="p">,</span> <span class="o">-</span><span class="mf">254.97</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">576.22</span><span class="p">,</span> <span class="o">-</span><span class="mf">201.97</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">576.22</span><span class="p">,</span> <span class="o">-</span><span class="mf">148.97</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">576.22</span><span class="p">,</span> <span class="o">-</span><span class="mf">95.98</span><span class="p">),</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">vessel_outer_points</span> <span class="o">=</span> <span class="n">_spline</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="p">(</span><span class="mf">515.49</span><span class="p">,</span> <span class="mf">96.83</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">515.49</span><span class="p">,</span> <span class="mf">142.76</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">515.82</span><span class="p">,</span> <span class="mf">194.68</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">518.01</span><span class="p">,</span> <span class="mf">287.54</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">532.01</span><span class="p">,</span> <span class="mf">362.38</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">553.35</span><span class="p">,</span> <span class="mf">416.55</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">586.38</span><span class="p">,</span> <span class="mf">470.35</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">631.6</span><span class="p">,</span> <span class="mf">520.05</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">683.43</span><span class="p">,</span> <span class="mf">557.88</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">735.26</span><span class="p">,</span> <span class="mf">582.92</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">785.06</span><span class="p">,</span> <span class="mf">596.53</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">975.1</span><span class="p">,</span> <span class="mf">588.58</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1026.92</span><span class="p">,</span> <span class="mf">570.66</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1078.75</span><span class="p">,</span> <span class="mf">545.28</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1130.58</span><span class="p">,</span> <span class="mf">510.38</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1181.92</span><span class="p">,</span> <span class="mf">463.91</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1225.57</span><span class="p">,</span> <span class="mf">410.04</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1258.12</span><span class="p">,</span> <span class="mf">357.04</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1283.02</span><span class="p">,</span> <span class="mf">304.73</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1302.33</span><span class="p">,</span> <span class="mf">252.01</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1316.56</span><span class="p">,</span> <span class="mf">198.48</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1326.96</span><span class="p">,</span> <span class="mf">139.4</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1333.09</span><span class="p">,</span> <span class="mf">100.85</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1343.49</span><span class="p">,</span> <span class="o">-</span><span class="mf">64.8</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1336.09</span><span class="p">,</span> <span class="o">-</span><span class="mf">109.34</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1327.34</span><span class="p">,</span> <span class="o">-</span><span class="mf">183.2</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1318.02</span><span class="p">,</span> <span class="o">-</span><span class="mf">232.48</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1302.84</span><span class="p">,</span> <span class="o">-</span><span class="mf">287.56</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1285.56</span><span class="p">,</span> <span class="o">-</span><span class="mf">341.5</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1263.71</span><span class="p">,</span> <span class="o">-</span><span class="mf">396.83</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1237.29</span><span class="p">,</span> <span class="o">-</span><span class="mf">451.74</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1207.31</span><span class="p">,</span> <span class="o">-</span><span class="mf">505.04</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1172.76</span><span class="p">,</span> <span class="o">-</span><span class="mf">556.01</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1128.04</span><span class="p">,</span> <span class="o">-</span><span class="mf">612.4</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1076.72</span><span class="p">,</span> <span class="o">-</span><span class="mf">658.26</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1024.89</span><span class="p">,</span> <span class="o">-</span><span class="mf">689.93</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">973.06</span><span class="p">,</span> <span class="o">-</span><span class="mf">711.78</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">799.79</span><span class="p">,</span> <span class="o">-</span><span class="mf">721.93</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">771.84</span><span class="p">,</span> <span class="o">-</span><span class="mf">713.39</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">720.02</span><span class="p">,</span> <span class="o">-</span><span class="mf">692.62</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">668.67</span><span class="p">,</span> <span class="o">-</span><span class="mf">662.28</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">617.9</span><span class="p">,</span> <span class="o">-</span><span class="mf">618.11</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">575.71</span><span class="p">,</span> <span class="o">-</span><span class="mf">565.77</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">546.74</span><span class="p">,</span> <span class="o">-</span><span class="mf">511.79</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">524.95</span><span class="p">,</span> <span class="o">-</span><span class="mf">451.31</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">516.75</span><span class="p">,</span> <span class="o">-</span><span class="mf">393.53</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">516.75</span><span class="p">,</span> <span class="o">-</span><span class="mf">334.63</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">516.75</span><span class="p">,</span> <span class="o">-</span><span class="mf">281.64</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">516.75</span><span class="p">,</span> <span class="o">-</span><span class="mf">228.64</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">516.75</span><span class="p">,</span> <span class="o">-</span><span class="mf">175.65</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">516.75</span><span class="p">,</span> <span class="o">-</span><span class="mf">107.41</span><span class="p">),</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="c1"># the blanket and divertor outlines from the figure poke slightly outside</span>
+    <span class="c1"># the cavity in places and nearly touch it elsewhere. Adding them, with a</span>
+    <span class="c1"># 1 cm gap, to the cavity stops the vessel overlapping or touching them,</span>
+    <span class="c1"># as nearly coincident spline surfaces do not imprint reliably for</span>
+    <span class="c1"># neutronics. The vessel profile is made with 2D booleans and then</span>
+    <span class="c1"># revolved, which is more robust than 3D booleans on the revolved shapes.</span>
+    <span class="n">cavity_face</span> <span class="o">=</span> <span class="n">_profile_face</span><span class="p">(</span><span class="n">vessel_cavity_points</span><span class="p">)</span><span class="o">.</span><span class="n">fuse</span><span class="p">(</span>
+        <span class="n">_profile_face</span><span class="p">(</span><span class="n">blanket_points</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">_profile_face</span><span class="p">(</span><span class="n">divertor_points</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">vessel_face</span> <span class="o">=</span> <span class="n">_single_face</span><span class="p">(</span><span class="n">_profile_face</span><span class="p">(</span><span class="n">vessel_outer_points</span><span class="p">)</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">_single_face</span><span class="p">(</span><span class="n">cavity_face</span><span class="o">.</span><span class="n">clean</span><span class="p">()))</span><span class="o">.</span><span class="n">clean</span><span class="p">())</span>
+    <span class="n">vessel</span> <span class="o">=</span> <span class="n">_revolve_face</span><span class="p">(</span><span class="n">vessel_face</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">)</span>
+
+    <span class="n">pf_coil_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">204</span><span class="p">,</span> <span class="mi">141</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">95</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">121</span><span class="p">]</span>
+    <span class="n">pf_coils</span> <span class="o">=</span> <span class="n">_pf_coils_with_cases</span><span class="p">(</span>
+        <span class="p">[(</span><span class="mi">689</span><span class="p">,</span> <span class="o">-</span><span class="mi">985</span><span class="p">),</span> <span class="p">(</span><span class="mi">1421</span><span class="p">,</span> <span class="o">-</span><span class="mi">689</span><span class="p">),</span> <span class="p">(</span><span class="mi">1580</span><span class="p">,</span> <span class="o">-</span><span class="mi">252</span><span class="p">),</span> <span class="p">(</span><span class="mi">1550</span><span class="p">,</span> <span class="mi">293</span><span class="p">),</span> <span class="p">(</span><span class="mi">1400</span><span class="p">,</span> <span class="mi">598</span><span class="p">),</span> <span class="p">(</span><span class="mi">621</span><span class="p">,</span> <span class="mi">811</span><span class="p">)],</span>
+        <span class="n">pf_coil_sizes</span><span class="p">,</span>
+        <span class="n">pf_coil_sizes</span><span class="p">,</span>
+        <span class="n">pf_coil_case_thickness</span><span class="p">,</span>
+        <span class="n">rotation_angle</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">central_solenoid_corners</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">((</span><span class="mf">263.61</span><span class="p">,</span> <span class="o">-</span><span class="mf">881.62</span><span class="p">),</span> <span class="p">(</span><span class="mf">363.05</span><span class="p">,</span> <span class="o">-</span><span class="mf">609.17</span><span class="p">)),</span>
+        <span class="p">((</span><span class="mf">266.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">600.85</span><span class="p">),</span> <span class="p">(</span><span class="mf">357.77</span><span class="p">,</span> <span class="o">-</span><span class="mf">332.38</span><span class="p">)),</span>
+        <span class="p">((</span><span class="mf">263.56</span><span class="p">,</span> <span class="o">-</span><span class="mf">316.04</span><span class="p">),</span> <span class="p">(</span><span class="mf">360.33</span><span class="p">,</span> <span class="mf">217.16</span><span class="p">)),</span>
+        <span class="p">((</span><span class="mf">262.23</span><span class="p">,</span> <span class="mf">229.49</span><span class="p">),</span> <span class="p">(</span><span class="mf">357.7</span><span class="p">,</span> <span class="mf">493.93</span><span class="p">)),</span>
+        <span class="p">((</span><span class="mf">261.01</span><span class="p">,</span> <span class="mf">510.28</span><span class="p">),</span> <span class="p">(</span><span class="mf">356.35</span><span class="p">,</span> <span class="mf">746.64</span><span class="p">)),</span>
+    <span class="p">]</span>
+    <span class="n">central_solenoid</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"central_solenoid_</span><span class="si">{</span><span class="n">counter</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="n">_revolve</span><span class="p">(</span>
+                <span class="n">_straight</span><span class="p">([(</span><span class="n">r0</span><span class="p">,</span> <span class="n">z0</span><span class="p">),</span> <span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">z0</span><span class="p">),</span> <span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">z1</span><span class="p">),</span> <span class="p">(</span><span class="n">r0</span><span class="p">,</span> <span class="n">z1</span><span class="p">)]),</span>
+                <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">counter</span><span class="p">,</span> <span class="p">((</span><span class="n">r0</span><span class="p">,</span> <span class="n">z0</span><span class="p">),</span> <span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">z1</span><span class="p">))</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">central_solenoid_corners</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="c1"># the toroidal field coil casing is not a Princeton-D, it follows the</span>
+    <span class="c1"># outline in the paper diagram and is extruded either side of each</span>
+    <span class="c1"># placement plane</span>
+    <span class="n">tf_profile</span> <span class="o">=</span> <span class="n">create_wire_workplane_from_points</span><span class="p">(</span>
+        <span class="n">points</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span><span class="mf">805.58</span><span class="p">,</span> <span class="mi">755</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">956.8</span><span class="p">,</span> <span class="mf">744.12</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1019.81</span><span class="p">,</span> <span class="mf">731.22</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1082.82</span><span class="p">,</span> <span class="mf">710.39</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1145.83</span><span class="p">,</span> <span class="mf">680.4</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1208.83</span><span class="p">,</span> <span class="mf">642.52</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1271.84</span><span class="p">,</span> <span class="mf">593.95</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1332.82</span><span class="p">,</span> <span class="mf">533.19</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1382.61</span><span class="p">,</span> <span class="mf">468.42</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1420.21</span><span class="p">,</span> <span class="mf">405.19</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1450.19</span><span class="p">,</span> <span class="mf">339.5</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1472.04</span><span class="p">,</span> <span class="mf">273.44</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1486.78</span><span class="p">,</span> <span class="mf">209.79</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1498.17</span><span class="p">,</span> <span class="mf">130.93</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1507.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">64.36</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1499.48</span><span class="p">,</span> <span class="o">-</span><span class="mf">158.26</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1489.83</span><span class="p">,</span> <span class="o">-</span><span class="mf">227.51</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1473.57</span><span class="p">,</span> <span class="o">-</span><span class="mf">301.27</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1453.75</span><span class="p">,</span> <span class="o">-</span><span class="mf">371.55</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1429.36</span><span class="p">,</span> <span class="o">-</span><span class="mf">437.88</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1402.43</span><span class="p">,</span> <span class="o">-</span><span class="mf">500.68</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1367.37</span><span class="p">,</span> <span class="o">-</span><span class="mf">566.76</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1327.18</span><span class="p">,</span> <span class="o">-</span><span class="mf">631.0</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1276.52</span><span class="p">,</span> <span class="o">-</span><span class="mf">694.44</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1214.93</span><span class="p">,</span> <span class="o">-</span><span class="mf">753.16</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1151.92</span><span class="p">,</span> <span class="o">-</span><span class="mf">796.94</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1088.92</span><span class="p">,</span> <span class="o">-</span><span class="mf">828.82</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">1025.91</span><span class="p">,</span> <span class="o">-</span><span class="mf">851.72</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">962.9</span><span class="p">,</span> <span class="o">-</span><span class="mf">866.36</span><span class="p">,</span> <span class="s2">"spline"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">805.58</span><span class="p">,</span> <span class="o">-</span><span class="mf">875.0</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">377.7</span><span class="p">,</span> <span class="o">-</span><span class="mf">875.0</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">375.45</span><span class="p">,</span> <span class="mi">755</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+            <span class="p">(</span><span class="mf">805.58</span><span class="p">,</span> <span class="mi">755</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">plane</span><span class="o">=</span><span class="s2">"XZ"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">single_tf_coil</span> <span class="o">=</span> <span class="n">tf_profile</span><span class="o">.</span><span class="n">extrude</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">both</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">val</span><span class="p">()</span>
+    <span class="c1"># neighbouring casings would overlap on the inboard side, so each casing is</span>
+    <span class="c1"># trimmed to its own wedge of 360 / number_of_tf_coils degrees. The casings</span>
+    <span class="c1"># then meet on shared flat faces and can be glued into one solid that</span>
+    <span class="c1"># imprints and meshes cleanly.</span>
+    <span class="n">spacing</span> <span class="o">=</span> <span class="mf">360.0</span> <span class="o">/</span> <span class="n">number_of_tf_coils</span>
+    <span class="n">placed_coils</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">angle</span> <span class="ow">in</span> <span class="n">_tf_placement_angles</span><span class="p">(</span><span class="n">number_of_tf_coils</span><span class="p">):</span>
+        <span class="n">wedge</span> <span class="o">=</span> <span class="n">cutting_wedge</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="o">=</span><span class="n">spacing</span><span class="p">)</span><span class="o">.</span><span class="n">val</span><span class="p">()</span>
+        <span class="n">wedge</span> <span class="o">=</span> <span class="n">wedge</span><span class="o">.</span><span class="n">rotate</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">angle</span> <span class="o">-</span> <span class="n">spacing</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">placed_coils</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">single_tf_coil</span><span class="o">.</span><span class="n">rotate</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">angle</span><span class="p">)</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">wedge</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">placed_coils</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">tf_coils</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">(</span><span class="s2">"XZ"</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">placed_coils</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">tf_coils</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">(</span><span class="s2">"XZ"</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">placed_coils</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">fuse</span><span class="p">(</span><span class="o">*</span><span class="n">placed_coils</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">glue</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">clean</span><span class="p">())</span>
+    <span class="c1"># the casing profile is a filled D, the region inside the outer wall of</span>
+    <span class="c1"># the vessel (plus a 1 cm gap) is removed to leave the casing around the</span>
+    <span class="c1"># vessel. The gap avoids the casing and vessel sharing spline surfaces,</span>
+    <span class="c1"># which do not imprint reliably for neutronics. The cutter is a full 360</span>
+    <span class="c1"># degree shape made from two halves, rotated by half a coil spacing so its</span>
+    <span class="c1"># seams are away from the middle of a casing.</span>
+    <span class="n">tf_cutter</span> <span class="o">=</span> <span class="n">_revolve_face</span><span class="p">(</span><span class="n">_profile_face</span><span class="p">(</span><span class="n">vessel_outer_points</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span> <span class="mi">360</span><span class="p">)</span>
+    <span class="n">tf_cutter</span> <span class="o">=</span> <span class="n">tf_cutter</span><span class="o">.</span><span class="n">rotate</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mf">180.0</span> <span class="o">/</span> <span class="n">number_of_tf_coils</span><span class="p">)</span>
+    <span class="n">tf_coils</span> <span class="o">=</span> <span class="n">_clip_to_sector</span><span class="p">(</span><span class="n">tf_coils</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">tf_cutter</span><span class="p">),</span> <span class="n">rotation_angle</span><span class="p">)</span>
+
+    <span class="n">parts</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">[(</span><span class="s2">"plasma"</span><span class="p">,</span> <span class="n">plasma</span><span class="p">),</span> <span class="p">(</span><span class="s2">"blanket"</span><span class="p">,</span> <span class="n">blanket</span><span class="p">),</span> <span class="p">(</span><span class="s2">"divertor"</span><span class="p">,</span> <span class="n">divertor</span><span class="p">),</span> <span class="p">(</span><span class="s2">"vessel"</span><span class="p">,</span> <span class="n">vessel</span><span class="p">)]</span>
+        <span class="o">+</span> <span class="n">central_solenoid</span>
+        <span class="o">+</span> <span class="n">pf_coils</span>
+        <span class="o">+</span> <span class="p">[(</span><span class="s2">"toroidal_field_coil"</span><span class="p">,</span> <span class="n">tf_coils</span><span class="p">)]</span>
+    <span class="p">)</span>
+    <span class="n">default_colors</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"blanket"</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+        <span class="s2">"divertor"</span><span class="p">:</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.67</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+        <span class="s2">"vessel"</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+        <span class="s2">"toroidal_field_coil"</span><span class="p">:</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">_build_assembly</span><span class="p">(</span>
+        <span class="n">parts</span><span class="p">,</span>
+        <span class="p">{</span><span class="s2">"toroidal_field_coil"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"pf_coil_6"</span><span class="p">,</span> <span class="s2">"pf_coil_case_6"</span><span class="p">]},</span>
+        <span class="n">colors</span><span class="p">,</span>
+        <span class="n">default_colors</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s2">"major_radius"</span><span class="p">:</span> <span class="n">major_radius</span><span class="p">,</span>
+            <span class="s2">"minor_radius"</span><span class="p">:</span> <span class="n">minor_radius</span><span class="p">,</span>
+            <span class="s2">"elongation"</span><span class="p">:</span> <span class="n">elongation</span><span class="p">,</span>
+            <span class="s2">"triangularity"</span><span class="p">:</span> <span class="n">triangularity</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, Fusion Energy.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.1.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
