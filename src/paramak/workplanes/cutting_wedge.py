@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import cadquery as cq
 
-from ..utils import create_wire_workplane_from_points, rotate_to_rotation_start_angle
+from ..utils import (
+    create_wire_workplane_from_points,
+    rotate_to_rotation_start_angle,
+    validate_positive,
+    validate_rotation_angle,
+)
 
 
 def cutting_wedge(
@@ -32,6 +37,9 @@ def cutting_wedge(
             rotation_start_angle to rotation_start_angle + rotation_angle. Must be
             between -360 and 360. Defaults to 0.
     """
+    validate_positive(height, "height")
+    validate_positive(radius, "radius")
+    validate_rotation_angle(rotation_angle)
 
     points = [
         (0, height / 2, "straight"),

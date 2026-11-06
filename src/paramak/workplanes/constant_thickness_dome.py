@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 import math
-import numbers
 
 import cadquery as cq
 
-from ..utils import create_wire_workplane_from_points
+from ..utils import create_wire_workplane_from_points, validate_positive, validate_rotation_angle
 from ..workplanes.cutting_wedge import cutting_wedge
 
 
@@ -48,25 +47,10 @@ def constant_thickness_dome(
             rotation_start_angle to rotation_start_angle + rotation_angle. Must be
             between -360 and 360. Defaults to 0.
     """
-
-    if not isinstance(chord_width, numbers.Number):
-        raise TypeError(f"chord_width must be a number. Not {type(chord_width)}")
-    if chord_width <= 0:
-        msg = f"chord_width must be a positive number above 0. Not {chord_width}"
-        raise ValueError(msg)
-
-    if not isinstance(chord_height, numbers.Number):
-        raise TypeError(f"chord_height must be a number. Not {type(chord_height)}")
-    if chord_height <= 0:
-        msg = f"chord_height must be a positive number above 0. Not {chord_height}"
-        raise ValueError(msg)
-
-    if not isinstance(thickness, numbers.Number):
-        msg = f"thickness must be a number. Not {type(thickness)}"
-        raise TypeError(msg)
-    if thickness <= 0:
-        msg = f"thickness must be a positive number above 0. Not {thickness}"
-        raise ValueError(msg)
+    validate_rotation_angle(rotation_angle)
+    validate_positive(chord_width, "chord_width")
+    validate_positive(chord_height, "chord_height")
+    validate_positive(thickness, "thickness")
 
     # Note these points are not used in the normal way when constructing
     # the solid

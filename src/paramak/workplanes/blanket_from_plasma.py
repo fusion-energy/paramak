@@ -10,7 +10,13 @@ from OCP.Standard import Standard_Failure
 from OCP.StdFail import StdFail_NotDone
 from scipy.interpolate import interp1d
 
-from ..utils import create_wire_workplane_from_points, rotate_to_rotation_start_angle
+from ..utils import (
+    create_wire_workplane_from_points,
+    rotate_to_rotation_start_angle,
+    validate_positive,
+    validate_positive_integer,
+    validate_rotation_angle,
+)
 
 
 def make_callable(attribute, start_angle, stop_angle):
@@ -351,12 +357,11 @@ def blanket_from_plasma(
             rotation_start_angle to rotation_start_angle + rotation_angle. Must be
             between -360 and 360. Defaults to 0.
     """
-    if major_radius <= 0:
-        raise ValueError(f"major_radius must be positive, got {major_radius}.")
-    if minor_radius <= 0:
-        raise ValueError(f"minor_radius must be positive, got {minor_radius}.")
-    if elongation <= 0:
-        raise ValueError(f"elongation must be positive, got {elongation}.")
+    validate_positive_integer(num_points, "num_points")
+    validate_rotation_angle(rotation_angle)
+    validate_positive(major_radius, "major_radius")
+    validate_positive(minor_radius, "minor_radius")
+    validate_positive(elongation, "elongation")
     if not (-1.0 <= triangularity <= 1.0):
         raise ValueError(f"triangularity must be between -1 and 1, got {triangularity}.")
 

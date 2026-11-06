@@ -1,6 +1,11 @@
 from __future__ import annotations
 
-from ..utils import create_wire_workplane_from_points, rotate_to_rotation_start_angle
+from ..utils import (
+    create_wire_workplane_from_points,
+    rotate_to_rotation_start_angle,
+    validate_positive,
+    validate_rotation_angle,
+)
 
 
 def poloidal_field_coil(
@@ -30,10 +35,9 @@ def poloidal_field_coil(
             rotation_start_angle to rotation_start_angle + rotation_angle. Must be
             between -360 and 360. Defaults to 0.
     """
-    if height <= 0:
-        raise ValueError(f"height must be positive, got {height}.")
-    if width <= 0:
-        raise ValueError(f"width must be positive, got {width}.")
+    validate_rotation_angle(rotation_angle)
+    validate_positive(height, "height")
+    validate_positive(width, "width")
 
     points = [
         (center_point[0] + width / 2.0, center_point[1] + height / 2.0, "straight"),  # upper right

@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import cadquery as cq
 
-from ..utils import create_wire_workplane_from_points, rotate_to_rotation_start_angle
+from ..utils import (
+    create_wire_workplane_from_points,
+    rotate_to_rotation_start_angle,
+    validate_positive,
+    validate_rotation_angle,
+)
 
 
 def blanket_constant_thickness_arc_h(
@@ -22,6 +27,8 @@ def blanket_constant_thickness_arc_h(
     name="blanket_constant_thickness_arc_h",
     rotation_start_angle: float = 0.0,
 ):
+    validate_positive(thickness, "thickness")
+    validate_rotation_angle(rotation_angle)
     points = [
         (inner_upper_point[0], inner_upper_point[1], "circle"),
         (inner_mid_point[0], inner_mid_point[1], "circle"),

@@ -4,7 +4,11 @@ import typing
 
 import cadquery as cq
 
-from ..utils import create_wire_workplane_from_points, rotate_to_rotation_start_angle
+from ..utils import (
+    create_wire_workplane_from_points,
+    rotate_to_rotation_start_angle,
+    validate_rotation_angle,
+)
 
 
 def revolved_shape(
@@ -54,6 +58,7 @@ def revolved_shape(
     Returns:
         A CadQuery Workplane containing the revolved solid.
     """
+    validate_rotation_angle(rotation_angle)
 
     if len(points) < 3:
         msg = f"revolved_shape requires at least 3 points to form a profile, got {len(points)}."

@@ -15,6 +15,8 @@ from ..utils import (
     get_plasma_index,
     resolve_assembly_color,
     rotate_about_z,
+    validate_plasma_radial_build,
+    validate_rotation_angle,
     validate_rotation_start_angle,
     validate_unique_assembly_names,
     validate_vertical_build_names,
@@ -474,6 +476,7 @@ def tokamak_from_plasma(
     if colors is None:
         colors = {}
 
+    validate_plasma_radial_build(radial_build, "radial_build")
     vertical_build = vertical_build_from_radial_build(radial_build, elongation)
 
     return tokamak(
@@ -572,8 +575,11 @@ def tokamak(
     if colors is None:
         colors = {}
 
+    validate_plasma_radial_build(radial_build, "radial_build")
+    validate_plasma_radial_build(vertical_build, "vertical_build")
     validate_vertical_build_names(vertical_build, "tokamak()")
     validate_rotation_start_angle(rotation_start_angle)
+    validate_rotation_angle(rotation_angle)
 
     major_radius, minor_radius, elongation = get_plasma_geometry(radial_build, vertical_build)
     blanket_rear_wall_end_height = sum([item[1] for item in vertical_build])
