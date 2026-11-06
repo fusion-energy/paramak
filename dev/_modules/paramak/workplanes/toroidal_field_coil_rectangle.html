@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.workplanes.toroidal_field_coil_rectangle &#8212; Paramak 0.10.1.dev17+g6a2fc6b7e documentation</title>
+    <title>paramak.workplanes.toroidal_field_coil_rectangle &#8212; Paramak 0.10.1.dev21+g7f4bc5dec documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=bea8632a"></script>
+    <script src="../../../_static/documentation_options.js?v=d387cfc5"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev17+g6a2fc6b7e" />
+  <meta name="docsearch:version" content="0.10.1.dev21+g7f4bc5dec" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -603,9 +603,16 @@ function render(data, parent_element, ratio){
 <span class="sd">            rotation_start_angle to rotation_start_angle + rotation_angle. The coils are</span>
 <span class="sd">            still placed at azimuthal_placement_angles. Must be between -360 and 360.</span>
 <span class="sd">            Defaults to 0.</span>
+<span class="sd">        name: the name of the coil. Defaults to "toroidal_field_coil".</span>
 <span class="sd">        with_inner_leg: include the inner tf leg. Defaults to True.</span>
-<span class="sd">        azimuth_start_angle: The azimuth angle to for the first TF coil which</span>
-<span class="sd">            offsets the placement of coils around the azimuthal angle</span>
+<span class="sd">        azimuthal_placement_angles: the angles in degrees around the Z axis to</span>
+<span class="sd">            place a coil at. Defaults to [0].</span>
+<span class="sd">        vertical_displacement: the vertical distance to move the coil (cm).</span>
+<span class="sd">            Defaults to 0.</span>
+<span class="sd">        color: the RGB(A) color of the coil. Defaults to (0.0, 0.0, 1.0).</span>
+<span class="sd">        plane: the plane the coil profile is drawn on. Defaults to "XZ".</span>
+<span class="sd">        origin: the origin of the workplane. Defaults to (0.0, 0.0, 0.0).</span>
+<span class="sd">        obj: an optional existing CadQuery object to build upon.</span>
 <span class="sd">    """</span>
     <span class="n">validate_rotation_angle</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
     <span class="n">validate_positive</span><span class="p">(</span><span class="n">thickness</span><span class="p">,</span> <span class="s2">"thickness"</span><span class="p">)</span>
@@ -697,6 +704,9 @@ function render(data, parent_element, ratio){
             <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
             <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
             <span class="n">rotation_start_angle</span><span class="o">=</span><span class="n">rotation_start_angle</span><span class="p">,</span>
+            <span class="c1"># the coils are placed around the global Z axis, so the wedge stays</span>
+            <span class="c1"># on that axis and only takes the height of the origin</span>
+            <span class="n">origin</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
         <span class="p">)</span>
         <span class="n">solid</span> <span class="o">=</span> <span class="n">solid</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">cutting_shape</span><span class="p">)</span>
 

@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.workplanes.blanket_from_plasma &#8212; Paramak 0.10.1.dev17+g6a2fc6b7e documentation</title>
+    <title>paramak.workplanes.blanket_from_plasma &#8212; Paramak 0.10.1.dev21+g7f4bc5dec documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=bea8632a"></script>
+    <script src="../../../_static/documentation_options.js?v=d387cfc5"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev17+g6a2fc6b7e" />
+  <meta name="docsearch:version" content="0.10.1.dev21+g7f4bc5dec" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -559,9 +559,7 @@ function render(data, parent_element, ratio){
 <span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">mpmath</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">OCP.Standard</span><span class="w"> </span><span class="kn">import</span> <span class="n">Standard_Failure</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">OCP.StdFail</span><span class="w"> </span><span class="kn">import</span> <span class="n">StdFail_NotDone</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">interp1d</span>
@@ -701,65 +699,14 @@ function render(data, parent_element, ratio){
 <span class="sd">        list: list of points [[R1, Z1, connection1], [R2, Z2, connection2],</span>
 <span class="sd">        ...]</span>
 <span class="sd">    """</span>
-    <span class="c1"># create sympy objects and derivatives</span>
-
-    <span class="n">overlapping_shape</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">theta_sp</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="s2">"theta"</span><span class="p">)</span>
-
-    <span class="n">R_sp</span><span class="p">,</span> <span class="n">Z_sp</span> <span class="o">=</span> <span class="n">distribution</span><span class="p">(</span>
-        <span class="n">major_radius</span><span class="p">,</span>
-        <span class="n">minor_radius</span><span class="p">,</span>
-        <span class="n">triangularity</span><span class="p">,</span>
-        <span class="n">elongation</span><span class="p">,</span>
-        <span class="n">vertical_displacement</span><span class="p">,</span>
-        <span class="n">theta_sp</span><span class="p">,</span>
-        <span class="n">pkg</span><span class="o">=</span><span class="n">sp</span><span class="p">,</span>
+    <span class="n">thetas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">thetas</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="c1"># offset may be a user function that only accepts a single angle</span>
+    <span class="n">offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">offset</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="k">for</span> <span class="n">theta</span> <span class="ow">in</span> <span class="n">thetas</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">R</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">offset_curve_coordinates</span><span class="p">(</span>
+        <span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">vertical_displacement</span><span class="p">,</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">offsets</span>
     <span class="p">)</span>
-    <span class="n">R_derivative</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">R_sp</span><span class="p">,</span> <span class="n">theta_sp</span><span class="p">)</span>
-    <span class="n">Z_derivative</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">Z_sp</span><span class="p">,</span> <span class="n">theta_sp</span><span class="p">)</span>
-    <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">for</span> <span class="n">theta</span> <span class="ow">in</span> <span class="n">thetas</span><span class="p">:</span>
-        <span class="c1"># get local value of derivatives</span>
-        <span class="n">val_R_derivative</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">R_derivative</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="s2">"theta"</span><span class="p">,</span> <span class="n">theta</span><span class="p">))</span>
-        <span class="n">val_Z_derivative</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">Z_derivative</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="s2">"theta"</span><span class="p">,</span> <span class="n">theta</span><span class="p">))</span>
-
-        <span class="c1"># get normal vector components</span>
-        <span class="n">nx</span> <span class="o">=</span> <span class="n">val_Z_derivative</span>
-        <span class="n">ny</span> <span class="o">=</span> <span class="o">-</span><span class="n">val_R_derivative</span>
-
-        <span class="c1"># normalise normal vector</span>
-        <span class="n">normal_vector_norm</span> <span class="o">=</span> <span class="p">(</span><span class="n">nx</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">ny</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
-        <span class="n">nx</span> <span class="o">/=</span> <span class="n">normal_vector_norm</span>
-        <span class="n">ny</span> <span class="o">/=</span> <span class="n">normal_vector_norm</span>
-
-        <span class="c1"># calculate outer points</span>
-        <span class="n">val_R_outer</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">distribution</span><span class="p">(</span>
-                <span class="n">major_radius</span><span class="p">,</span>
-                <span class="n">minor_radius</span><span class="p">,</span>
-                <span class="n">triangularity</span><span class="p">,</span>
-                <span class="n">elongation</span><span class="p">,</span>
-                <span class="n">vertical_displacement</span><span class="p">,</span>
-                <span class="n">theta</span><span class="p">,</span>
-            <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="o">+</span> <span class="n">offset</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">nx</span>
-        <span class="p">)</span>
-        <span class="n">val_Z_outer</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">distribution</span><span class="p">(</span>
-                <span class="n">major_radius</span><span class="p">,</span>
-                <span class="n">minor_radius</span><span class="p">,</span>
-                <span class="n">triangularity</span><span class="p">,</span>
-                <span class="n">elongation</span><span class="p">,</span>
-                <span class="n">vertical_displacement</span><span class="p">,</span>
-                <span class="n">theta</span><span class="p">,</span>
-            <span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="o">+</span> <span class="n">offset</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">ny</span>
-        <span class="p">)</span>
-        <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">val_R_outer</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">val_R_outer</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">val_Z_outer</span><span class="p">),</span> <span class="s2">"spline"</span><span class="p">])</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">overlapping_shape</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="s2">"spline"</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">Z</span><span class="p">)</span> <span class="k">if</span> <span class="n">r</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">overlapping_shape</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">points</span><span class="p">,</span> <span class="n">overlapping_shape</span>
 
 
@@ -772,7 +719,7 @@ function render(data, parent_element, ratio){
     <span class="n">thetas</span><span class="p">,</span>
     <span class="n">offsets</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Vectorised equivalent of create_offset_points. Returns the R and Z</span>
+<span class="w">    </span><span class="sd">"""Returns the R and Z</span>
 <span class="sd">    coordinates of the plasma surface offset along its outward normal.</span>
 
 <span class="sd">    Args:</span>
@@ -828,26 +775,19 @@ function render(data, parent_element, ratio){
     <span class="k">return</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">arc_lengths</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">distribution</span><span class="p">(</span><span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">vertical_displacement</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">pkg</span><span class="o">=</span><span class="n">np</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">distribution</span><span class="p">(</span><span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">triangularity</span><span class="p">,</span> <span class="n">elongation</span><span class="p">,</span> <span class="n">vertical_displacement</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Plasma distribution theta in degrees</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        theta (float or np.array or sp.Symbol): the angle(s) in degrees.</span>
-<span class="sd">        pkg (module, optional): Module to use in the function. If sp, as</span>
-<span class="sd">            sympy object will be returned. If np, a np.array or a float</span>
-<span class="sd">            will be returned. Defaults to np.</span>
+<span class="sd">        theta (float or np.array): the angle(s) in degrees.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        (float, float) or (sympy.Add, sympy.Mul) or</span>
-<span class="sd">            (numpy.array, numpy.array): The R and Z coordinates of the</span>
-<span class="sd">            point with angle theta</span>
+<span class="sd">        (float, float) or (numpy.array, numpy.array): The R and Z</span>
+<span class="sd">            coordinates of the point with angle theta</span>
 <span class="sd">    """</span>
-    <span class="k">if</span> <span class="n">pkg</span> <span class="o">==</span> <span class="n">np</span><span class="p">:</span>
-        <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">theta</span> <span class="o">=</span> <span class="n">mpmath</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
-    <span class="n">R</span> <span class="o">=</span> <span class="n">major_radius</span> <span class="o">+</span> <span class="n">minor_radius</span> <span class="o">*</span> <span class="n">pkg</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">+</span> <span class="n">triangularity</span> <span class="o">*</span> <span class="n">pkg</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
-    <span class="n">Z</span> <span class="o">=</span> <span class="n">elongation</span> <span class="o">*</span> <span class="n">minor_radius</span> <span class="o">*</span> <span class="n">pkg</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">vertical_displacement</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">major_radius</span> <span class="o">+</span> <span class="n">minor_radius</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">+</span> <span class="n">triangularity</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">elongation</span> <span class="o">*</span> <span class="n">minor_radius</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">vertical_displacement</span>
     <span class="k">return</span> <span class="n">R</span><span class="p">,</span> <span class="n">Z</span>
 
 
@@ -889,13 +829,12 @@ function render(data, parent_element, ratio){
 <span class="sd">            a tuple of floats, blanket thickness will vary linearly between the</span>
 <span class="sd">            two values. If thickness is callable, then the blanket thickness</span>
 <span class="sd">            will be a function of poloidal angle (in degrees). If thickness is</span>
-<span class="sd">            a list of two lists (thicknesses and angles) then these will be</span>
+<span class="sd">            a list of two lists (angles and thicknesses) then these will be</span>
 <span class="sd">            used together with linear interpolation.</span>
 <span class="sd">        start_angle: the angle in degrees to start the blanket, measured anti</span>
 <span class="sd">            clockwise from 3 o'clock.</span>
 <span class="sd">        stop_angle: the angle in degrees to stop the blanket, measured anti</span>
 <span class="sd">            clockwise from 3 o'clock.</span>
-<span class="sd">        plasma: If not None, the parameters of the plasma Object will be used.</span>
 <span class="sd">        minor_radius: the minor radius of the plasma (cm).</span>
 <span class="sd">        major_radius: the major radius of the plasma (cm).</span>
 <span class="sd">        triangularity: the triangularity of the plasma.</span>
@@ -908,8 +847,10 @@ function render(data, parent_element, ratio){
 <span class="sd">            (angles and offsets) then these will be used together with linear</span>
 <span class="sd">            interpolation.</span>
 <span class="sd">        num_points: number of points that will describe the shape.</span>
-<span class="sd">        allow_overlapping_shape: allows parameters to create a shape that</span>
-<span class="sd">            overlaps itself.</span>
+<span class="sd">        allow_overlapping_shape: if False (the default) a warning is given</span>
+<span class="sd">            when the offset makes some points of the profile reach past the</span>
+<span class="sd">            Z axis (a negative R). Those points are always left out of the</span>
+<span class="sd">            profile, setting this to True only stops the warning.</span>
 <span class="sd">        rotation_start_angle: the angle in degrees the revolution starts from,</span>
 <span class="sd">            measured around the revolve axis from the workplane. The shape covers</span>
 <span class="sd">            rotation_start_angle to rotation_start_angle + rotation_angle. Must be</span>

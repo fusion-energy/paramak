@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.workplanes.u_shaped_dome &#8212; Paramak 0.10.1.dev17+g6a2fc6b7e documentation</title>
+    <title>paramak.workplanes.u_shaped_dome &#8212; Paramak 0.10.1.dev21+g7f4bc5dec documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=bea8632a"></script>
+    <script src="../../../_static/documentation_options.js?v=d387cfc5"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev17+g6a2fc6b7e" />
+  <meta name="docsearch:version" content="0.10.1.dev21+g7f4bc5dec" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -573,6 +573,8 @@ function render(data, parent_element, ratio){
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"u_shaped_dome"</span><span class="p">,</span>
     <span class="n">plane</span><span class="o">=</span><span class="s2">"XZ"</span><span class="p">,</span>
     <span class="n">upper_or_lower</span><span class="o">=</span><span class="s2">"upper"</span><span class="p">,</span>
+    <span class="n">color</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.333</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+    <span class="n">origin</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
     <span class="n">rotation_start_angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">"""A cylindrical u shaped dome with constant thickness.</span>
@@ -589,10 +591,16 @@ function render(data, parent_element, ratio){
 <span class="sd">        cylinder_height: the height of the cylindrical section of the vacuum</span>
 <span class="sd">            vessel.</span>
 <span class="sd">        thickness: the radial thickness of the vessel in cm.</span>
+<span class="sd">        color: the RGB(A) color of the parts. Defaults to (0.0, 0.333, 0.0).</span>
+<span class="sd">        origin: the origin of the workplane, which moves all the parts.</span>
+<span class="sd">            Defaults to (0, 0, 0).</span>
 <span class="sd">        rotation_start_angle: the angle in degrees the revolution starts from,</span>
 <span class="sd">            measured around the revolve axis from the workplane. The shape covers</span>
 <span class="sd">            rotation_start_angle to rotation_start_angle + rotation_angle. Must be</span>
 <span class="sd">            between -360 and 360. Defaults to 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: the dome and cylinder as two CadQuery Workplanes.</span>
 <span class="sd">    """</span>
     <span class="n">validate_positive</span><span class="p">(</span><span class="n">dish_height</span><span class="p">,</span> <span class="s2">"dish_height"</span><span class="p">)</span>
     <span class="n">validate_rotation_angle</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
@@ -635,6 +643,8 @@ function render(data, parent_element, ratio){
         <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
         <span class="n">rotation_start_angle</span><span class="o">=</span><span class="n">rotation_start_angle</span><span class="p">,</span>
         <span class="n">plane</span><span class="o">=</span><span class="n">plane</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+        <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">upper_or_lower</span> <span class="o">==</span> <span class="s2">"upper"</span><span class="p">:</span>
@@ -647,6 +657,8 @@ function render(data, parent_element, ratio){
             <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
             <span class="n">rotation_start_angle</span><span class="o">=</span><span class="n">rotation_start_angle</span><span class="p">,</span>
             <span class="n">plane</span><span class="o">=</span><span class="n">plane</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+            <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">upper_or_lower</span> <span class="o">==</span> <span class="s2">"lower"</span><span class="p">:</span>
@@ -659,6 +671,8 @@ function render(data, parent_element, ratio){
             <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
             <span class="n">rotation_start_angle</span><span class="o">=</span><span class="n">rotation_start_angle</span><span class="p">,</span>
             <span class="n">plane</span><span class="o">=</span><span class="n">plane</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+            <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'upper_or_lower must be either "lower" or "upper" not </span><span class="si">{</span><span class="n">upper_or_lower</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
