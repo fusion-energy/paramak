@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.assemblies.tokamak &#8212; Paramak 0.10.1.dev11+gb0be9417b documentation</title>
+    <title>paramak.assemblies.tokamak &#8212; Paramak 0.10.1.dev13+ga2c376ade documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=60feca84"></script>
+    <script src="../../../_static/documentation_options.js?v=be9abea6"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev11+gb0be9417b" />
+  <meta name="docsearch:version" content="0.10.1.dev13+ga2c376ade" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -837,7 +837,6 @@ function render(data, parent_element, ratio){
     <span class="n">triangularity</span><span class="p">,</span>
     <span class="n">elongation</span><span class="p">,</span>
     <span class="n">rotation_angle</span><span class="p">,</span>
-    <span class="n">center_column</span><span class="p">,</span>
     <span class="n">layer_count</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
     <span class="n">poloidal_segment_angles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">toroidal_sectors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -1193,7 +1192,6 @@ function render(data, parent_element, ratio){
         <span class="n">triangularity</span><span class="o">=</span><span class="n">triangularity</span><span class="p">,</span>
         <span class="n">elongation</span><span class="o">=</span><span class="n">elongation</span><span class="p">,</span>
         <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
-        <span class="n">center_column</span><span class="o">=</span><span class="n">inner_radial_build</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>  <span class="c1"># blanket_cutting_cylinder,</span>
         <span class="n">layer_count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">inner_radial_build</span><span class="p">),</span>
         <span class="n">poloidal_segment_angles</span><span class="o">=</span><span class="n">poloidal_segment_angles</span><span class="p">,</span>
         <span class="n">toroidal_sectors</span><span class="o">=</span><span class="n">toroidal_sectors</span><span class="p">,</span>
@@ -1224,8 +1222,10 @@ function render(data, parent_element, ratio){
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">extra_intersect_shapes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">segmented</span><span class="p">:</span>
             <span class="c1"># makes a union of the the radial build to use as a base for the intersect shapes</span>
-            <span class="n">reactor_compound</span> <span class="o">=</span> <span class="n">inner_radial_build</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">inner_radial_build</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">blanket_layers</span><span class="p">:</span>
+            <span class="c1"># there may be no centre column cylinders, so all the parts are used</span>
+            <span class="n">all_parts</span> <span class="o">=</span> <span class="n">inner_radial_build</span> <span class="o">+</span> <span class="n">blanket_layers</span>
+            <span class="n">reactor_compound</span> <span class="o">=</span> <span class="n">all_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">all_parts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
                 <span class="n">reactor_compound</span> <span class="o">=</span> <span class="n">reactor_compound</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
 
         <span class="c1"># adds the extra intersect shapes to the assembly</span>

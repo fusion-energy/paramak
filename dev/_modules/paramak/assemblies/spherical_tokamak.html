@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.assemblies.spherical_tokamak &#8212; Paramak 0.10.1.dev11+gb0be9417b documentation</title>
+    <title>paramak.assemblies.spherical_tokamak &#8212; Paramak 0.10.1.dev13+ga2c376ade documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=60feca84"></script>
+    <script src="../../../_static/documentation_options.js?v=be9abea6"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev11+gb0be9417b" />
+  <meta name="docsearch:version" content="0.10.1.dev13+ga2c376ade" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -1127,6 +1127,11 @@ function render(data, parent_element, ratio){
     <span class="n">validate_plasma_radial_build</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="s2">"radial_build"</span><span class="p">)</span>
     <span class="n">validate_plasma_radial_build</span><span class="p">(</span><span class="n">vertical_build</span><span class="p">,</span> <span class="s2">"vertical_build"</span><span class="p">)</span>
     <span class="n">validate_build_lengths</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">,</span> <span class="s2">"spherical_tokamak()"</span><span class="p">,</span> <span class="n">inboard_layers</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">LayerType</span><span class="o">.</span><span class="n">SOLID</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">radial_build</span><span class="p">[:</span> <span class="n">get_plasma_index</span><span class="p">(</span><span class="n">radial_build</span><span class="p">)]):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"The radial_build for spherical_tokamak() needs at least one LayerType.SOLID before the "</span>
+            <span class="s2">"LayerType.GAP next to the plasma, as the blanket layers are joined to the centre column."</span>
+        <span class="p">)</span>
     <span class="n">validate_vertical_build_names</span><span class="p">(</span><span class="n">vertical_build</span><span class="p">,</span> <span class="s2">"spherical_tokamak()"</span><span class="p">)</span>
     <span class="n">validate_rotation_start_angle</span><span class="p">(</span><span class="n">rotation_start_angle</span><span class="p">)</span>
     <span class="n">validate_rotation_angle</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
