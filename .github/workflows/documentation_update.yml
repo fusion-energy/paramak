@@ -30,6 +30,9 @@ jobs:
 
       - name: checkout actions
         uses: actions/checkout@v4
+        with:
+          # the full history is needed for setuptools_scm to find the version from the tags
+          fetch-depth: 0
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
