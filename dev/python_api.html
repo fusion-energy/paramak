@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Python API reference &#8212; Paramak 0.10.1.dev21+g7f4bc5dec documentation</title>
+    <title>Python API reference &#8212; Paramak 0.11.0 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="_static/documentation_options.js?v=d387cfc5"></script>
+    <script src="_static/documentation_options.js?v=f3b36f1a"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/vtk.js?v=415cc427"></script>
@@ -210,7 +210,7 @@ function render(data, parent_element, ratio){
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://raw.githubusercontent.com/fusion-energy/paramak/main/docs/version_switcher.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.11.0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             true;
         </script>
@@ -219,11 +219,11 @@ function render(data, parent_element, ratio){
     <link rel="icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Spherical Tokamak" href="examples_spherical_tokamak.html" />
+    <link rel="prev" title="Reactors from papers" href="examples_paper_reactors.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev21+g7f4bc5dec" />
+  <meta name="docsearch:version" content="0.11.0" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -864,6 +864,116 @@ layer also has a poloidal_build entry. Defaults to None.</p></li>
 </dd></dl>
 
 </section>
+<section id="reactors-from-papers">
+<h2>Reactors from papers<a class="headerlink" href="#reactors-from-papers" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.sparc_from_2020_paper">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">sparc_from_2020_paper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_tf_coils</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">18</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pf_coil_case_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/paper_reactors.html#sparc_from_2020_paper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.sparc_from_2020_paper" title="Link to this definition">#</a></dt>
+<dd><p>Creates a simplified SPARC reactor from a figure in a published paper.</p>
+<p>The geometry is based on Figure 4 of A. J. Creely et al., “Overview of the
+SPARC tokamak”, Journal of Plasma Physics, 86(5), 865860502 (2020),
+<a class="reference external" href="https://doi.org/10.1017/S0022377820001257">doi:10.1017/S0022377820001257</a>. The coordinates were read
+off the figure, so they are approximate and the model does not exactly
+match the reactor.</p>
+<p>The assembly contains the plasma, the central solenoid, the poloidal field
+coils (each a winding pack inside a case), the divertor and vertical
+stability coils, the ICRF antenna, the vacuum vessel, the inner vessel
+components and the toroidal field coils.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rotation_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees of the sector to build, between
+0 (exclusive) and 360.</p></li>
+<li><p><strong>number_of_tf_coils</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – the number of toroidal field coils, equally spaced
+around 360 degrees. Only the coils inside the sector are kept.</p></li>
+<li><p><strong>pf_coil_case_thickness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the thickness (cm) of the case around each
+poloidal field coil winding pack. The outer size of each coil (with
+its case) is taken from the paper figure.</p></li>
+<li><p><strong>colors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span>) – optional dictionary of RGB(A) colors keyed by part name, used
+in place of the default colors.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Assembly</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A paramak Assembly with a named part for each component.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.iter_from_2020_paper">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">iter_from_2020_paper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_tf_coils</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">18</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pf_coil_case_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/paper_reactors.html#iter_from_2020_paper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.iter_from_2020_paper" title="Link to this definition">#</a></dt>
+<dd><p>Creates a simplified ITER reactor from a figure in a published paper.</p>
+<p>The geometry is based on the diagram in “ITER Project: International
+Cooperation and Energy Investment” (2020),
+<a class="reference external" href="https://doi.org/10.1007/978-3-030-42913-3_26">doi:10.1007/978-3-030-42913-3_26</a>. Several parts use
+paramak parametric shapes, so the model does not exactly match the
+diagram or the reactor.</p>
+<p>The assembly contains the plasma, a blanket that follows the plasma, a
+single null divertor, the vacuum vessel, the central solenoid, the
+poloidal field coils (each a winding pack inside a case) and the toroidal
+field coils.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rotation_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees of the sector to build, between
+0 (exclusive) and 360.</p></li>
+<li><p><strong>number_of_tf_coils</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – the number of toroidal field coils, equally spaced
+around 360 degrees. Only the coils inside the sector are kept.</p></li>
+<li><p><strong>pf_coil_case_thickness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the thickness (cm) of the case around each
+poloidal field coil winding pack. The outer size of each coil (with
+its case) is taken from the paper figure.</p></li>
+<li><p><strong>colors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span>) – optional dictionary of RGB(A) colors keyed by part name, used
+in place of the default colors.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Assembly</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A paramak Assembly with a named part for each component.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="paramak.eu_demo_from_2015_paper">
+<span class="sig-prename descclassname"><span class="pre">paramak.</span></span><span class="sig-name descname"><span class="pre">eu_demo_from_2015_paper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rotation_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_tf_coils</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pf_coil_case_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/paramak/assemblies/paper_reactors.html#eu_demo_from_2015_paper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paramak.eu_demo_from_2015_paper" title="Link to this definition">#</a></dt>
+<dd><p>Creates a simplified EU DEMO reactor from a figure in a published paper.</p>
+<p>The geometry is based on Figure 2 of R. Kemp et al., “Definition of the
+basic DEMO tokamak geometry based on systems code studies”, Fusion
+Engineering and Design (2015), <a class="reference external" href="https://doi.org/10.1016/j.fusengdes.2015.06.097">doi:10.1016/j.fusengdes.2015.06.097</a>. The coordinates were
+read off the figure, so they are approximate and the model does not
+exactly match the reactor.</p>
+<p>The assembly contains the plasma, the blanket, a single null divertor,
+the vacuum vessel, the central solenoid, the poloidal field coils (each a
+winding pack inside a case) and the toroidal field coil casings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rotation_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the angle in degrees of the sector to build, between
+0 (exclusive) and 360.</p></li>
+<li><p><strong>number_of_tf_coils</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – the number of toroidal field coils, equally spaced
+around 360 degrees. Only the coils inside the sector are kept.</p></li>
+<li><p><strong>pf_coil_case_thickness</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – the thickness (cm) of the case around each
+poloidal field coil winding pack. The outer size of each coil (with
+its case) is taken from the paper figure.</p></li>
+<li><p><strong>colors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <span class="highlight sphinx_autodoc_typehints-value"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></span></span>) – optional dictionary of RGB(A) colors keyed by part name, used
+in place of the default colors.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Assembly</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A paramak Assembly with a named part for each component.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="utilities">
 <h2>Utilities<a class="headerlink" href="#utilities" title="Link to this heading">#</a></h2>
 <dl class="py function">
@@ -1304,12 +1414,12 @@ between -360 and 360. Defaults to 0.</p></li>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="examples_spherical_tokamak.html"
+       href="examples_paper_reactors.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Spherical Tokamak</p>
+        <p class="prev-next-title">Reactors from papers</p>
       </div>
     </a>
 </div>
@@ -1336,6 +1446,12 @@ between -360 and 360. Defaults to 0.</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.tokamak_from_plasma"><code class="docutils literal notranslate"><span class="pre">tokamak_from_plasma()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.spherical_tokamak"><code class="docutils literal notranslate"><span class="pre">spherical_tokamak()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.spherical_tokamak_from_plasma"><code class="docutils literal notranslate"><span class="pre">spherical_tokamak_from_plasma()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reactors-from-papers">Reactors from papers</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.sparc_from_2020_paper"><code class="docutils literal notranslate"><span class="pre">sparc_from_2020_paper()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.iter_from_2020_paper"><code class="docutils literal notranslate"><span class="pre">iter_from_2020_paper()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paramak.eu_demo_from_2015_paper"><code class="docutils literal notranslate"><span class="pre">eu_demo_from_2015_paper()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utilities">Utilities</a><ul class="nav section-nav flex-column">

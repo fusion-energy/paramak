@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Paramak documentation &#8212; Paramak 0.10.1.dev21+g7f4bc5dec documentation</title>
+    <title>Paramak documentation &#8212; Paramak 0.11.0 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="_static/documentation_options.js?v=d387cfc5"></script>
+    <script src="_static/documentation_options.js?v=f3b36f1a"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/vtk.js?v=415cc427"></script>
@@ -210,7 +210,7 @@ function render(data, parent_element, ratio){
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://raw.githubusercontent.com/fusion-energy/paramak/main/docs/version_switcher.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.11.0';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             true;
         </script>
@@ -223,7 +223,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev21+g7f4bc5dec" />
+  <meta name="docsearch:version" content="0.11.0" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -534,21 +534,28 @@ function render(data, parent_element, ratio){
                   
   <section id="paramak-documentation">
 <h1>Paramak documentation<a class="headerlink" href="#paramak-documentation" title="Link to this heading">#</a></h1>
-<p><strong>Version</strong>: 0.10.1.dev21+g7f4bc5dec</p>
+<p><strong>Version</strong>: 0.11.0</p>
 <div class="toctree-wrapper compound">
 </div>
 <p>Parameter driven CAD creation for fusion reactors.</p>
 <p>Paramak provides parameter driven creation of Tokamak and Spherical Tokamak CAD models as well as DAGMC compatible neutronics models.</p>
-<p>The style of reactor, sizes of components, plasma shape and number of radial or vertical layers can be specified.</p>
+<p>The style of reactor, sizes of components, plasma shape and number of radial or vertical layers can be specified. Reactors from published papers (SPARC, ITER and EU DEMO) can also be made.</p>
+<p><a class="reference external" href="https://github.com/fusion-energy/cad_to_dagmc">CAD-to-DAGMC</a>, <a class="reference external" href="https://github.com/stellarmesh/stellarmesh">Stellarmesh</a> and <a class="reference external" href="https://github.com/openmsr/CAD_to_OpenMC">CAD-to-OpenMC</a> can be used to convert these CAD models to <a class="reference external" href="https://github.com/svalinn/DAGMC">DAGMC</a> compatible meshes for use in neutronics simulations with <a class="reference external" href="https://github.com/openmc-dev/openmc">OpenMC</a>.</p>
+<p>Paramak is open source and the source code is available on <a class="reference external" href="https://github.com/fusion-energy/paramak">GitHub</a>.</p>
 <div style="display: flex; justify-content: center;">
-    <video width="45%" controls autoplay loop muted playsinline title="Spherical tokamak (paramak.spherical_tokamak_from_plasma and paramak.spherical_tokamak): a compact reactor with a blanket on the outboard side of the plasma and a centre column on the inboard side. The animation varies the thickness of each radial_build layer, the number of toroidal field coils, the poloidal field coil positions, the divertor size, the plasma elongation and triangularity, the poloidal_build segmentation of the first wall and blanket, and their toroidal_build segmentation into sectors, on their own and together with the poloidal segments.">
+    <video width="32%" controls autoplay loop muted playsinline title="Spherical tokamak (paramak.spherical_tokamak_from_plasma and paramak.spherical_tokamak): a compact reactor with a blanket on the outboard side of the plasma and a centre column on the inboard side. The animation varies the thickness of each radial_build layer, the number of toroidal field coils, the poloidal field coil positions, the divertor size, the plasma elongation and triangularity, the poloidal_build segmentation of the first wall and blanket, and their toroidal_build segmentation into sectors, on their own and together with the poloidal segments.">
         <source src="_static/spherical_tokamak_animation.webm" type="video/webm">
         <source src="_static/spherical_tokamak_animation.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
-    <video width="45%" controls autoplay loop muted playsinline title="Tokamak (paramak.tokamak_from_plasma and paramak.tokamak): a reactor with a blanket that goes around both the inboard and outboard sides of the plasma. The animation varies the thickness of each radial_build layer, the number of toroidal field coils, the poloidal field coil positions, the divertor size, the plasma elongation and triangularity, the poloidal_build segmentation into first wall tiles and first wall and blanket modules, and the toroidal_build segmentation of the first wall and blanket into sectors, on their own and together with the poloidal modules.">
+    <video width="32%" controls autoplay loop muted playsinline title="Tokamak (paramak.tokamak_from_plasma and paramak.tokamak): a reactor with a blanket that goes around both the inboard and outboard sides of the plasma. The animation varies the thickness of each radial_build layer, the number of toroidal field coils, the poloidal field coil positions, the divertor size, the plasma elongation and triangularity, the poloidal_build segmentation into first wall tiles and first wall and blanket modules, and the toroidal_build segmentation of the first wall and blanket into sectors, on their own and together with the poloidal modules.">
         <source src="_static/tokamak_animation.webm" type="video/webm">
         <source src="_static/tokamak_animation.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <video width="32%" controls autoplay loop muted playsinline title="Reactors from papers, shown one after the other: SPARC (paramak.sparc_from_2020_paper, based on Figure 4 of Overview of the SPARC tokamak, 2020), ITER (paramak.iter_from_2020_paper, based on the diagram in ITER Project: International Cooperation and Energy Investment, 2020) and EU DEMO (paramak.eu_demo_from_2015_paper, based on Figure 2 of Definition of the basic DEMO tokamak geometry based on systems code studies, 2015). The animation varies the rotation_angle of each reactor in turn from 1 to 360 degrees and back.">
+        <source src="_static/paper_reactors_animation.webm" type="video/webm">
+        <source src="_static/paper_reactors_animation.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 </div><div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">

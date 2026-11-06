@@ -1,10 +1,12 @@
 Examples
 ========
 
-There are two main reactors to choose from:
+There are two main parametric reactors to choose from:
 
 * Tokamak
 * Spherical Tokamak.
+
+There are also reactors with fixed geometry taken from published papers (SPARC, ITER and EU DEMO).
 
 The reactors can be varied in terms of their radial build, vertical build, elongation and triangularity which gives a lot of variability.
 All reactors can be built with either:
@@ -28,4 +30,5 @@ These examples show how to make various reactors with different options.
    examples_vis
    examples_tokamak
    examples_spherical_tokamak
+   examples_paper_reactors
 
