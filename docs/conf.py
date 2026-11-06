@@ -7,7 +7,6 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 import os
-import re
 import sys
 
 sys.path.insert(0, os.path.abspath("../src"))
@@ -54,12 +53,9 @@ html_js_files = ["cq_viewer.js"]
 # TODO add logo
 # html_favicon = "favicon.ico"
 
-# Version match must match the 'version' key in version_switcher.json
-pattern = re.compile(r"^[0-9]+\.[0-9]+")
-version_match = pattern.search(version)
-if version_match:
-    version_match = version_match.group()
-elif "dev" in version:
+# Version match must match the 'version' key in version_switcher.json, which
+# has "dev" for development builds and the full version (e.g. "0.9.10") for releases
+if "dev" in version:
     version_match = "dev"
 else:
     version_match = version
@@ -80,3 +76,8 @@ html_sidebars = {"**": ["sidebar-nav-bs"]}
 
 html_favicon = "_static/favicon.ico"
 master_doc = "index"
+
+# external sites such as anaconda.org are sometimes slow to respond, retry
+# before reporting a link as broken
+linkcheck_timeout = 60
+linkcheck_retries = 3
