@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.workplanes.toroidal_field_coil_rectangle &#8212; Paramak 0.10.1.dev15+g469cef7e9 documentation</title>
+    <title>paramak.workplanes.toroidal_field_coil_rectangle &#8212; Paramak 0.10.1.dev16+g4d311e7da documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=eae266c5"></script>
+    <script src="../../../_static/documentation_options.js?v=e07937bd"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev15+g469cef7e9" />
+  <meta name="docsearch:version" content="0.10.1.dev16+g4d311e7da" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -593,7 +593,8 @@ function render(data, parent_element, ratio){
 <span class="sd">        horizontal_start_point: the (x,z) coordinates of the inner upper</span>
 <span class="sd">            point (cm).</span>
 <span class="sd">        vertical_mid_point: the (x,z) coordinates of the mid point of the</span>
-<span class="sd">            vertical section (cm).</span>
+<span class="sd">            vertical section (cm). The coil is symmetric about this height,</span>
+<span class="sd">            so the bottom is the horizontal_start_point mirrored about it.</span>
 <span class="sd">        thickness: the thickness of the toroidal field coil.</span>
 <span class="sd">        distance: the extrusion distance.</span>
 <span class="sd">        rotation_angle (float): angle of rotation in degrees, this cuts the resulting shape with a wedge. Useful for sector models.</span>
@@ -624,6 +625,10 @@ function render(data, parent_element, ratio){
 <span class="s2">                horizontal_start_point y value"</span>
         <span class="p">)</span>
 
+    <span class="c1"># the coil is symmetric about the height of the vertical_mid_point, so the</span>
+    <span class="c1"># bottom is the top mirrored about that height</span>
+    <span class="n">bottom</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">vertical_mid_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">horizontal_start_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
     <span class="n">points</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">horizontal_start_point</span><span class="p">,</span>  <span class="c1"># connection point</span>
         <span class="p">(</span>
@@ -631,21 +636,21 @@ function render(data, parent_element, ratio){
             <span class="n">horizontal_start_point</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
         <span class="p">),</span>
         <span class="p">(</span><span class="n">vertical_mid_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">horizontal_start_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
-        <span class="p">(</span><span class="n">vertical_mid_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">horizontal_start_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="p">(</span><span class="n">vertical_mid_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bottom</span><span class="p">),</span>
         <span class="c1"># connection point</span>
         <span class="p">(</span>
             <span class="n">horizontal_start_point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">thickness</span><span class="p">,</span>
-            <span class="o">-</span><span class="n">horizontal_start_point</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">bottom</span><span class="p">,</span>
         <span class="p">),</span>
         <span class="c1"># connection point</span>
-        <span class="p">(</span><span class="n">horizontal_start_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">horizontal_start_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="p">(</span><span class="n">horizontal_start_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bottom</span><span class="p">),</span>
         <span class="p">(</span>
             <span class="n">horizontal_start_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="o">-</span><span class="p">(</span><span class="n">horizontal_start_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">thickness</span><span class="p">),</span>
+            <span class="n">bottom</span> <span class="o">-</span> <span class="n">thickness</span><span class="p">,</span>
         <span class="p">),</span>
         <span class="p">(</span>
             <span class="n">vertical_mid_point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">thickness</span><span class="p">,</span>
-            <span class="o">-</span><span class="p">(</span><span class="n">horizontal_start_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">thickness</span><span class="p">),</span>
+            <span class="n">bottom</span> <span class="o">-</span> <span class="n">thickness</span><span class="p">,</span>
         <span class="p">),</span>
         <span class="p">(</span>
             <span class="n">vertical_mid_point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">thickness</span><span class="p">,</span>
