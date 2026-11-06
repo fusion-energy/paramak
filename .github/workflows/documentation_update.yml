@@ -41,6 +41,11 @@ jobs:
 
       - name: install dependencies
         run: python -m pip install .[docs]
+
+      # TODO remove once a CadQuery release includes CadQuery/cadquery#2124,
+      # which fixes slow vertical rotation in the cq_directive viewer on tall pages
+      - name: install CadQuery main branch
+        run: python -m pip install git+https://github.com/CadQuery/cadquery.git
       
       - name: Sphinx build tagged version
         if: startsWith(github.ref, 'refs/tags/')
