@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.assemblies.tokamak &#8212; Paramak 0.10.1.dev9+ga1db492d9 documentation</title>
+    <title>paramak.assemblies.tokamak &#8212; Paramak 0.10.1.dev10+g19fd10286 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=c0ffd75c"></script>
+    <script src="../../../_static/documentation_options.js?v=227e245f"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev9+ga1db492d9" />
+  <meta name="docsearch:version" content="0.10.1.dev10+g19fd10286" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -571,6 +571,7 @@ function render(data, parent_element, ratio){
     <span class="n">get_plasma_index</span><span class="p">,</span>
     <span class="n">resolve_assembly_color</span><span class="p">,</span>
     <span class="n">rotate_about_z</span><span class="p">,</span>
+    <span class="n">sum_before_after_plasma</span><span class="p">,</span>
     <span class="n">validate_build_lengths</span><span class="p">,</span>
     <span class="n">validate_plasma_radial_build</span><span class="p">,</span>
     <span class="n">validate_rotation_angle</span><span class="p">,</span>
@@ -614,12 +615,16 @@ function render(data, parent_element, ratio){
     <span class="k">return</span> <span class="n">before_plasma</span> <span class="o">-</span> <span class="n">after_plasma</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">create_center_column_shield_cylinders</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">,</span> <span class="n">center_column_shield_height</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_center_column_shield_cylinders</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">):</span>
     <span class="n">cylinders</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">total_sum</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">layer_count</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="n">number_of_cylinder_layers</span> <span class="o">=</span> <span class="n">count_cylinder_layers</span><span class="p">(</span><span class="n">radial_build</span><span class="p">)</span>
+    <span class="c1"># the vertical_build is ordered from the top, so the column goes from -below</span>
+    <span class="c1"># the plasma to +above it, the same as the blanket layers</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">below</span> <span class="o">=</span> <span class="n">sum_before_after_plasma</span><span class="p">(</span><span class="n">vertical_build</span><span class="p">)</span>
+    <span class="n">center_column_shield_height</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">vertical_build</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">radial_build</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">LayerType</span><span class="o">.</span><span class="n">PLASMA</span><span class="p">:</span>
@@ -643,6 +648,7 @@ function render(data, parent_element, ratio){
             <span class="n">name</span><span class="o">=</span><span class="n">layer_name</span><span class="p">,</span>
             <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
             <span class="n">height</span><span class="o">=</span><span class="n">center_column_shield_height</span><span class="p">,</span>
+            <span class="n">reference_point</span><span class="o">=</span><span class="p">(</span><span class="s2">"lower"</span><span class="p">,</span> <span class="o">-</span><span class="n">below</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="n">total_sum</span> <span class="o">+=</span> <span class="n">thickness</span>
         <span class="n">cylinders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cylinder</span><span class="p">)</span>
@@ -1164,9 +1170,7 @@ function render(data, parent_element, ratio){
         <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">inner_radial_build</span> <span class="o">=</span> <span class="n">create_center_column_shield_cylinders</span><span class="p">(</span>
-        <span class="n">radial_build</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">,</span> <span class="n">blanket_rear_wall_end_height</span>
-    <span class="p">)</span>
+    <span class="n">inner_radial_build</span> <span class="o">=</span> <span class="n">create_center_column_shield_cylinders</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="p">)</span>
 
     <span class="c1"># validated before the blanket layers are built so errors are raised quickly</span>
     <span class="n">poloidal_segment_angles</span> <span class="o">=</span> <span class="kc">None</span>
