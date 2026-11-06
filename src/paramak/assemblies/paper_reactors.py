@@ -792,57 +792,6 @@ def eu_demo_from_2015_paper(
     )
     divertor = _revolve(divertor_points, rotation_angle=rotation_angle)
 
-    # the space inside the vacuum vessel, which the blanket and divertor sit in
-    vessel_cavity_points = _spline(
-        [
-            (574.13, 101.11),
-            (574.69, 165.88),
-            (576.22, 183.81),
-            (578.25, 276.25),
-            (592.98, 356.14),
-            (618.39, 410.17),
-            (660.06, 462.71),
-            (711.89, 503.99),
-            (763.71, 528.24),
-            (800.81, 535.07),
-            (957.82, 529.16),
-            (1009.65, 511.73),
-            (1061.48, 484.36),
-            (1113.31, 445.67),
-            (1160.05, 396.81),
-            (1196.13, 343.45),
-            (1221.54, 290.07),
-            (1239.32, 234.98),
-            (1251.52, 177.4),
-            (1259.9, 119.15),
-            (1262.9, 91.48),
-            (1257.76, -69.66),
-            (1248.47, -117.97),
-            (1236.27, -162.39),
-            (1219.5, -215.31),
-            (1198.16, -267.66),
-            (1171.74, -320.87),
-            (1140.74, -372.28),
-            (1102.63, -425.0),
-            (1058.94, -476.29),
-            (1022.86, -523.16),
-            (998.47, -582.32),
-            (961.88, -633.83),
-            (788.1, -641.84),
-            (746.44, -626.41),
-            (694.61, -595.17),
-            (646.34, -549.17),
-            (610.77, -496.43),
-            (588.92, -442.35),
-            (578.15, -383.5),
-            (577.7, -343.84),
-            (576.22, -254.97),
-            (576.22, -201.97),
-            (576.22, -148.97),
-            (576.22, -95.98),
-        ]
-    )
-
     vessel_outer_points = _spline(
         [
             (515.49, 96.83),
@@ -898,16 +847,15 @@ def eu_demo_from_2015_paper(
             (516.75, -107.41),
         ]
     )
-    # the blanket and divertor outlines from the figure poke slightly outside
-    # the cavity in places and nearly touch it elsewhere. Adding them, with a
-    # 1 cm gap, to the cavity stops the vessel overlapping or touching them,
-    # as nearly coincident spline surfaces do not imprint reliably for
-    # neutronics. The vessel profile is made with 2D booleans and then
-    # revolved, which is more robust than 3D booleans on the revolved shapes.
-    cavity_face = _profile_face(vessel_cavity_points).fuse(
-        _profile_face(blanket_points, offset=1.0), _profile_face(divertor_points, offset=1.0)
-    )
-    vessel_face = _single_face(_profile_face(vessel_outer_points).cut(_single_face(cavity_face.clean())).clean())
+    # the vessel sits directly against the blanket and divertor, so the space
+    # inside it is the outline of the two (their fused face with the hole for
+    # the plasma filled in). The vessel then shares its inner surfaces with
+    # them and imprints onto them. The vessel profile is made with 2D booleans
+    # and then revolved, which is more robust than 3D booleans on the
+    # revolved shapes.
+    blanket_and_divertor = _single_face(_profile_face(blanket_points).fuse(_profile_face(divertor_points)).clean())
+    cavity_face = cq.Face.makeFromWires(blanket_and_divertor.outerWire())
+    vessel_face = _single_face(_profile_face(vessel_outer_points).cut(cavity_face).clean())
     vessel = _revolve_face(vessel_face, rotation_angle)
 
     pf_coil_sizes = [204, 141, 102, 95, 79, 121]
