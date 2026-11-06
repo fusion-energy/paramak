@@ -48,7 +48,7 @@ my_reactor = paramak.tokamak(
     rotation_angle=180,
 )
 
-my_reactor = my_reactor.remove(name="plasma")  # removing as we don't need the plasma for this neutronics simulation
+my_reactor.remove(name="plasma")  # removing as we don't need the plasma for this neutronics simulation
 
 my_model = CadToDagmc()
 # as inner and outer layers are one solid there are only 6 solids in model

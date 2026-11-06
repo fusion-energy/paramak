@@ -63,7 +63,7 @@ my_reactor = paramak.tokamak_from_plasma(
 
 # removing the plasma from the CadQuery Assembly as we don't need this in the
 # DAGMC mesh for the neutronics simulation.
-my_reactor = my_reactor.remove(name="plasma")
+my_reactor.remove(name="plasma")
 
 
 # this prints all the names of the parts in the reactor, this is useful for

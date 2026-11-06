@@ -559,3 +559,38 @@ def test_segment_names_that_clash_after_suffixes():
                 None,
             ],
         )
+
+
+def test_remove_plasma_from_reactor():
+    """Removing the plasma with cadquery's Assembly.remove works on a reactor,
+    leaves the other layers and keeps the reactor geometry metadata."""
+
+    reactor = paramak.tokamak_from_plasma(
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 30),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 10),
+            (paramak.LayerType.SOLID, 120),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 20),
+            (paramak.LayerType.SOLID, 120),
+            (paramak.LayerType.SOLID, 10),
+        ],
+        elongation=2,
+        triangularity=0.55,
+        rotation_angle=180,
+    )
+    major_radius = reactor.major_radius
+    solid_count = len(reactor.toCompound().Solids())
+
+    result = reactor.remove("plasma")
+
+    assert result is reactor
+    assert "plasma" not in reactor.names()
+    assert reactor.names() == ["layer_1", "layer_2", "layer_3", "layer_4", "layer_5"]
+    assert len(reactor.toCompound().Solids()) == solid_count - 1
+    assert reactor.major_radius == major_radius
