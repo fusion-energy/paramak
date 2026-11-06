@@ -14,6 +14,7 @@ def u_shaped_dome(
     name: str = "u_shaped_dome",
     plane="XZ",
     upper_or_lower="upper",
+    rotation_start_angle: float = 0.0,
 ):
     """A cylindrical u shaped dome with constant thickness.
 
@@ -27,6 +28,10 @@ def u_shaped_dome(
         cylinder_height: the height of the cylindrical section of the vacuum
             vessel.
         thickness: the radial thickness of the vessel in cm.
+        rotation_start_angle: the angle in degrees the revolution starts from,
+            measured around the revolve axis from the workplane. The shape covers
+            rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+            between -360 and 360. Defaults to 0.
     """
     if cylinder_height <= 0:
         raise ValueError(f"cylinder_height must be positive, got {cylinder_height}.")
@@ -74,6 +79,7 @@ def u_shaped_dome(
         thickness=thickness,
         reference_point=("center", center_height),
         rotation_angle=rotation_angle,
+        rotation_start_angle=rotation_start_angle,
         plane=plane,
     )
 
@@ -85,6 +91,7 @@ def u_shaped_dome(
             chord_height=dish_height,
             upper_or_lower="upper",
             rotation_angle=rotation_angle,
+            rotation_start_angle=rotation_start_angle,
             plane=plane,
         )
 
@@ -96,6 +103,7 @@ def u_shaped_dome(
             chord_height=dish_height,
             upper_or_lower="lower",
             rotation_angle=rotation_angle,
+            rotation_start_angle=rotation_start_angle,
             plane=plane,
         )
     else:

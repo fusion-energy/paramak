@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import math
 import typing
 
-from ..utils import create_wire_workplane_from_points, rotate_solid
+from ..utils import create_wire_workplane_from_points, rotate_solid, validate_rotation_start_angle
 from ..workplanes.cutting_wedge import cutting_wedge
 
 
@@ -20,6 +21,7 @@ def toroidal_field_coil_rectangle(
     plane: str = "XZ",
     origin: tuple[float, float, float] = (0.0, 0.0, 0.0),
     obj=None,
+    rotation_start_angle: float = 0.0,
 ):
     """Creates a rectangular shaped toroidal field coil.
 
@@ -31,6 +33,11 @@ def toroidal_field_coil_rectangle(
         thickness: the thickness of the toroidal field coil.
         distance: the extrusion distance.
         rotation_angle (float): angle of rotation in degrees, this cuts the resulting shape with a wedge. Useful for sector models.
+        rotation_start_angle (float): the angle in degrees the wedge that cuts the shape starts
+            from, measured around the Z axis from the XZ plane, so the sector kept covers
+            rotation_start_angle to rotation_start_angle + rotation_angle. The coils are
+            still placed at azimuthal_placement_angles. Must be between -360 and 360.
+            Defaults to 0.
         with_inner_leg: include the inner tf leg. Defaults to True.
         azimuth_start_angle: The azimuth angle to for the first TF coil which
             offsets the placement of coils around the azimuthal angle
@@ -39,6 +46,7 @@ def toroidal_field_coil_rectangle(
         raise ValueError(f"thickness must be positive, got {thickness}.")
     if distance <= 0:
         raise ValueError(f"distance must be positive, got {distance}.")
+    validate_rotation_start_angle(rotation_start_angle)
    # TODO consider if we should limit the rotation angle. Is there a use case for negative rotation angle
    # if not (0 < rotation_angle <= 360):
    #    raise ValueError(f"rotation_angle must be in the range (0, 360], got {rotation_angle}.")
@@ -114,9 +122,17 @@ def toroidal_field_coil_rectangle(
 
     if rotation_angle < 360.0:
         bb = solid.val().BoundingBox()
-        radius = max(bb.xmax, bb.ymax) * 1.1  # 10% larger than the bounding box to ensure clean cut
-        height = max(bb.zmax, bb.zmin) * 2.1  # 10% larger than the bounding box to ensure clean cut
-        cutting_shape = cutting_wedge(height=height, radius=radius, rotation_angle=rotation_angle)
+        # the coils can be at any azimuthal angle, including negative x and y, so the wedge
+        # radius is the largest distance from the Z axis the bounding box allows. The wedge
+        # is made larger than the coils to ensure a clean cut.
+        radius = math.hypot(max(abs(bb.xmin), abs(bb.xmax)), max(abs(bb.ymin), abs(bb.ymax))) * 1.1
+        height = max(abs(bb.zmin), abs(bb.zmax)) * 2.1
+        cutting_shape = cutting_wedge(
+            height=height,
+            radius=radius,
+            rotation_angle=rotation_angle,
+            rotation_start_angle=rotation_start_angle,
+        )
         solid = solid.intersect(cutting_shape)
 
     solid.name = name

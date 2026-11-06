@@ -25,6 +25,7 @@ def constant_thickness_dome(
     origin=(0, 0, 0),
     rotation_angle=90,
     obj=None,
+    rotation_start_angle: float = 0.0,
     **kwargs,
 ):
     """A cylindrical vessel volume with constant thickness with a simple dished
@@ -42,6 +43,10 @@ def constant_thickness_dome(
             domes to be made.
         name: the name of the shape, used in the graph legend and as a
             filename prefix when exporting.
+        rotation_start_angle: the angle in degrees the revolution starts from,
+            measured around the revolve axis from the workplane. The shape covers
+            rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+            between -360 and 360. Defaults to 0.
     """
 
     if not isinstance(chord_width, numbers.Number):
@@ -181,7 +186,13 @@ def constant_thickness_dome(
 
     height = 2 * (radius_of_sphere + abs(center_point[1]) + thickness)
     radius = 2 * (radius_of_sphere + abs(center_point[0]) + thickness)
-    cutter = cutting_wedge(height=height, radius=radius, rotation_angle=rotation_angle, plane=plane)
+    cutter = cutting_wedge(
+        height=height,
+        radius=radius,
+        rotation_angle=rotation_angle,
+        rotation_start_angle=rotation_start_angle,
+        plane=plane,
+    )
 
     cap = cap.cut(outer_cylinder_cutter).cut(inner_cylinder_cutter)
     cap = cap.intersect(cutter)

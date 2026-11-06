@@ -1,5 +1,7 @@
 import math
 
+import pytest
+
 from cadquery import exporters
 
 import paramak
@@ -36,3 +38,12 @@ def test_rotation_angle():
         / (0.5 * solid_180_uncut.val().Volume())
         < 0.00001
     )
+
+
+def test_diagonal_coils_are_not_clipped_by_the_wedge():
+    "coils between the x and y axes reach further from the Z axis than their x or y extent"
+
+    kwargs = dict(horizontal_start_point=(100, 100), vertical_mid_point=(300, 0), thickness=10, distance=10)
+    whole = paramak.toroidal_field_coil_rectangle(azimuthal_placement_angles=[35, 55], **kwargs)
+    cut = paramak.toroidal_field_coil_rectangle(azimuthal_placement_angles=[35, 55], rotation_angle=90, **kwargs)
+    assert sum(solid.Volume() for solid in cut.vals()) == pytest.approx(whole.val().Volume(), rel=1e-4)

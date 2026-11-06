@@ -10,7 +10,7 @@ from OCP.Standard import Standard_Failure
 from OCP.StdFail import StdFail_NotDone
 from scipy.interpolate import interp1d
 
-from ..utils import create_wire_workplane_from_points
+from ..utils import create_wire_workplane_from_points, rotate_to_rotation_start_angle
 
 
 def make_callable(attribute, start_angle, stop_angle):
@@ -312,6 +312,7 @@ def blanket_from_plasma(
     obj=None,
     allow_overlapping_shape=False,
     connect_to_center=False,
+    rotation_start_angle: float = 0.0,
 ):
     """A blanket volume created from plasma parameters. It might be necessary
     to increase the num_points when making long but thin geometry with this
@@ -345,6 +346,10 @@ def blanket_from_plasma(
         num_points: number of points that will describe the shape.
         allow_overlapping_shape: allows parameters to create a shape that
             overlaps itself.
+        rotation_start_angle: the angle in degrees the revolution starts from,
+            measured around the revolve axis from the workplane. The shape covers
+            rotation_start_angle to rotation_start_angle + rotation_angle. Must be
+            between -360 and 360. Defaults to 0.
     """
     if major_radius <= 0:
         raise ValueError(f"major_radius must be positive, got {major_radius}.")
@@ -380,6 +385,7 @@ def blanket_from_plasma(
             "blanket_from_plasma: could not revolve the profile, "
             "the geometry is probably self-overlapping"
         ) from e
+    solid = rotate_to_rotation_start_angle(solid, wire, rotation_start_angle)
     solid.name = name
     solid.color = color
     return solid
