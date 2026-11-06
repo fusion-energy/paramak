@@ -21,9 +21,33 @@ MESH_SIZES = {
 }
 
 EXPECTED_PARTS = {
-    paramak.sparc_from_2020_paper: ["plasma", "vessel", "inner_vessel", "antenna", "toroidal_field_coil", "pf_coil_1"],
-    paramak.iter_from_2020_paper: ["plasma", "blanket", "divertor", "vessel", "toroidal_field_coil", "pf_coil_1"],
-    paramak.eu_demo_from_2015_paper: ["plasma", "blanket", "divertor", "vessel", "toroidal_field_coil", "pf_coil_1"],
+    paramak.sparc_from_2020_paper: [
+        "plasma",
+        "vessel",
+        "inner_vessel",
+        "antenna",
+        "toroidal_field_coil",
+        "pf_coil_1",
+        "pf_coil_case_1",
+    ],
+    paramak.iter_from_2020_paper: [
+        "plasma",
+        "blanket",
+        "divertor",
+        "vessel",
+        "toroidal_field_coil",
+        "pf_coil_1",
+        "pf_coil_case_1",
+    ],
+    paramak.eu_demo_from_2015_paper: [
+        "plasma",
+        "blanket",
+        "divertor",
+        "vessel",
+        "toroidal_field_coil",
+        "pf_coil_1",
+        "pf_coil_case_1",
+    ],
 }
 
 
@@ -89,6 +113,43 @@ def test_invalid_rotation_angle(reactor_function, rotation_angle):
 def test_invalid_number_of_tf_coils(reactor_function, number_of_tf_coils):
     with pytest.raises(ValueError, match="number_of_tf_coils"):
         reactor_function(number_of_tf_coils=number_of_tf_coils)
+
+
+def test_pf_coils_have_a_winding_pack_and_case(reactor_function_and_180_degree_reactor):
+    """Each poloidal field coil is a winding pack and a case, which together
+    fill the outer coil size from the paper."""
+    _, reactor = reactor_function_and_180_degree_reactor
+    volumes = part_volumes(reactor)
+    shapes = {name.split("/")[-1]: shape for shape, name, _loc, _color in reactor}
+    pf_coil_numbers = [name.split("_")[-1] for name in volumes if name.startswith("pf_coil_case_")]
+    assert pf_coil_numbers
+    for number in pf_coil_numbers:
+        core, case = shapes[f"pf_coil_{number}"], shapes[f"pf_coil_case_{number}"]
+        assert core.Volume() > 0 and case.Volume() > 0
+        core_box, case_box = core.BoundingBox(), case.BoundingBox()
+        # the case surrounds the winding pack
+        assert case_box.zmin < core_box.zmin and case_box.zmax > core_box.zmax
+        assert case_box.xmax > core_box.xmax
+        # together they make a solid rectangular ring with no gap
+        assert core.fuse(case).Volume() == pytest.approx(core.Volume() + case.Volume(), rel=1e-6)
+
+
+@pytest.mark.parametrize("reactor_function", PAPER_REACTORS, ids=lambda f: f.__name__)
+def test_pf_coil_case_thickness_changes_the_split_not_the_coil_size(reactor_function):
+    thin = part_volumes(reactor_function(rotation_angle=10, pf_coil_case_thickness=1))
+    thick = part_volumes(reactor_function(rotation_angle=10, pf_coil_case_thickness=5))
+    assert thick["pf_coil_case_1"] > thin["pf_coil_case_1"]
+    assert thick["pf_coil_1"] < thin["pf_coil_1"]
+    assert thick["pf_coil_1"] + thick["pf_coil_case_1"] == pytest.approx(
+        thin["pf_coil_1"] + thin["pf_coil_case_1"], rel=1e-6
+    )
+
+
+@pytest.mark.parametrize("reactor_function", PAPER_REACTORS, ids=lambda f: f.__name__)
+@pytest.mark.parametrize("pf_coil_case_thickness", [0, -1, float("nan"), 1000])
+def test_invalid_pf_coil_case_thickness(reactor_function, pf_coil_case_thickness):
+    with pytest.raises(ValueError, match="pf_coil_case_thickness"):
+        reactor_function(pf_coil_case_thickness=pf_coil_case_thickness)
 
 
 @pytest.mark.parametrize("reactor_function", PAPER_REACTORS, ids=lambda f: f.__name__)

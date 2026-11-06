@@ -17,6 +17,7 @@ from ..workplanes.blanket_from_plasma import find_points as blanket_find_points
 from ..workplanes.cutting_wedge import cutting_wedge
 from ..workplanes.plasma_simplified import plasma_simplified
 from ..workplanes.poloidal_field_coil import poloidal_field_coil
+from ..workplanes.poloidal_field_coil_case import poloidal_field_coil_case
 from ..workplanes.revolved_shape import revolved_shape
 from ..workplanes.toroidal_field_coil_princeton_d import toroidal_field_coil_princeton_d
 from .assembly import Assembly
@@ -103,6 +104,59 @@ def _clip_to_sector(solid: cq.Workplane, rotation_angle: float) -> cq.Workplane:
     return solid.intersect(cutting_wedge(height=height, radius=radius, rotation_angle=rotation_angle))
 
 
+PF_COIL_CASE_COLOR = (0.9, 0.4, 0.4)
+
+
+def _pf_coils_with_cases(center_points, widths, heights, case_thickness: float, rotation_angle: float):
+    """Makes each poloidal field coil as a winding pack inside a case of
+    constant thickness. The widths and heights are the outer size of each
+    coil (including the case), as read off the paper figures.
+
+    Returns:
+        a list of (name, solid) tuples, a pf_coil_N winding pack and a
+        pf_coil_case_N case for each coil.
+    """
+    if (
+        isinstance(case_thickness, bool)
+        or not isinstance(case_thickness, (int, float, np.integer, np.floating))
+        or not np.isfinite(case_thickness)
+        or case_thickness <= 0
+    ):
+        msg = f"pf_coil_case_thickness must be a positive number, got {case_thickness}."
+        raise ValueError(msg)
+    smallest_size = min(min(widths), min(heights))
+    if 2 * case_thickness >= smallest_size:
+        msg = (
+            f"pf_coil_case_thickness must be less than half the size of the smallest poloidal field coil "
+            f"({smallest_size / 2} cm) so there is room for the winding pack, got {case_thickness}."
+        )
+        raise ValueError(msg)
+    parts = []
+    for counter, (center_point, width, height) in enumerate(zip(center_points, widths, heights), 1):
+        core_width, core_height = width - 2 * case_thickness, height - 2 * case_thickness
+        parts.append(
+            (
+                f"pf_coil_{counter}",
+                poloidal_field_coil(
+                    height=core_height, width=core_width, center_point=center_point, rotation_angle=rotation_angle
+                ),
+            )
+        )
+        parts.append(
+            (
+                f"pf_coil_case_{counter}",
+                poloidal_field_coil_case(
+                    coil_height=core_height,
+                    coil_width=core_width,
+                    casing_thickness=case_thickness,
+                    center_point=center_point,
+                    rotation_angle=rotation_angle,
+                ),
+            )
+        )
+    return parts
+
+
 def _build_assembly(parts, cuts, colors, default_colors, plasma_parameters) -> Assembly:
     """Adds the named parts to an Assembly.
 
@@ -132,7 +186,10 @@ def _build_assembly(parts, cuts, colors, default_colors, plasma_parameters) -> A
                 # surfaces, the cut is still valid without it
                 solid = solid.cut(cutter, clean=False)
         solids[name] = solid
-        color = (colors or {}).get(name, default_colors.get(name)) or resolve_assembly_color(name)
+        default_color = default_colors.get(name)
+        if default_color is None and name.startswith("pf_coil_case"):
+            default_color = PF_COIL_CASE_COLOR
+        color = (colors or {}).get(name, default_color) or resolve_assembly_color(name)
         assembly.add(solid, name=name, color=cq.Color(*color))
     for key, value in plasma_parameters.items():
         setattr(assembly, key, value)
@@ -142,6 +199,7 @@ def _build_assembly(parts, cuts, colors, default_colors, plasma_parameters) -> A
 def sparc_from_2020_paper(
     rotation_angle: float = 180.0,
     number_of_tf_coils: int = 18,
+    pf_coil_case_thickness: float = 3.0,
     colors: dict | None = None,
 ) -> Assembly:
     """Creates a simplified SPARC reactor from a figure in a published paper.
@@ -153,15 +211,19 @@ def sparc_from_2020_paper(
     off the figure, so they are approximate and the model does not exactly
     match the reactor.
 
-    The assembly contains the plasma, the central solenoid and poloidal field
-    coils, the divertor and vertical stability coils, the ICRF antenna, the
-    vacuum vessel, the inner vessel components and the toroidal field coils.
+    The assembly contains the plasma, the central solenoid, the poloidal field
+    coils (each a winding pack inside a case), the divertor and vertical
+    stability coils, the ICRF antenna, the vacuum vessel, the inner vessel
+    components and the toroidal field coils.
 
     Args:
         rotation_angle: the angle in degrees of the sector to build, between
             0 (exclusive) and 360.
         number_of_tf_coils: the number of toroidal field coils, equally spaced
             around 360 degrees. Only the coils inside the sector are kept.
+        pf_coil_case_thickness: the thickness (cm) of the case around each
+            poloidal field coil winding pack. The outer size of each coil (with
+            its case) is taken from the paper figure.
         colors: optional dictionary of RGB(A) colors keyed by part name, used
             in place of the default colors.
 
@@ -200,11 +262,12 @@ def sparc_from_2020_paper(
         [27.7] * 6,
         [41.5, 40.5, 82.95, 82.95, 40.5, 41.5],
     )
-    pf_coils = rectangular_coils(
-        "pf_coil",
+    pf_coils = _pf_coils_with_cases(
         [(86, 230), (86, -230), (164, 241), (164, -241), (263, 222), (263, -222), (373, 131), (373, -131)],
         [32, 32, 50, 50, 43, 43, 48, 48],
         [40, 40, 30, 30, 28, 28, 37, 37],
+        pf_coil_case_thickness,
+        rotation_angle,
     )
     divertor_coils = rectangular_coils(
         "divertor_coil", [(207, 144), (207, 125), (207, -144), (207, -125)], [15] * 4, [15] * 4
@@ -371,6 +434,7 @@ def sparc_from_2020_paper(
 def iter_from_2020_paper(
     rotation_angle: float = 180.0,
     number_of_tf_coils: int = 18,
+    pf_coil_case_thickness: float = 10.0,
     colors: dict | None = None,
 ) -> Assembly:
     """Creates a simplified ITER reactor from a figure in a published paper.
@@ -384,13 +448,17 @@ def iter_from_2020_paper(
 
     The assembly contains the plasma, a blanket that follows the plasma, a
     single null divertor, the vacuum vessel, the central solenoid, the
-    poloidal field coils and the toroidal field coils.
+    poloidal field coils (each a winding pack inside a case) and the toroidal
+    field coils.
 
     Args:
         rotation_angle: the angle in degrees of the sector to build, between
             0 (exclusive) and 360.
         number_of_tf_coils: the number of toroidal field coils, equally spaced
             around 360 degrees. Only the coils inside the sector are kept.
+        pf_coil_case_thickness: the thickness (cm) of the case around each
+            poloidal field coil winding pack. The outer size of each coil (with
+            its case) is taken from the paper figure.
         colors: optional dictionary of RGB(A) colors keyed by part name, used
             in place of the default colors.
 
@@ -553,18 +621,13 @@ def iter_from_2020_paper(
         ((798.54, 621.64), (861.75, 681.95)),
         ((345.54, 707.78), (446.68, 803.45)),
     ]
-    pf_coils = [
-        (
-            f"pf_coil_{counter}",
-            poloidal_field_coil(
-                height=upper[1] - lower[1],
-                width=upper[0] - lower[0],
-                center_point=((lower[0] + upper[0]) / 2, (lower[1] + upper[1]) / 2),
-                rotation_angle=rotation_angle,
-            ),
-        )
-        for counter, (lower, upper) in enumerate(pf_coil_corners, 1)
-    ]
+    pf_coils = _pf_coils_with_cases(
+        [((lower[0] + upper[0]) / 2, (lower[1] + upper[1]) / 2) for lower, upper in pf_coil_corners],
+        [upper[0] - lower[0] for lower, upper in pf_coil_corners],
+        [upper[1] - lower[1] for lower, upper in pf_coil_corners],
+        pf_coil_case_thickness,
+        rotation_angle,
+    )
 
     # the central solenoid is made of 6 stacked modules
     cs_inner, cs_outer = 132.74, 202.27
@@ -619,6 +682,7 @@ def iter_from_2020_paper(
 def eu_demo_from_2015_paper(
     rotation_angle: float = 180.0,
     number_of_tf_coils: int = 16,
+    pf_coil_case_thickness: float = 10.0,
     colors: dict | None = None,
 ) -> Assembly:
     """Creates a simplified EU DEMO reactor from a figure in a published paper.
@@ -631,14 +695,17 @@ def eu_demo_from_2015_paper(
     exactly match the reactor.
 
     The assembly contains the plasma, the blanket, a single null divertor,
-    the vacuum vessel, the central solenoid, the poloidal field coils and the
-    toroidal field coil casings.
+    the vacuum vessel, the central solenoid, the poloidal field coils (each a
+    winding pack inside a case) and the toroidal field coil casings.
 
     Args:
         rotation_angle: the angle in degrees of the sector to build, between
             0 (exclusive) and 360.
         number_of_tf_coils: the number of toroidal field coils, equally spaced
             around 360 degrees. Only the coils inside the sector are kept.
+        pf_coil_case_thickness: the thickness (cm) of the case around each
+            poloidal field coil winding pack. The outer size of each coil (with
+            its case) is taken from the paper figure.
         colors: optional dictionary of RGB(A) colors keyed by part name, used
             in place of the default colors.
 
@@ -840,19 +907,14 @@ def eu_demo_from_2015_paper(
     vessel_face = _single_face(_profile_face(vessel_outer_points).cut(_single_face(cavity_face.clean())).clean())
     vessel = _revolve_face(vessel_face, rotation_angle)
 
-    pf_coils = [
-        (
-            f"pf_coil_{counter}",
-            poloidal_field_coil(height=size, width=size, center_point=center_point, rotation_angle=rotation_angle),
-        )
-        for counter, (center_point, size) in enumerate(
-            zip(
-                [(689, -985), (1421, -689), (1580, -252), (1550, 293), (1400, 598), (621, 811)],
-                [204, 141, 102, 95, 79, 121],
-            ),
-            1,
-        )
-    ]
+    pf_coil_sizes = [204, 141, 102, 95, 79, 121]
+    pf_coils = _pf_coils_with_cases(
+        [(689, -985), (1421, -689), (1580, -252), (1550, 293), (1400, 598), (621, 811)],
+        pf_coil_sizes,
+        pf_coil_sizes,
+        pf_coil_case_thickness,
+        rotation_angle,
+    )
 
     central_solenoid_corners = [
         ((263.61, -881.62), (363.05, -609.17)),
@@ -952,7 +1014,7 @@ def eu_demo_from_2015_paper(
     }
     return _build_assembly(
         parts,
-        {"toroidal_field_coil": ["pf_coil_6"]},
+        {"toroidal_field_coil": ["pf_coil_6", "pf_coil_case_6"]},
         colors,
         default_colors,
         {
