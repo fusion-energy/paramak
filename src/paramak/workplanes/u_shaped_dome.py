@@ -22,9 +22,11 @@ def u_shaped_dome(
     Arguments:
         radius: the radius from which the centres of the vessel meets the outer
             circumference.
-        reference_point: the x,z coordinates to build the vessel from. Can be
-            either the 'center' with a value or 'lower' with a
-            value. For example
+        reference_point: the vertical position to build the vessel from,
+            either ("center", z) for the middle of the cylinder or
+            ("lower", z) for the lowest point of the shape (the bottom of
+            the cylinder for an upper dome, the bottom of the dish for a
+            lower dome).
         dish_height: the height of the dish section.
         cylinder_height: the height of the cylindrical section of the vacuum
             vessel.
@@ -58,9 +60,12 @@ def u_shaped_dome(
         lower_chord_center_height = reference_point[1] - 0.5 * cylinder_height
         upper_chord_center_height = reference_point[1] + 0.5 * cylinder_height
     elif reference_point[0] == "lower":
-        center_height = reference_point[1] + thickness + dish_height + 0.5 * cylinder_height
-        lower_chord_center_height = reference_point[1] + thickness + dish_height
-        upper_chord_center_height = reference_point[1] + thickness + dish_height + cylinder_height
+        # the lowest point is the bottom of the dish for a lower dome and the
+        # bottom of the cylinder for an upper dome
+        cylinder_bottom = reference_point[1] + (thickness + dish_height if upper_or_lower == "lower" else 0)
+        center_height = cylinder_bottom + 0.5 * cylinder_height
+        lower_chord_center_height = cylinder_bottom
+        upper_chord_center_height = cylinder_bottom + cylinder_height
     else:
         raise ValueError('reference_point should be a tuple where the first value is either "center" or "lower"')
 
