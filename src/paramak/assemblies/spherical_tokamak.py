@@ -33,6 +33,7 @@ from .poloidal import (
     SegmentBuild,
     check_not_empty,
     get_poloidal_segment_angles,
+    cut_with_shapes,
     intersect_with_each_part,
     resolve_vertical_build,
     validate_segment_build,
@@ -646,7 +647,7 @@ def spherical_tokamak(
                 reactor_compound = reactor_compound.union(entry)
 
         # adds the extra intersect shapes to the assembly
-        for entry, name in zip(extra_intersect_shapes, intersect_names):
+        for index, (entry, name) in enumerate(zip(extra_intersect_shapes, intersect_names)):
             if not segmented:
                 reactor_entry_intersection = entry.intersect(reactor_compound)
             else:
@@ -654,6 +655,11 @@ def spherical_tokamak(
                 # makes fusing all the parts unreliable, so the shape is intersected
                 # with each part and the pieces are kept together in a compound
                 reactor_entry_intersection = intersect_with_each_part(entry, inner_radial_build + blanket_layers)
+            # the cut shapes are parts of the assembly and the earlier intersect shapes have
+            # already taken their share of the reactor, so both are removed to avoid overlaps
+            reactor_entry_intersection = cut_with_shapes(
+                reactor_entry_intersection, [*extra_cut_shapes, *extra_intersect_shapes[:index]]
+            )
             my_assembly.add(reactor_entry_intersection, name=name, color=cq.Color(*resolve_assembly_color(name, None, colors)))
 
     # cut the core layers with any extra shapes (a no-op when there are none)
