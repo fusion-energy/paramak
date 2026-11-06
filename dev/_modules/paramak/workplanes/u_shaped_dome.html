@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.workplanes.u_shaped_dome &#8212; Paramak 0.10.1.dev4+g91cb223ec documentation</title>
+    <title>paramak.workplanes.u_shaped_dome &#8212; Paramak 0.10.1.dev8+g420086413 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=58172660"></script>
+    <script src="../../../_static/documentation_options.js?v=bffb9d30"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev4+g91cb223ec" />
+  <meta name="docsearch:version" content="0.10.1.dev8+g420086413" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -556,6 +556,7 @@ function render(data, parent_element, ratio){
   <h1>Source code for paramak.workplanes.u_shaped_dome</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_positive</span><span class="p">,</span> <span class="n">validate_rotation_angle</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..workplanes.center_column_shield_cylinder</span><span class="w"> </span><span class="kn">import</span> <span class="n">center_column_shield_cylinder</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..workplanes.constant_thickness_dome</span><span class="w"> </span><span class="kn">import</span> <span class="n">constant_thickness_dome</span>
 
@@ -572,6 +573,7 @@ function render(data, parent_element, ratio){
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"u_shaped_dome"</span><span class="p">,</span>
     <span class="n">plane</span><span class="o">=</span><span class="s2">"XZ"</span><span class="p">,</span>
     <span class="n">upper_or_lower</span><span class="o">=</span><span class="s2">"upper"</span><span class="p">,</span>
+    <span class="n">rotation_start_angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">"""A cylindrical u shaped dome with constant thickness.</span>
 
@@ -585,22 +587,16 @@ function render(data, parent_element, ratio){
 <span class="sd">        cylinder_height: the height of the cylindrical section of the vacuum</span>
 <span class="sd">            vessel.</span>
 <span class="sd">        thickness: the radial thickness of the vessel in cm.</span>
+<span class="sd">        rotation_start_angle: the angle in degrees the revolution starts from,</span>
+<span class="sd">            measured around the revolve axis from the workplane. The shape covers</span>
+<span class="sd">            rotation_start_angle to rotation_start_angle + rotation_angle. Must be</span>
+<span class="sd">            between -360 and 360. Defaults to 0.</span>
 <span class="sd">    """</span>
-    <span class="k">if</span> <span class="n">cylinder_height</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"cylinder_height must be positive, got </span><span class="si">{</span><span class="n">cylinder_height</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"radius must be a number. Not </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">radius</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="s2">"radius must be a positive number above 0. "</span> <span class="sa">f</span><span class="s2">"Not </span><span class="si">{</span><span class="n">radius</span><span class="si">}</span><span class="s2">"</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">thickness</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"thickness must be a number. Not </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">thickness</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">thickness</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"thickness must be a positive number above 0. Not </span><span class="si">{</span><span class="n">thickness</span><span class="si">}</span><span class="s2">"</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">dish_height</span><span class="p">,</span> <span class="s2">"dish_height"</span><span class="p">)</span>
+    <span class="n">validate_rotation_angle</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">cylinder_height</span><span class="p">,</span> <span class="s2">"cylinder_height"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="s2">"radius"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">thickness</span><span class="p">,</span> <span class="s2">"thickness"</span><span class="p">)</span>
 
         <span class="c1">#</span>
         <span class="c1">#          -   -</span>
@@ -632,6 +628,7 @@ function render(data, parent_element, ratio){
         <span class="n">thickness</span><span class="o">=</span><span class="n">thickness</span><span class="p">,</span>
         <span class="n">reference_point</span><span class="o">=</span><span class="p">(</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">center_height</span><span class="p">),</span>
         <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+        <span class="n">rotation_start_angle</span><span class="o">=</span><span class="n">rotation_start_angle</span><span class="p">,</span>
         <span class="n">plane</span><span class="o">=</span><span class="n">plane</span><span class="p">,</span>
     <span class="p">)</span>
 
@@ -643,6 +640,7 @@ function render(data, parent_element, ratio){
             <span class="n">chord_height</span><span class="o">=</span><span class="n">dish_height</span><span class="p">,</span>
             <span class="n">upper_or_lower</span><span class="o">=</span><span class="s2">"upper"</span><span class="p">,</span>
             <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+            <span class="n">rotation_start_angle</span><span class="o">=</span><span class="n">rotation_start_angle</span><span class="p">,</span>
             <span class="n">plane</span><span class="o">=</span><span class="n">plane</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -654,6 +652,7 @@ function render(data, parent_element, ratio){
             <span class="n">chord_height</span><span class="o">=</span><span class="n">dish_height</span><span class="p">,</span>
             <span class="n">upper_or_lower</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">,</span>
             <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+            <span class="n">rotation_start_angle</span><span class="o">=</span><span class="n">rotation_start_angle</span><span class="p">,</span>
             <span class="n">plane</span><span class="o">=</span><span class="n">plane</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>

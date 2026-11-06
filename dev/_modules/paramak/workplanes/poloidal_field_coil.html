@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.workplanes.poloidal_field_coil &#8212; Paramak 0.10.1.dev4+g91cb223ec documentation</title>
+    <title>paramak.workplanes.poloidal_field_coil &#8212; Paramak 0.10.1.dev8+g420086413 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=58172660"></script>
+    <script src="../../../_static/documentation_options.js?v=bffb9d30"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev4+g91cb223ec" />
+  <meta name="docsearch:version" content="0.10.1.dev8+g420086413" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -556,7 +556,12 @@ function render(data, parent_element, ratio){
   <h1>Source code for paramak.workplanes.poloidal_field_coil</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_wire_workplane_from_points</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">create_wire_workplane_from_points</span><span class="p">,</span>
+    <span class="n">rotate_to_rotation_start_angle</span><span class="p">,</span>
+    <span class="n">validate_positive</span><span class="p">,</span>
+    <span class="n">validate_rotation_angle</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="poloidal_field_coil">
@@ -575,6 +580,7 @@ function render(data, parent_element, ratio){
     <span class="n">plane</span><span class="o">=</span><span class="s2">"XZ"</span><span class="p">,</span>
     <span class="n">origin</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
     <span class="n">obj</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">rotation_start_angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">"""A rectangular poloidal field coil.</span>
 
@@ -582,11 +588,14 @@ function render(data, parent_element, ratio){
 <span class="sd">        height: the vertical (z axis) height of the coil.</span>
 <span class="sd">        width: the horizontal (x axis) width of the coil.</span>
 <span class="sd">        center_point: the center of the coil (x,z) values.</span>
+<span class="sd">        rotation_start_angle: the angle in degrees the revolution starts from,</span>
+<span class="sd">            measured around the revolve axis from the workplane. The shape covers</span>
+<span class="sd">            rotation_start_angle to rotation_start_angle + rotation_angle. Must be</span>
+<span class="sd">            between -360 and 360. Defaults to 0.</span>
 <span class="sd">    """</span>
-    <span class="k">if</span> <span class="n">height</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"height must be positive, got </span><span class="si">{</span><span class="n">height</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">width</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"width must be positive, got </span><span class="si">{</span><span class="n">width</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+    <span class="n">validate_rotation_angle</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="s2">"height"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="s2">"width"</span><span class="p">)</span>
 
     <span class="n">points</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="n">center_point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">width</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">center_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">height</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="s2">"straight"</span><span class="p">),</span>  <span class="c1"># upper right</span>
@@ -600,6 +609,7 @@ function render(data, parent_element, ratio){
     <span class="n">wire</span> <span class="o">=</span> <span class="n">create_wire_workplane_from_points</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="n">points</span><span class="p">,</span> <span class="n">plane</span><span class="o">=</span><span class="n">plane</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">)</span>
 
     <span class="n">solid</span> <span class="o">=</span> <span class="n">wire</span><span class="o">.</span><span class="n">revolve</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
+    <span class="n">solid</span> <span class="o">=</span> <span class="n">rotate_to_rotation_start_angle</span><span class="p">(</span><span class="n">solid</span><span class="p">,</span> <span class="n">wire</span><span class="p">,</span> <span class="n">rotation_start_angle</span><span class="p">)</span>
     <span class="n">solid</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
     <span class="n">solid</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span>
     <span class="k">return</span> <span class="n">solid</span></div>

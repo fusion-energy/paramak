@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.assemblies.tokamak &#8212; Paramak 0.10.1.dev4+g91cb223ec documentation</title>
+    <title>paramak.assemblies.tokamak &#8212; Paramak 0.10.1.dev8+g420086413 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=58172660"></script>
+    <script src="../../../_static/documentation_options.js?v=bffb9d30"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev4+g91cb223ec" />
+  <meta name="docsearch:version" content="0.10.1.dev8+g420086413" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -570,6 +570,10 @@ function render(data, parent_element, ratio){
     <span class="n">get_layer_name</span><span class="p">,</span>
     <span class="n">get_plasma_index</span><span class="p">,</span>
     <span class="n">resolve_assembly_color</span><span class="p">,</span>
+    <span class="n">rotate_about_z</span><span class="p">,</span>
+    <span class="n">validate_plasma_radial_build</span><span class="p">,</span>
+    <span class="n">validate_rotation_angle</span><span class="p">,</span>
+    <span class="n">validate_rotation_start_angle</span><span class="p">,</span>
     <span class="n">validate_unique_assembly_names</span><span class="p">,</span>
     <span class="n">validate_vertical_build_names</span><span class="p">,</span>
 <span class="p">)</span>
@@ -962,6 +966,7 @@ function render(data, parent_element, ratio){
     <span class="n">colors</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">poloidal_build</span><span class="p">:</span> <span class="n">SegmentBuild</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">toroidal_build</span><span class="p">:</span> <span class="n">SegmentBuild</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">rotation_start_angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Assembly</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Creates a tokamak fusion reactor from a radial build and plasma parameters.</span>
@@ -972,6 +977,12 @@ function render(data, parent_element, ratio){
 <span class="sd">        elongation: The elongation of the plasma. Defaults to 2.0.</span>
 <span class="sd">        triangularity: The triangularity of the plasma. Defaults to 0.55.</span>
 <span class="sd">        rotation_angle: The rotation angle of the plasma. Defaults to 180.0.</span>
+<span class="sd">        rotation_start_angle: The angle in degrees the reactor starts from, measured</span>
+<span class="sd">            around the Z axis from the XZ plane in the direction the reactor is</span>
+<span class="sd">            revolved, so the reactor covers rotation_start_angle to</span>
+<span class="sd">            rotation_start_angle + rotation_angle. extra_cut_shapes and</span>
+<span class="sd">            extra_intersect_shapes are used where they are and are not rotated.</span>
+<span class="sd">            Must be between -360 and 360. Defaults to 0.</span>
 <span class="sd">        extra_cut_shapes: A list of extra shapes to cut the reactor with. Defaults to [].</span>
 <span class="sd">        extra_intersect_shapes: A list of extra shapes to intersect the reactor with. Defaults to [].</span>
 <span class="sd">        colors (dict, optional): the colors to assign to the assembly parts. Defaults to {}.</span>
@@ -1006,9 +1017,10 @@ function render(data, parent_element, ratio){
 <span class="sd">            arc_length, name) for a sector (the name is optional) or</span>
 <span class="sd">            (paramak.LayerType.GAP, width) for a gap. Arc lengths are measured</span>
 <span class="sd">            around the plasma facing surface at the outboard midplane,</span>
-<span class="sd">            starting at the XZ plane and going in the direction the reactor is</span>
-<span class="sd">            revolved, and each entry must sum to the arc length returned by</span>
-<span class="sd">            paramak.toroidal_arc_length (within 0.1 percent). Gaps are slots</span>
+<span class="sd">            starting at rotation_start_angle (the XZ plane by default) and</span>
+<span class="sd">            going in the direction the reactor is revolved, and each entry</span>
+<span class="sd">            must sum to the arc length returned by paramak.toroidal_arc_length</span>
+<span class="sd">            (within 0.1 percent). Gaps are slots</span>
 <span class="sd">            with parallel sides, so a gap has the same width at every radius.</span>
 <span class="sd">            Sectors are named "&lt;layer name&gt;_&lt;sector name&gt;", or</span>
 <span class="sd">            "&lt;layer name&gt;_&lt;poloidal segment name&gt;_&lt;sector name&gt;" when the</span>
@@ -1025,6 +1037,7 @@ function render(data, parent_element, ratio){
     <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">colors</span> <span class="o">=</span> <span class="p">{}</span>
 
+    <span class="n">validate_plasma_radial_build</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="s2">"radial_build"</span><span class="p">)</span>
     <span class="n">vertical_build</span> <span class="o">=</span> <span class="n">vertical_build_from_radial_build</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">elongation</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">tokamak</span><span class="p">(</span>
@@ -1032,6 +1045,7 @@ function render(data, parent_element, ratio){
         <span class="n">vertical_build</span><span class="o">=</span><span class="n">vertical_build</span><span class="p">,</span>
         <span class="n">triangularity</span><span class="o">=</span><span class="n">triangularity</span><span class="p">,</span>
         <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+        <span class="n">rotation_start_angle</span><span class="o">=</span><span class="n">rotation_start_angle</span><span class="p">,</span>
         <span class="n">extra_cut_shapes</span><span class="o">=</span><span class="n">extra_cut_shapes</span><span class="p">,</span>
         <span class="n">extra_intersect_shapes</span><span class="o">=</span><span class="n">extra_intersect_shapes</span><span class="p">,</span>
         <span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span>
@@ -1053,6 +1067,7 @@ function render(data, parent_element, ratio){
     <span class="n">colors</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">poloidal_build</span><span class="p">:</span> <span class="n">SegmentBuild</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">toroidal_build</span><span class="p">:</span> <span class="n">SegmentBuild</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">rotation_start_angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Assembly</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Creates a tokamak fusion reactor from a radial and vertical build.</span>
@@ -1064,6 +1079,12 @@ function render(data, parent_element, ratio){
 <span class="sd">            reactor. Each tuple should contain a LayerType, a float and the string is optional.</span>
 <span class="sd">        triangularity: The triangularity of the plasma. Defaults to 0.55.</span>
 <span class="sd">        rotation_angle: The rotation angle of the plasma. Defaults to 180.0.</span>
+<span class="sd">        rotation_start_angle: The angle in degrees the reactor starts from, measured</span>
+<span class="sd">            around the Z axis from the XZ plane in the direction the reactor is</span>
+<span class="sd">            revolved, so the reactor covers rotation_start_angle to</span>
+<span class="sd">            rotation_start_angle + rotation_angle. extra_cut_shapes and</span>
+<span class="sd">            extra_intersect_shapes are used where they are and are not rotated.</span>
+<span class="sd">            Must be between -360 and 360. Defaults to 0.</span>
 <span class="sd">        extra_cut_shapes: A list of extra shapes to cut the reactor with. Defaults to [].</span>
 <span class="sd">        extra_intersect_shapes: A list of extra shapes to intersect the reactor with. Defaults to [].</span>
 <span class="sd">        colors (dict, optional): the colors to assign to the assembly parts. Defaults to {}.</span>
@@ -1098,9 +1119,10 @@ function render(data, parent_element, ratio){
 <span class="sd">            arc_length, name) for a sector (the name is optional) or</span>
 <span class="sd">            (paramak.LayerType.GAP, width) for a gap. Arc lengths are measured</span>
 <span class="sd">            around the plasma facing surface at the outboard midplane,</span>
-<span class="sd">            starting at the XZ plane and going in the direction the reactor is</span>
-<span class="sd">            revolved, and each entry must sum to the arc length returned by</span>
-<span class="sd">            paramak.toroidal_arc_length (within 0.1 percent). Gaps are slots</span>
+<span class="sd">            starting at rotation_start_angle (the XZ plane by default) and</span>
+<span class="sd">            going in the direction the reactor is revolved, and each entry</span>
+<span class="sd">            must sum to the arc length returned by paramak.toroidal_arc_length</span>
+<span class="sd">            (within 0.1 percent). Gaps are slots</span>
 <span class="sd">            with parallel sides, so a gap has the same width at every radius.</span>
 <span class="sd">            Sectors are named "&lt;layer name&gt;_&lt;sector name&gt;", or</span>
 <span class="sd">            "&lt;layer name&gt;_&lt;poloidal segment name&gt;_&lt;sector name&gt;" when the</span>
@@ -1117,7 +1139,11 @@ function render(data, parent_element, ratio){
     <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">colors</span> <span class="o">=</span> <span class="p">{}</span>
 
+    <span class="n">validate_plasma_radial_build</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="s2">"radial_build"</span><span class="p">)</span>
+    <span class="n">validate_plasma_radial_build</span><span class="p">(</span><span class="n">vertical_build</span><span class="p">,</span> <span class="s2">"vertical_build"</span><span class="p">)</span>
     <span class="n">validate_vertical_build_names</span><span class="p">(</span><span class="n">vertical_build</span><span class="p">,</span> <span class="s2">"tokamak()"</span><span class="p">)</span>
+    <span class="n">validate_rotation_start_angle</span><span class="p">(</span><span class="n">rotation_start_angle</span><span class="p">)</span>
+    <span class="n">validate_rotation_angle</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
 
     <span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">elongation</span> <span class="o">=</span> <span class="n">get_plasma_geometry</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">)</span>
     <span class="n">blanket_rear_wall_end_height</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">vertical_build</span><span class="p">])</span>
@@ -1160,6 +1186,12 @@ function render(data, parent_element, ratio){
         <span class="n">toroidal_sectors</span><span class="o">=</span><span class="n">toroidal_sectors</span><span class="p">,</span>
         <span class="n">toroidal_region_size</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">radial_build</span><span class="p">),</span> <span class="n">blanket_rear_wall_end_height</span><span class="p">),</span>
     <span class="p">)</span>
+
+    <span class="c1"># the reactor is built from 0 degrees then rotated to rotation_start_angle,</span>
+    <span class="c1"># before the extra shapes are applied as they are given in their final position</span>
+    <span class="n">plasma</span> <span class="o">=</span> <span class="n">rotate_about_z</span><span class="p">(</span><span class="n">plasma</span><span class="p">,</span> <span class="n">rotation_start_angle</span><span class="p">)</span>
+    <span class="n">inner_radial_build</span> <span class="o">=</span> <span class="p">[</span><span class="n">rotate_about_z</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">rotation_start_angle</span><span class="p">)</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">inner_radial_build</span><span class="p">]</span>
+    <span class="n">blanket_layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">rotate_about_z</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">rotation_start_angle</span><span class="p">)</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">blanket_layers</span><span class="p">]</span>
 
     <span class="n">cut_names</span><span class="p">,</span> <span class="n">intersect_names</span><span class="p">,</span> <span class="n">layer_names</span> <span class="o">=</span> <span class="n">get_assembly_names</span><span class="p">(</span>
         <span class="n">extra_cut_shapes</span><span class="p">,</span> <span class="n">extra_intersect_shapes</span><span class="p">,</span> <span class="n">inner_radial_build</span><span class="p">,</span> <span class="n">blanket_layers</span>

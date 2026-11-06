@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.workplanes.revolved_shape &#8212; Paramak 0.10.1.dev4+g91cb223ec documentation</title>
+    <title>paramak.workplanes.revolved_shape &#8212; Paramak 0.10.1.dev8+g420086413 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=58172660"></script>
+    <script src="../../../_static/documentation_options.js?v=bffb9d30"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev4+g91cb223ec" />
+  <meta name="docsearch:version" content="0.10.1.dev8+g420086413" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -560,7 +560,11 @@ function render(data, parent_element, ratio){
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">cadquery</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cq</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_wire_workplane_from_points</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">create_wire_workplane_from_points</span><span class="p">,</span>
+    <span class="n">rotate_to_rotation_start_angle</span><span class="p">,</span>
+    <span class="n">validate_rotation_angle</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="revolved_shape">
@@ -577,6 +581,7 @@ function render(data, parent_element, ratio){
     <span class="n">plane</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"XZ"</span><span class="p">,</span>
     <span class="n">origin</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
     <span class="n">obj</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">rotation_start_angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Creates a solid by revolving an arbitrary closed 2D profile around the axis.</span>
 
@@ -598,6 +603,10 @@ function render(data, parent_element, ratio){
 <span class="sd">            closed automatically.</span>
 <span class="sd">        rotation_angle: the angle in degrees to revolve the profile around the</span>
 <span class="sd">            axis. Defaults to 360.</span>
+<span class="sd">        rotation_start_angle: the angle in degrees the revolution starts from,</span>
+<span class="sd">            measured around the revolve axis from the workplane. The shape covers</span>
+<span class="sd">            rotation_start_angle to rotation_start_angle + rotation_angle. Must be</span>
+<span class="sd">            between -360 and 360. Defaults to 0.</span>
 <span class="sd">        name: the name assigned to the resulting solid.</span>
 <span class="sd">        color: the RGB(A) color assigned to the resulting solid.</span>
 <span class="sd">        plane: the plane to build the profile on, e.g. "XZ".</span>
@@ -607,6 +616,7 @@ function render(data, parent_element, ratio){
 <span class="sd">    Returns:</span>
 <span class="sd">        A CadQuery Workplane containing the revolved solid.</span>
 <span class="sd">    """</span>
+    <span class="n">validate_rotation_angle</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"revolved_shape requires at least 3 points to form a profile, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span><span class="si">}</span><span class="s2">."</span>
@@ -618,6 +628,7 @@ function render(data, parent_element, ratio){
     <span class="n">wire</span> <span class="o">=</span> <span class="n">create_wire_workplane_from_points</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="n">closed_points</span><span class="p">,</span> <span class="n">plane</span><span class="o">=</span><span class="n">plane</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">)</span>
 
     <span class="n">solid</span> <span class="o">=</span> <span class="n">wire</span><span class="o">.</span><span class="n">revolve</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
+    <span class="n">solid</span> <span class="o">=</span> <span class="n">rotate_to_rotation_start_angle</span><span class="p">(</span><span class="n">solid</span><span class="p">,</span> <span class="n">wire</span><span class="p">,</span> <span class="n">rotation_start_angle</span><span class="p">)</span>
     <span class="n">solid</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
     <span class="n">solid</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span>
     <span class="k">return</span> <span class="n">solid</span></div>

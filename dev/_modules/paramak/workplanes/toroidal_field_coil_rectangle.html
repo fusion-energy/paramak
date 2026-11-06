@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.workplanes.toroidal_field_coil_rectangle &#8212; Paramak 0.10.1.dev4+g91cb223ec documentation</title>
+    <title>paramak.workplanes.toroidal_field_coil_rectangle &#8212; Paramak 0.10.1.dev8+g420086413 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=58172660"></script>
+    <script src="../../../_static/documentation_options.js?v=bffb9d30"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev4+g91cb223ec" />
+  <meta name="docsearch:version" content="0.10.1.dev8+g420086413" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -556,9 +556,16 @@ function render(data, parent_element, ratio){
   <h1>Source code for paramak.workplanes.toroidal_field_coil_rectangle</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_wire_workplane_from_points</span><span class="p">,</span> <span class="n">rotate_solid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">create_wire_workplane_from_points</span><span class="p">,</span>
+    <span class="n">rotate_solid</span><span class="p">,</span>
+    <span class="n">validate_positive</span><span class="p">,</span>
+    <span class="n">validate_rotation_angle</span><span class="p">,</span>
+    <span class="n">validate_rotation_start_angle</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..workplanes.cutting_wedge</span><span class="w"> </span><span class="kn">import</span> <span class="n">cutting_wedge</span>
 
 
@@ -578,6 +585,7 @@ function render(data, parent_element, ratio){
     <span class="n">plane</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"XZ"</span><span class="p">,</span>
     <span class="n">origin</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
     <span class="n">obj</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">rotation_start_angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Creates a rectangular shaped toroidal field coil.</span>
 
@@ -589,17 +597,19 @@ function render(data, parent_element, ratio){
 <span class="sd">        thickness: the thickness of the toroidal field coil.</span>
 <span class="sd">        distance: the extrusion distance.</span>
 <span class="sd">        rotation_angle (float): angle of rotation in degrees, this cuts the resulting shape with a wedge. Useful for sector models.</span>
+<span class="sd">        rotation_start_angle (float): the angle in degrees the wedge that cuts the shape starts</span>
+<span class="sd">            from, measured around the Z axis from the XZ plane, so the sector kept covers</span>
+<span class="sd">            rotation_start_angle to rotation_start_angle + rotation_angle. The coils are</span>
+<span class="sd">            still placed at azimuthal_placement_angles. Must be between -360 and 360.</span>
+<span class="sd">            Defaults to 0.</span>
 <span class="sd">        with_inner_leg: include the inner tf leg. Defaults to True.</span>
 <span class="sd">        azimuth_start_angle: The azimuth angle to for the first TF coil which</span>
 <span class="sd">            offsets the placement of coils around the azimuthal angle</span>
 <span class="sd">    """</span>
-    <span class="k">if</span> <span class="n">thickness</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"thickness must be positive, got </span><span class="si">{</span><span class="n">thickness</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"distance must be positive, got </span><span class="si">{</span><span class="n">distance</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
-   <span class="c1"># TODO consider if we should limit the rotation angle. Is there a use case for negative rotation angle</span>
-   <span class="c1"># if not (0 &lt; rotation_angle &lt;= 360):</span>
-   <span class="c1">#    raise ValueError(f"rotation_angle must be in the range (0, 360], got {rotation_angle}.")</span>
+    <span class="n">validate_rotation_angle</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">thickness</span><span class="p">,</span> <span class="s2">"thickness"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">distance</span><span class="p">,</span> <span class="s2">"distance"</span><span class="p">)</span>
+    <span class="n">validate_rotation_start_angle</span><span class="p">(</span><span class="n">rotation_start_angle</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">azimuthal_placement_angles</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">azimuthal_placement_angles</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -672,9 +682,17 @@ function render(data, parent_element, ratio){
 
     <span class="k">if</span> <span class="n">rotation_angle</span> <span class="o">&lt;</span> <span class="mf">360.0</span><span class="p">:</span>
         <span class="n">bb</span> <span class="o">=</span> <span class="n">solid</span><span class="o">.</span><span class="n">val</span><span class="p">()</span><span class="o">.</span><span class="n">BoundingBox</span><span class="p">()</span>
-        <span class="n">radius</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">xmax</span><span class="p">,</span> <span class="n">bb</span><span class="o">.</span><span class="n">ymax</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.1</span>  <span class="c1"># 10% larger than the bounding box to ensure clean cut</span>
-        <span class="n">height</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">zmax</span><span class="p">,</span> <span class="n">bb</span><span class="o">.</span><span class="n">zmin</span><span class="p">)</span> <span class="o">*</span> <span class="mf">2.1</span>  <span class="c1"># 10% larger than the bounding box to ensure clean cut</span>
-        <span class="n">cutting_shape</span> <span class="o">=</span> <span class="n">cutting_wedge</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span> <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">)</span>
+        <span class="c1"># the coils can be at any azimuthal angle, including negative x and y, so the wedge</span>
+        <span class="c1"># radius is the largest distance from the Z axis the bounding box allows. The wedge</span>
+        <span class="c1"># is made larger than the coils to ensure a clean cut.</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">xmin</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">xmax</span><span class="p">)),</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">ymin</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">ymax</span><span class="p">)))</span> <span class="o">*</span> <span class="mf">1.1</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">zmin</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">zmax</span><span class="p">))</span> <span class="o">*</span> <span class="mf">2.1</span>
+        <span class="n">cutting_shape</span> <span class="o">=</span> <span class="n">cutting_wedge</span><span class="p">(</span>
+            <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+            <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
+            <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
+            <span class="n">rotation_start_angle</span><span class="o">=</span><span class="n">rotation_start_angle</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">solid</span> <span class="o">=</span> <span class="n">solid</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">cutting_shape</span><span class="p">)</span>
 
     <span class="n">solid</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
