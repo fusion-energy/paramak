@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.assemblies.spherical_tokamak &#8212; Paramak 0.10.1.dev7+gc07cdfbc5 documentation</title>
+    <title>paramak.assemblies.spherical_tokamak &#8212; Paramak 0.10.1.dev9+ga1db492d9 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=6b2ebb92"></script>
+    <script src="../../../_static/documentation_options.js?v=c0ffd75c"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev7+gc07cdfbc5" />
+  <meta name="docsearch:version" content="0.10.1.dev9+ga1db492d9" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -574,6 +574,9 @@ function render(data, parent_element, ratio){
     <span class="n">rotate_about_z</span><span class="p">,</span>
     <span class="n">sum_before_after_plasma</span><span class="p">,</span>
     <span class="n">sum_up_to_gap_before_plasma</span><span class="p">,</span>
+    <span class="n">validate_build_lengths</span><span class="p">,</span>
+    <span class="n">validate_plasma_radial_build</span><span class="p">,</span>
+    <span class="n">validate_rotation_angle</span><span class="p">,</span>
     <span class="n">validate_rotation_start_angle</span><span class="p">,</span>
     <span class="n">validate_unique_assembly_names</span><span class="p">,</span>
     <span class="n">validate_vertical_build_names</span><span class="p">,</span>
@@ -612,8 +615,9 @@ function render(data, parent_element, ratio){
     <span class="n">cumulative_thickness_lvb</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">radial_build</span><span class="p">[</span><span class="n">plasma_index_radial</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]):</span>
-        <span class="n">upper_thickness</span> <span class="o">=</span> <span class="n">vertical_build</span><span class="p">[</span><span class="n">plasma_index_vertical</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">lower_thickness</span> <span class="o">=</span> <span class="n">vertical_build</span><span class="p">[</span><span class="n">plasma_index_vertical</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># the vertical_build is ordered from the top of the reactor to the bottom</span>
+        <span class="n">upper_thickness</span> <span class="o">=</span> <span class="n">vertical_build</span><span class="p">[</span><span class="n">plasma_index_vertical</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">lower_thickness</span> <span class="o">=</span> <span class="n">vertical_build</span><span class="p">[</span><span class="n">plasma_index_vertical</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">radial_thickness</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">LayerType</span><span class="o">.</span><span class="n">GAP</span><span class="p">:</span>
@@ -901,7 +905,8 @@ function render(data, parent_element, ratio){
     <span class="n">total_sum</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">layer_count</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="n">before</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sum_before_after_plasma</span><span class="p">(</span><span class="n">vertical_build</span><span class="p">)</span>
+    <span class="c1"># the entries after the plasma are below it, so the column starts at -below</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">below</span> <span class="o">=</span> <span class="n">sum_before_after_plasma</span><span class="p">(</span><span class="n">vertical_build</span><span class="p">)</span>
     <span class="n">center_column_shield_height</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">vertical_build</span><span class="p">])</span>
 
     <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">radial_build</span><span class="p">):</span>
@@ -922,7 +927,7 @@ function render(data, parent_element, ratio){
             <span class="n">name</span><span class="o">=</span><span class="n">layer_name</span><span class="p">,</span>
             <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
             <span class="n">height</span><span class="o">=</span><span class="n">center_column_shield_height</span><span class="p">,</span>
-            <span class="n">reference_point</span><span class="o">=</span><span class="p">(</span><span class="s2">"lower"</span><span class="p">,</span> <span class="o">-</span><span class="n">before</span><span class="p">),</span>
+            <span class="n">reference_point</span><span class="o">=</span><span class="p">(</span><span class="s2">"lower"</span><span class="p">,</span> <span class="o">-</span><span class="n">below</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="n">cylinders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cylinder</span><span class="p">)</span>
         <span class="n">total_sum</span> <span class="o">+=</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -1012,6 +1017,7 @@ function render(data, parent_element, ratio){
     <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">colors</span> <span class="o">=</span> <span class="p">{}</span>
 
+    <span class="n">validate_plasma_radial_build</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="s2">"radial_build"</span><span class="p">)</span>
     <span class="n">vertical_build</span> <span class="o">=</span> <span class="n">spherical_vertical_build_from_radial_build</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">elongation</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">spherical_tokamak</span><span class="p">(</span>
@@ -1050,6 +1056,10 @@ function render(data, parent_element, ratio){
 <span class="sd">            reactor. Each tuple should contain a LayerType, a float and the string is optional.</span>
 <span class="sd">        vertical_build: sequence of tuples containing the vertical build of the</span>
 <span class="sd">            reactor. Each tuple should contain a LayerType, a float and the string is optional.</span>
+<span class="sd">            Entries are ordered from the top of the reactor to the bottom, so</span>
+<span class="sd">            the entries before the plasma are above it. There must be at</span>
+<span class="sd">            least one entry above and below the plasma for each radial_build</span>
+<span class="sd">            entry after the plasma.</span>
 <span class="sd">        triangularity: The triangularity of the plasma. Defaults to 0.55.</span>
 <span class="sd">        rotation_angle: The rotation angle of the reactor in degrees. Defaults to 180.0.</span>
 <span class="sd">        rotation_start_angle: The angle in degrees the reactor starts from, measured</span>
@@ -1113,8 +1123,12 @@ function render(data, parent_element, ratio){
     <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">colors</span> <span class="o">=</span> <span class="p">{}</span>
 
+    <span class="n">validate_plasma_radial_build</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="s2">"radial_build"</span><span class="p">)</span>
+    <span class="n">validate_plasma_radial_build</span><span class="p">(</span><span class="n">vertical_build</span><span class="p">,</span> <span class="s2">"vertical_build"</span><span class="p">)</span>
+    <span class="n">validate_build_lengths</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">,</span> <span class="s2">"spherical_tokamak()"</span><span class="p">,</span> <span class="n">inboard_layers</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">validate_vertical_build_names</span><span class="p">(</span><span class="n">vertical_build</span><span class="p">,</span> <span class="s2">"spherical_tokamak()"</span><span class="p">)</span>
     <span class="n">validate_rotation_start_angle</span><span class="p">(</span><span class="n">rotation_start_angle</span><span class="p">)</span>
+    <span class="n">validate_rotation_angle</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
 
     <span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">elongation</span> <span class="o">=</span> <span class="n">get_plasma_geometry</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">)</span>
     <span class="n">blanket_rear_wall_end_height</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">vertical_build</span><span class="p">])</span>

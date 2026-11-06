@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.workplanes.blanket_from_plasma &#8212; Paramak 0.10.1.dev7+gc07cdfbc5 documentation</title>
+    <title>paramak.workplanes.blanket_from_plasma &#8212; Paramak 0.10.1.dev9+ga1db492d9 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=6b2ebb92"></script>
+    <script src="../../../_static/documentation_options.js?v=c0ffd75c"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev7+gc07cdfbc5" />
+  <meta name="docsearch:version" content="0.10.1.dev9+ga1db492d9" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -566,7 +566,13 @@ function render(data, parent_element, ratio){
 <span class="kn">from</span><span class="w"> </span><span class="nn">OCP.StdFail</span><span class="w"> </span><span class="kn">import</span> <span class="n">StdFail_NotDone</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">interp1d</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_wire_workplane_from_points</span><span class="p">,</span> <span class="n">rotate_to_rotation_start_angle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">create_wire_workplane_from_points</span><span class="p">,</span>
+    <span class="n">rotate_to_rotation_start_angle</span><span class="p">,</span>
+    <span class="n">validate_positive</span><span class="p">,</span>
+    <span class="n">validate_positive_integer</span><span class="p">,</span>
+    <span class="n">validate_rotation_angle</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">make_callable</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="n">start_angle</span><span class="p">,</span> <span class="n">stop_angle</span><span class="p">):</span>
@@ -909,12 +915,11 @@ function render(data, parent_element, ratio){
 <span class="sd">            rotation_start_angle to rotation_start_angle + rotation_angle. Must be</span>
 <span class="sd">            between -360 and 360. Defaults to 0.</span>
 <span class="sd">    """</span>
-    <span class="k">if</span> <span class="n">major_radius</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"major_radius must be positive, got </span><span class="si">{</span><span class="n">major_radius</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">minor_radius</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"minor_radius must be positive, got </span><span class="si">{</span><span class="n">minor_radius</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">elongation</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"elongation must be positive, got </span><span class="si">{</span><span class="n">elongation</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+    <span class="n">validate_positive_integer</span><span class="p">(</span><span class="n">num_points</span><span class="p">,</span> <span class="s2">"num_points"</span><span class="p">)</span>
+    <span class="n">validate_rotation_angle</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">major_radius</span><span class="p">,</span> <span class="s2">"major_radius"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">minor_radius</span><span class="p">,</span> <span class="s2">"minor_radius"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">elongation</span><span class="p">,</span> <span class="s2">"elongation"</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">&lt;=</span> <span class="n">triangularity</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"triangularity must be between -1 and 1, got </span><span class="si">{</span><span class="n">triangularity</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
 

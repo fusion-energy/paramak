@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Python API reference &#8212; Paramak 0.10.1.dev7+gc07cdfbc5 documentation</title>
+    <title>Python API reference &#8212; Paramak 0.10.1.dev9+ga1db492d9 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="_static/documentation_options.js?v=6b2ebb92"></script>
+    <script src="_static/documentation_options.js?v=c0ffd75c"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/vtk.js?v=415cc427"></script>
@@ -223,7 +223,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev7+gc07cdfbc5" />
+  <meta name="docsearch:version" content="0.10.1.dev9+ga1db492d9" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -578,7 +578,11 @@ function render(data, parent_element, ratio){
 <li><p><strong>radial_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span>) – sequence of tuples containing the radial build of the
 reactor. Each tuple should contain a LayerType, a float and the string is optional.</p></li>
 <li><p><strong>vertical_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span>) – sequence of tuples containing the vertical build of the
-reactor. Each tuple should contain a LayerType, a float and the string is optional.</p></li>
+reactor. Each tuple should contain a LayerType, a float and the string is optional.
+Entries are ordered from the top of the reactor to the bottom, so
+the entries before the plasma are above it. There must be at
+least one entry above and below the plasma for each radial_build
+entry after the plasma.</p></li>
 <li><p><strong>triangularity</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The triangularity of the plasma. Defaults to 0.55.</p></li>
 <li><p><strong>rotation_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The rotation angle of the plasma. Defaults to 180.0.</p></li>
 <li><p><strong>rotation_start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The angle in degrees the reactor starts from, measured
@@ -721,7 +725,11 @@ layer also has a poloidal_build entry. Defaults to None.</p></li>
 <li><p><strong>radial_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span>) – sequence of tuples containing the radial build of the
 reactor. Each tuple should contain a LayerType, a float and the string is optional.</p></li>
 <li><p><strong>vertical_build</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">LayerType</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span>) – sequence of tuples containing the vertical build of the
-reactor. Each tuple should contain a LayerType, a float and the string is optional.</p></li>
+reactor. Each tuple should contain a LayerType, a float and the string is optional.
+Entries are ordered from the top of the reactor to the bottom, so
+the entries before the plasma are above it. There must be at
+least one entry above and below the plasma for each radial_build
+entry after the plasma.</p></li>
 <li><p><strong>triangularity</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The triangularity of the plasma. Defaults to 0.55.</p></li>
 <li><p><strong>rotation_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The rotation angle of the reactor in degrees. Defaults to 180.0.</p></li>
 <li><p><strong>rotation_start_angle</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The angle in degrees the reactor starts from, measured

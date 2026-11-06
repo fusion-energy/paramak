@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.assemblies.tokamak &#8212; Paramak 0.10.1.dev7+gc07cdfbc5 documentation</title>
+    <title>paramak.assemblies.tokamak &#8212; Paramak 0.10.1.dev9+ga1db492d9 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=6b2ebb92"></script>
+    <script src="../../../_static/documentation_options.js?v=c0ffd75c"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev7+gc07cdfbc5" />
+  <meta name="docsearch:version" content="0.10.1.dev9+ga1db492d9" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -571,6 +571,9 @@ function render(data, parent_element, ratio){
     <span class="n">get_plasma_index</span><span class="p">,</span>
     <span class="n">resolve_assembly_color</span><span class="p">,</span>
     <span class="n">rotate_about_z</span><span class="p">,</span>
+    <span class="n">validate_build_lengths</span><span class="p">,</span>
+    <span class="n">validate_plasma_radial_build</span><span class="p">,</span>
+    <span class="n">validate_rotation_angle</span><span class="p">,</span>
     <span class="n">validate_rotation_start_angle</span><span class="p">,</span>
     <span class="n">validate_unique_assembly_names</span><span class="p">,</span>
     <span class="n">validate_vertical_build_names</span><span class="p">,</span>
@@ -1035,6 +1038,9 @@ function render(data, parent_element, ratio){
     <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">colors</span> <span class="o">=</span> <span class="p">{}</span>
 
+    <span class="n">validate_plasma_radial_build</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="s2">"radial_build"</span><span class="p">)</span>
+    <span class="c1"># the vertical build is made from the inboard radial build</span>
+    <span class="n">validate_build_lengths</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">radial_build</span><span class="p">,</span> <span class="s2">"tokamak_from_plasma()"</span><span class="p">)</span>
     <span class="n">vertical_build</span> <span class="o">=</span> <span class="n">vertical_build_from_radial_build</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">elongation</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">tokamak</span><span class="p">(</span>
@@ -1074,6 +1080,10 @@ function render(data, parent_element, ratio){
 <span class="sd">            reactor. Each tuple should contain a LayerType, a float and the string is optional.</span>
 <span class="sd">        vertical_build: sequence of tuples containing the vertical build of the</span>
 <span class="sd">            reactor. Each tuple should contain a LayerType, a float and the string is optional.</span>
+<span class="sd">            Entries are ordered from the top of the reactor to the bottom, so</span>
+<span class="sd">            the entries before the plasma are above it. There must be at</span>
+<span class="sd">            least one entry above and below the plasma for each radial_build</span>
+<span class="sd">            entry after the plasma.</span>
 <span class="sd">        triangularity: The triangularity of the plasma. Defaults to 0.55.</span>
 <span class="sd">        rotation_angle: The rotation angle of the plasma. Defaults to 180.0.</span>
 <span class="sd">        rotation_start_angle: The angle in degrees the reactor starts from, measured</span>
@@ -1136,8 +1146,12 @@ function render(data, parent_element, ratio){
     <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">colors</span> <span class="o">=</span> <span class="p">{}</span>
 
+    <span class="n">validate_plasma_radial_build</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="s2">"radial_build"</span><span class="p">)</span>
+    <span class="n">validate_plasma_radial_build</span><span class="p">(</span><span class="n">vertical_build</span><span class="p">,</span> <span class="s2">"vertical_build"</span><span class="p">)</span>
+    <span class="n">validate_build_lengths</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">,</span> <span class="s2">"tokamak()"</span><span class="p">)</span>
     <span class="n">validate_vertical_build_names</span><span class="p">(</span><span class="n">vertical_build</span><span class="p">,</span> <span class="s2">"tokamak()"</span><span class="p">)</span>
     <span class="n">validate_rotation_start_angle</span><span class="p">(</span><span class="n">rotation_start_angle</span><span class="p">)</span>
+    <span class="n">validate_rotation_angle</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
 
     <span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">elongation</span> <span class="o">=</span> <span class="n">get_plasma_geometry</span><span class="p">(</span><span class="n">radial_build</span><span class="p">,</span> <span class="n">vertical_build</span><span class="p">)</span>
     <span class="n">blanket_rear_wall_end_height</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">vertical_build</span><span class="p">])</span>
