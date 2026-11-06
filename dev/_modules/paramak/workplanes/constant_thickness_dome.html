@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>paramak.workplanes.constant_thickness_dome &#8212; Paramak 0.10.1.dev13+ga2c376ade documentation</title>
+    <title>paramak.workplanes.constant_thickness_dome &#8212; Paramak 0.10.1.dev14+g41d16b05b documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=be9abea6"></script>
+    <script src="../../../_static/documentation_options.js?v=bde42e5d"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/vtk.js?v=415cc427"></script>
@@ -221,7 +221,7 @@ function render(data, parent_element, ratio){
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.10.1.dev13+ga2c376ade" />
+  <meta name="docsearch:version" content="0.10.1.dev14+g41d16b05b" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -675,24 +675,10 @@ function render(data, parent_element, ratio){
 
     <span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="n">point_1</span><span class="p">,</span> <span class="n">point_2</span><span class="p">,</span> <span class="n">point_3</span><span class="p">,</span> <span class="n">point_6</span><span class="p">,</span> <span class="n">point_7</span><span class="p">]</span>
 
-    <span class="n">radius_of_sphere</span> <span class="o">=</span> <span class="p">((</span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">chord_width</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">chord_height</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="n">chord_height</span><span class="p">)</span>
+    <span class="c1"># the spheres and wedge are built on the same workplane (plane and origin) as the cutters</span>
+    <span class="n">big_sphere</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">)</span><span class="o">.</span><span class="n">moveTo</span><span class="p">(</span><span class="n">center_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">center_point</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">sphere</span><span class="p">(</span><span class="n">radius_of_sphere</span> <span class="o">+</span> <span class="n">thickness</span><span class="p">)</span>
 
-    <span class="c1"># TODO set to 0 for now, add ability to shift the center of the chord left and right</span>
-    <span class="n">chord_center</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">chord_center_height</span><span class="p">)</span>
-
-    <span class="c1"># far_side is center on x and</span>
-    <span class="k">if</span> <span class="n">upper_or_lower</span> <span class="o">==</span> <span class="s2">"upper"</span><span class="p">:</span>
-        <span class="n">center_point</span> <span class="o">=</span> <span class="p">(</span><span class="n">chord_center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">chord_center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">chord_height</span> <span class="o">-</span> <span class="n">radius_of_sphere</span><span class="p">)</span>
-        <span class="n">far_side</span> <span class="o">=</span> <span class="p">(</span><span class="n">center_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">center_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">radius_of_sphere</span> <span class="o">+</span> <span class="n">thickness</span><span class="p">))</span>
-    <span class="k">elif</span> <span class="n">upper_or_lower</span> <span class="o">==</span> <span class="s2">"lower"</span><span class="p">:</span>
-        <span class="n">center_point</span> <span class="o">=</span> <span class="p">(</span><span class="n">chord_center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">chord_center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">chord_height</span> <span class="o">+</span> <span class="n">radius_of_sphere</span><span class="p">)</span>
-        <span class="n">far_side</span> <span class="o">=</span> <span class="p">(</span><span class="n">center_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">center_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">radius_of_sphere</span> <span class="o">+</span> <span class="n">thickness</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"upper_or_lower argument must be set to either 'upper' or 'lower'"</span><span class="p">)</span>
-
-    <span class="n">big_sphere</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span><span class="o">.</span><span class="n">moveTo</span><span class="p">(</span><span class="n">center_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">center_point</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">sphere</span><span class="p">(</span><span class="n">radius_of_sphere</span> <span class="o">+</span> <span class="n">thickness</span><span class="p">)</span>
-
-    <span class="n">small_sphere</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span><span class="o">.</span><span class="n">moveTo</span><span class="p">(</span><span class="n">center_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">center_point</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">sphere</span><span class="p">(</span><span class="n">radius_of_sphere</span><span class="p">)</span>
+    <span class="n">small_sphere</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">(</span><span class="n">plane</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">)</span><span class="o">.</span><span class="n">moveTo</span><span class="p">(</span><span class="n">center_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">center_point</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">sphere</span><span class="p">(</span><span class="n">radius_of_sphere</span><span class="p">)</span>
 
     <span class="n">wire</span> <span class="o">=</span> <span class="n">create_wire_workplane_from_points</span><span class="p">(</span>
         <span class="n">points</span><span class="o">=</span><span class="p">(</span>
@@ -734,6 +720,7 @@ function render(data, parent_element, ratio){
         <span class="n">rotation_angle</span><span class="o">=</span><span class="n">rotation_angle</span><span class="p">,</span>
         <span class="n">rotation_start_angle</span><span class="o">=</span><span class="n">rotation_start_angle</span><span class="p">,</span>
         <span class="n">plane</span><span class="o">=</span><span class="n">plane</span><span class="p">,</span>
+        <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">cap</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">outer_cylinder_cutter</span><span class="p">)</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">inner_cylinder_cutter</span><span class="p">)</span>
