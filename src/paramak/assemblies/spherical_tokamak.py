@@ -404,6 +404,8 @@ def spherical_tokamak_from_plasma(
             extra_intersect_shapes are used where they are and are not rotated.
             Must be between -360 and 360. Defaults to 0.
         extra_cut_shapes: A list of extra shapes to cut the reactor with. Defaults to [].
+            When cutting splits a layer or segment into multiple solids, the parts
+            are named "<original part name>_1", "<original part name>_2", and so on.
         colors: the colors to assign to the assembly parts. Defaults to {}.
             Each dictionary entry should be a key that matches the assembly part name
             (e.g. 'plasma', or 'layer_1') and a tuple of 3 or 4 floats between 0 and 1
@@ -636,6 +638,7 @@ def spherical_tokamak(
     validate_unique_assembly_names([*cut_names, *intersect_names, *layer_names, "plasma"], "spherical_tokamak()")
 
     my_assembly = Assembly()
+    layer_assembly = Assembly()
 
     for entry, name in zip(extra_cut_shapes, cut_names):
         if not isinstance(entry, cq.Workplane):
@@ -678,10 +681,16 @@ def spherical_tokamak(
         color = resolve_assembly_color(
             name, radial_layer_names.index(radial_layer_name), colors, layer_name=radial_layer_name
         )
-        # TODO track the names of shapes, even when extra shapes are made due to splitting
         for cutter in cutters:
             entry = entry.cut(cutter)
-        my_assembly.add(entry, name=name, color=cq.Color(*color))
+        layer_assembly.add(entry, name=name, color=cq.Color(*color))
+
+    layer_assembly = layer_assembly.split_solids()
+    validate_unique_assembly_names(
+        [*cut_names, *intersect_names, *layer_assembly.names(), "plasma"], "spherical_tokamak()"
+    )
+    for entry, path, loc, color in layer_assembly:
+        my_assembly.add(entry, name=path.split("/")[-1], color=color, loc=loc)
 
     my_assembly.add(plasma, name="plasma", color=cq.Color(*resolve_assembly_color("plasma", None, colors)))
 

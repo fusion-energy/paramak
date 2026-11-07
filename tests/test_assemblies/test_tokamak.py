@@ -454,11 +454,21 @@ def test_poloidal_build_with_divertor_conserves_volume():
     )
 
     assert "extra_intersect_shapes_1" in segmented.names()
-    assert len([name for name in segmented.names() if "_module_" in name]) == 3 * number_of_modules
 
     unsegmented_volumes = volumes(unsegmented)
     segmented_volumes = volumes(segmented)
     no_divertor_volumes = volumes(segmented_no_divertor)
+
+    def volume_after(name):
+        return sum(
+            volume
+            for part_name, volume in segmented_volumes.items()
+            if part_name == name or (part_name.startswith(f"{name}_") and part_name[len(name) + 1 :].isdigit())
+        )
+
+    module_names = [name for name in no_divertor_volumes if "_module_" in name]
+    assert len(module_names) == 3 * number_of_modules
+    assert all(volume_after(name) > 0 for name in module_names)
 
     # the divertor is the same shape whether or not the layers are segmented
     assert segmented_volumes["extra_intersect_shapes_1"] == pytest.approx(
@@ -469,12 +479,12 @@ def test_poloidal_build_with_divertor_conserves_volume():
     # the divertor volume is removed from the segments it overlaps and no others
     reduced = [
         name
-        for name in no_divertor_volumes
-        if "_module_" in name and segmented_volumes[name] < no_divertor_volumes[name] * (1 - 1e-6)
+        for name in module_names
+        if volume_after(name) < no_divertor_volumes[name] * (1 - 1e-6)
     ]
     assert 0 < len(reduced) < 3 * number_of_modules
     removed = sum(
-        no_divertor_volumes[name] - segmented_volumes[name] for name in no_divertor_volumes if name != "plasma"
+        no_divertor_volumes[name] - volume_after(name) for name in no_divertor_volumes if name != "plasma"
     )
     assert removed == pytest.approx(segmented_volumes["extra_intersect_shapes_1"], rel=1e-3)
 
