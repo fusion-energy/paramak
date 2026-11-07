@@ -1,12 +1,9 @@
 name: documentation release
 
 on:
-  # builds the docs on every pull request, including ones based on other branches
-  # (stacked PRs), they are only deployed on pushes to main and tags
+  # builds the docs on every branch push and pull request; deploys only from main and tags
   pull_request:
   push:
-    branches:
-      - main
     tags:
       - '*'
 
@@ -65,7 +62,7 @@ jobs:
           sphinx-build -b linkcheck docs /tmp/linkcheck
 
       - name: Deploy docs to GitHub Pages
-        if: github.event_name == 'push' || startsWith(github.ref, 'refs/tags/')
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || startsWith(github.ref, 'refs/tags/')
         uses: peaceiris/actions-gh-pages@v4
         with:
           publish_branch: gh-pages
