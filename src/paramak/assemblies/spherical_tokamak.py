@@ -638,7 +638,6 @@ def spherical_tokamak(
     validate_unique_assembly_names([*cut_names, *intersect_names, *layer_names, "plasma"], "spherical_tokamak()")
 
     my_assembly = Assembly()
-    layer_assembly = Assembly()
 
     for entry, name in zip(extra_cut_shapes, cut_names):
         if not isinstance(entry, cq.Workplane):
@@ -683,14 +682,11 @@ def spherical_tokamak(
         )
         for cutter in cutters:
             entry = entry.cut(cutter)
-        layer_assembly.add(entry, name=name, color=cq.Color(*color))
+        my_assembly.add_split_solids(entry, name=name, color=cq.Color(*color))
 
-    layer_assembly = layer_assembly.split_solids()
     validate_unique_assembly_names(
-        [*cut_names, *intersect_names, *layer_assembly.names(), "plasma"], "spherical_tokamak()"
+        [*my_assembly.names(), "plasma"], "spherical_tokamak()"
     )
-    for entry, path, loc, color in layer_assembly:
-        my_assembly.add(entry, name=path.split("/")[-1], color=color, loc=loc)
 
     my_assembly.add(plasma, name="plasma", color=cq.Color(*resolve_assembly_color("plasma", None, colors)))
 
