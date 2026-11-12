@@ -975,3 +975,74 @@ def eu_demo_from_2015_paper(
             "triangularity": triangularity,
         },
     )
+
+
+def arc_from_2026_paper(
+    rotation_angle: float = 180.0,
+    number_of_tf_coils: int = 18,  #ARC Borrowed SPARC default; replace with ARC count.
+    pf_coil_case_thickness: float = 3.0,  #ARC Borrowed SPARC default in cm; confirm for ARC.
+    colors: dict | None = None,
+) -> Assembly:
+    """Scaffold for a future ARC paper reactor; no geometry is returned yet.
+
+    #ARC Supply the verified 2026 paper citation, DOI, figure, and approximations.
+    #ARC All defaults are borrowed from SPARC and are not verified ARC values.
+
+    Args:
+        rotation_angle: sector angle in degrees, greater than 0 and at most 360.
+        number_of_tf_coils: positive integer count distributed over 360 degrees.
+        pf_coil_case_thickness: provisional PF case thickness in cm.
+        colors: optional RGB(A) overrides keyed by component name.
+
+    Returns:
+        An Assembly once ARC geometry is implemented.
+
+    Raises:
+        ValueError: if the sector angle or TF-coil count is invalid.
+        NotImplementedError: for valid inputs until ARC geometry is supplied.
+    """
+    _validate(rotation_angle, number_of_tf_coils)
+
+    #ARC 1. Replace SPARC plasma placeholders (cm except dimensionless shaping):
+    #ARC major_radius = 185.0; elongation = 1.97; triangularity = 0.31
+    #ARC paper_minor_radius = 57.0; minor_radius = paper_minor_radius - 6.0
+    #ARC Review the SPARC-only 6 cm clearance adjustment independently for ARC.
+    #ARC plasma = plasma_simplified(..., rotation_angle=rotation_angle)
+
+    #ARC 2. Supply ARC solenoid modules; SPARC has six at R=53.5, width=27.7.
+    #ARC SPARC Z centres: [-169.58, -118.43, -46.54, 46.54, 118.43, 169.58].
+    #ARC SPARC heights: [41.5, 40.5, 82.95, 82.95, 40.5, 41.5].
+    #ARC central_solenoid = [(name, poloidal_field_coil(...)), ...]
+
+    #ARC 3. Supply ARC PF centres and outer widths/heights (SPARC has 8 coils).
+    #ARC pf_coils = _pf_coils_with_cases(centres, widths, heights,
+    #ARC     pf_coil_case_thickness, rotation_angle)
+
+    #ARC 4. Insert ARC vessel and internal-component R/Z profile coordinates.
+    #ARC vessel = _revolve(outer_profile, rotation_angle).cut(cavity)
+    #ARC inner_vessel = _revolve(profile, rotation_angle), only if applicable.
+
+    #ARC 5. Confirm separate ARC blanket/divertor components and insert profiles.
+    #ARC blanket/divertor = _revolve(profile, rotation_angle)
+    #ARC Confirm whether SPARC antenna, VS, divertor-coil, and EFCCU parts apply.
+    #ARC SPARC VS centres=(240, +/-70), sizes=10x10 cm.
+    #ARC SPARC divertor-coil centres=(207, +/-144), (207, +/-125), sizes=15x15 cm.
+    #ARC Insert ARC-specific profiles for any antenna or EFCCU coils retained.
+
+    #ARC 6. Confirm ARC TF construction; SPARC uses Princeton-D placeholders:
+    #ARC r1=72, r2=339, thickness=33, distance=33 (cm).
+    #ARC tf_coils = toroidal_field_coil_princeton_d(...,
+    #ARC     azimuthal_placement_angles=_tf_placement_angles(number_of_tf_coils),
+    #ARC     rotation_angle=rotation_angle)
+    #ARC For custom TF profiles use _clip_to_sector; support partial/full turns.
+
+    #ARC 7. Define unique component names, required shared faces, and clearances.
+    #ARC parts = [("plasma", plasma), ("vessel", vessel), ...]
+    #ARC cuts = {part_name: [overlapping_part_names, ...]}
+    #ARC default_colors = {part_name: (r, g, b), ...}
+    #ARC return _build_assembly(parts, cuts, colors, default_colors,
+    #ARC     dict(major_radius=major_radius, minor_radius=minor_radius,
+    #ARC          elongation=elongation, triangularity=triangularity))
+    raise NotImplementedError(
+        "arc_from_2026_paper is a scaffold: supply ARC paper geometry and review the borrowed SPARC defaults."
+    )

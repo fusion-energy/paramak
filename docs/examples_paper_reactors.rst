@@ -49,3 +49,15 @@ EU DEMO
     import paramak
 
     result = paramak.eu_demo_from_2015_paper(rotation_angle=180)
+
+ARC scaffold
+------------
+
+.. #ARC Replace this scaffold description with a verified paper citation and geometry example.
+
+``paramak.arc_from_2026_paper(rotation_angle=180.0, number_of_tf_coils=18,
+pf_coil_case_thickness=3.0, colors=None)`` is an unfinished scaffold.
+Its defaults are borrowed from SPARC, not verified ARC design values.
+Valid calls raise ``NotImplementedError`` until ARC geometry is supplied.
+
+No ARC rendering or export example is executed at this stage.
