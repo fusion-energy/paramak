@@ -980,48 +980,49 @@ def eu_demo_from_2015_paper(
 def arc_from_2026_paper(
     rotation_angle: float = 180.0,
     number_of_tf_coils: int = 18,
-    pf_coil_case_thickness: float = 3.0,  #ARC Borrowed SPARC default in cm; confirm for ARC.
+    pf_coil_case_thickness: float = 3.0,  # Borrowed SPARC default in cm
     colors: dict | None = None,
 ) -> Assembly:
-    """Create a plasma, magnet, vessel-wall, and shield approximation of ARC V3A.
+    """Creates a simplified ARC V3A reactor from a published paper and its data.
 
-    #ARC Plasma: Howard et al. (2026), pp.3–4, doi:10.1017/S0022377826101573.
-    #ARC Smooth plasma, approximate magnets, and sourced tungsten first-wall contours.
-    #ARC Solenoids: device_V3A.json, pf_active.coil cs1u/l, cs2u/l, cs3u/l.
-    #ARC Coil locations are sourced; envelope solids approximate the public element model.
+    The geometry is based on J. C. Hillesheim et al., "Overview of the physics
+    basis for the ARC fusion power plant", Journal of Plasma Physics, 92, E69
+    (2026), `doi:10.1017/S0022377826101706
+    <https://doi.org/10.1017/S0022377826101706>`_. The inner and outer toroidal
+    field coil profiles were read off Figure 2. The other component profiles
+    and coil locations are taken from the accompanying device_V3A.json file
+    described in Appendix A. The model is approximate and does not exactly
+    represent the reactor or a final engineering design.
+
+    The assembly contains the plasma, six central solenoid modules, ten poloidal
+    field coils (each a winding pack inside a case), the toroidal field coils,
+    the tungsten first wall, the inner and outer vacuum vessel walls, the FLiBe
+    first-wall cooling region, the bulk FLiBe blanket and the neutron shield.
+
+    The plasma is a smooth approximation clipped to the first-wall cavity.
+    Solenoid and poloidal field coil dimensions approximate the JSON element
+    envelopes, with the latter assumed to include their cases. The toroidal
+    field coil profiles use straight segments and an assumed total extrusion
+    thickness of 40 cm. Physical material compositions and densities are not
+    assigned. Assembly triangularity metadata records the plasma primitive's
+    angular shaping coefficient, arcsin(0.65), rather than geometric triangularity.
 
     Args:
-        rotation_angle: sector angle in degrees, greater than 0 and at most 360.
-        number_of_tf_coils: positive TF-coil count, default 18 from Hillesheim et al.
-            (2026), p.10; equally spaced TF solids are clipped to rotation_angle.
-        pf_coil_case_thickness: assumed positive case thickness in cm, default 3.
-            PF element envelopes are treated as case-inclusive outer dimensions.
-            This split is a modeling assumption, not a measured ARC case size.
-        colors: optional RGB(A) overrides keyed by component name.
+        rotation_angle: the angle in degrees of the sector to build, between
+            0 (exclusive) and 360.
+        number_of_tf_coils: the number of toroidal field coils, equally spaced
+            around 360 degrees. Only the portions inside the sector are kept.
+            The default of 18 is the paper's ARC V3A baseline. Other counts
+            require checking coil packing with the fixed extrusion thickness.
+        pf_coil_case_thickness: the thickness (cm) of the case around each
+            poloidal field coil winding pack. The default of 3 cm is assumed,
+            not specified by the ARC data. Changing the thickness preserves
+            the case-inclusive outer dimensions derived from the JSON envelopes.
+        colors: optional dictionary of RGB(A) colors keyed by part name, used
+            in place of the default colors.
 
     Returns:
-        An Assembly with plasma and six central_solenoid_N parts, ordered
-        CS1U, CS1L, CS2U, CS2L, CS3U, CS3L. Solenoids are rectangular solid
-        envelopes without separate cases or resolved turns. Ten PF winding packs
-        and ten separate cases are named pf_coil_N and pf_coil_case_N, ordered
-        PF1U, PF1L, PF2U, PF2L, ..., PF5U, PF5L. The toroidal_field_coil
-        part uses user-supplied inner/outer profiles, straight segments, and an
-        assumed total extrusion thickness of 40 cm; it has no case/pack split.
-        The first_wall part uses the JSON tungsten layer contours (nominal 0.5 cm);
-        this is geometry only, without a physical material assignment. The smooth
-        plasma approximation is clipped to the first-wall cavity to avoid overlaps.
-        Inner and outer vessel walls are named inner_vessel and outer_vessel;
-        neutron_shield uses the supplied solid shield polygon. flibe_first_wall
-        fills the nominal 4.5 cm vessel cooling space as one homogeneous region;
-        no physical materials or individual channels are assigned. flibe_blanket
-        fills the tank interior outside the full vessel envelope and neutron shield;
-        the enclosing tank shell itself is not yet included.
-        Its triangularity metadata is the angular shaping
-        coefficient, not the paper geometric triangularity target of 0.65.
-
-    Raises:
-        ValueError: if the sector angle, TF-coil count, or PF case thickness
-            is invalid, including cases too thick to leave a winding pack.
+        A paramak Assembly with a named part for each component.
     """
     _validate(rotation_angle, number_of_tf_coils)
 
@@ -1032,7 +1033,7 @@ def arc_from_2026_paper(
     # Geometric triangularity target 0.65; primitive coefficient is asin(delta).
     triangularity = float(np.arcsin(0.65))
 
-    # ARC Smooth boundary; replace with equilibrium data for double-null geometry.
+    # Smooth boundary; replace with equilibrium data for double-null geometry.
     plasma = plasma_simplified(
         major_radius=major_radius,
         minor_radius=minor_radius,
@@ -1063,8 +1064,7 @@ def arc_from_2026_paper(
     ]
 
     # PF bounds from device_V3A.json annular-element extents, converted to cm.
-    # Assume envelopes include cases; actual ARC case dimensions remain unknown.
-    # Split the fixed outer size into pack/case exactly as the other paper models.
+    # Assume envelopes include cases; 
     pf_bounds = [
         (110.500000000000, 169.500000000000, 360.500000000000, 419.500000000000),  #ARC PF1U
         (110.500000000000, 169.500000000000, -419.500000000000, -360.500000000000),  #ARC PF1L
@@ -1159,15 +1159,11 @@ def arc_from_2026_paper(
     first_wall_inner_face = _profile_face(_straight([(100 * r, 100 * z) for r, z in first_wall_inner_m]))
     first_wall_section = _single_face(first_wall_outer_face.cut(first_wall_inner_face).clean())
     first_wall = _revolve_face(first_wall_section, rotation_angle)
-    #ARC The smooth plasma fit protrudes locally beyond the sourced limiter contour.
-    #ARC Preserve the wall profiles and contain the approximate plasma in its cavity.
-    #ARC Replace this clipping with a checked equilibrium-derived plasma boundary later.
-    #ARC Keep Boolean faces: spline surface unification can fail on this intersection.
     plasma = plasma.intersect(_revolve_face(first_wall_inner_face, rotation_angle), clean=False)
 
-    #ARC Inner/outer vessel walls: device_V3A.json wall.description_2d[1].vessel.unit[1:3].
-    #ARC Preserve supplied contours; coordinates below are metres, converted to cm.
-    #ARC The inner wall's inner contour is exactly the first wall's outer contour.
+    # Inner/outer vessel walls: device_V3A.json wall.description_2d[1].vessel.unit[1:3].
+    # Preserve supplied contours; coordinates below are metres, converted to cm.
+    # The inner wall's inner contour is exactly the first wall's outer contour.
     inner_vessel_outer_m = [
         (3.405, 0.0),
         (3.405, -0.8515435),
@@ -1278,13 +1274,10 @@ def arc_from_2026_paper(
     outer_vessel_outer_face = _profile_face(_straight([(100 * r, 100 * z) for r, z in outer_vessel_outer_m]))
     outer_vessel_section = _single_face(outer_vessel_outer_face.cut(outer_vessel_inner_face).clean())
     outer_vessel = _revolve_face(outer_vessel_section, rotation_angle)
-    #ARC Homogenized FLiBe first-wall cooling space, using the existing vessel interfaces.
-    #ARC Individual channels/ribs and physical material properties are not modeled.
     flibe_first_wall_section = _single_face(outer_vessel_inner_face.cut(inner_vessel_outer_face).clean())
     flibe_first_wall = _revolve_face(flibe_first_wall_section, rotation_angle)
 
-    #ARC Neutron shield: device_V3A.json wall.description_2d[3].vessel.unit[0].element[0].
-    #ARC Solid axisymmetric polygon; electrical breaks and materials are not modeled.
+    # Neutron shield: device_V3A.json wall.description_2d[3].vessel.unit[0].element[0].
     neutron_shield_m = [
         (2.48, 0.0),
         (2.48, 1.35),
@@ -1308,10 +1301,7 @@ def arc_from_2026_paper(
     neutron_shield_face = _profile_face(_straight([(100 * r, 100 * z) for r, z in neutron_shield_m]))
     neutron_shield = _revolve_face(neutron_shield_face, rotation_angle)
 
-    #ARC Bulk FLiBe: tank interior from wall.description_2d[2].vessel.unit[0].
-    #ARC Use outline_inner; the thin outline_inner/outline_outer annulus is the tank.
-    #ARC Subtract the complete vessel envelope, including its cavity and cooling space,
-    #ARC and the solid neutron shield to obtain a separate, non-overlapping liquid region.
+    # Bulk FLiBe: tank interior from wall.description_2d[2].vessel.unit[0].
     blanket_tank_inner_m = [
         (2.48, 0.0),
         (2.48, 1.35),
@@ -1343,20 +1333,9 @@ def arc_from_2026_paper(
         blanket_tank_inner_face.cut(outer_vessel_outer_face).cut(neutron_shield_face).clean()
     )
     flibe_blanket = _revolve_face(flibe_blanket_section, rotation_angle)
-    #ARC Homogeneous bulk region; detailed penetrations and physical materials remain unspecified.
 
-    #ARC 5. Confirm separate ARC blanket/divertor components and insert profiles.
-    #ARC blanket/divertor = _revolve(profile, rotation_angle)
-    #ARC Confirm whether SPARC antenna, VS, divertor-coil, and EFCCU parts apply.
-    #ARC SPARC VS centres=(240, +/-70), sizes=10x10 cm.
-    #ARC SPARC divertor-coil centres=(207, +/-144), (207, +/-125), sizes=15x15 cm.
-    #ARC Insert ARC-specific profiles for any antenna or EFCCU coils retained.
-
-    #ARC 6. TF profiles: fill BOTH closed perimeters in R/Z coordinates, in cm.
-    #ARC Each point is (R, Z, "straight") or (R, Z, "spline").
-    #ARC List points consecutively around each perimeter; repeat the first at the end.
-    #ARC The outer perimeter includes the entire outside edge and the inboard leg.
-    #ARC User-supplied outer perimeter in metres; retain source precision.
+    # 6. TF profiles: fill BOTH closed perimeters in R/Z coordinates, in cm.
+    # Each point is (R, Z, "straight") or (R, Z, "spline").
     _tf_outer_points_m = [
         (1.5074554987568587, 3.3923282715247196),
         (1.7586289812671465, 3.3923282715247196),
@@ -1405,15 +1384,11 @@ def arc_from_2026_paper(
         (1.5074554987568587, 1.8986702390788741),
         (1.5074554987568587, 2.8491798960898667),
     ]
-    #ARC Convert to cm, connect supplied points by straight segments, and close.
-    #ARC Do not infer spline smoothing or enforce symmetry on the measured outline.
     _tf_outer_points = [
         (100 * r, 100 * z, "straight")
         for r, z in _tf_outer_points_m + [_tf_outer_points_m[0]]
     ]
-    #ARC The inner perimeter bounds the TF opening, not the vessel or plasma.
-    #ARC It must lie inside the outer perimeter, leaving the coil cross-section.
-    #ARC User-supplied inner perimeter in metres; retain source precision.
+    # The inner perimeter bounds the TF opening, not the vessel or plasma.
     _tf_inner_points_m = [
         (2.397028249314129, 0.2274444685100958),
         (2.407493811085391, 0.9272702599357725),
@@ -1452,13 +1427,10 @@ def arc_from_2026_paper(
         (2.407493811085391, -1.2871038860678592),
         (2.407493811085391, -0.5872780946421834),
     ]
-    #Convert to cm and close with straight segments, matching the outer profile.
     _tf_inner_points = [
         (100 * r, 100 * z, "straight")
         for r, z in _tf_inner_points_m + [_tf_inner_points_m[0]]
     ]
-    #Assumed total toroidal thickness in cm, not a published dimension.
-    #Extrude plus/minus 20 cm; 40 cm fits nominal 18-coil inboard spacing.
     _tf_distance = 40.0
     outer_wire = create_wire_workplane_from_points(points=_tf_outer_points, plane="XZ")
     inner_wire = create_wire_workplane_from_points(points=_tf_inner_points, plane="XZ")
@@ -1474,14 +1446,6 @@ def arc_from_2026_paper(
         cq.Workplane("XZ").add(cq.Compound.makeCompound(placed_tf_coils)), rotation_angle
     )
 
-    #ARC 7. Define unique component names, required shared faces, and clearances.
-    #ARC parts = [("plasma", plasma), ("vessel", vessel), ...]
-    #ARC cuts = {part_name: [overlapping_part_names, ...]}
-    #ARC default_colors = {part_name: (r, g, b), ...}
-    #ARC return _build_assembly(parts, cuts, colors, default_colors,
-    #ARC     dict(major_radius=major_radius, minor_radius=minor_radius,
-    #ARC          elongation=elongation, triangularity=triangularity))
-    #ARC Return implemented plasma, solenoids, and PF packs/cases; remaining components are pending.
     return _build_assembly(
         [("plasma", plasma)] + central_solenoid + pf_coils + [
             ("toroidal_field_coil", tf_coils),
