@@ -220,3 +220,13 @@ The constructor returns a plasma, solenoid, and PF pack/case approximation (R=46
 
 - [x] #ARC Add first_wall from the JSON tungsten layer's inner/outer contours (nominal 0.5 cm), with sector revolution, color overrides, and no runtime dependency on the reference JSON.
 - [ ] #ARC Replace the smooth plasma approximation with a checked equilibrium boundary. It is currently clipped to the first-wall inner cavity because the analytical fit otherwise overlaps the sourced wall locally; preserve the supplied first-wall geometry.
+
+
+- [x] #ARC Add inner_vessel, outer_vessel, and neutron_shield from explicit JSON contours, converted to cm and revolved through the requested sector. Preserve the first-wall/inner-vessel interface and the intervening vessel cooling gap.
+- [ ] #ARC Construct the blanket tank shell; vessel cooling space is now represented by flibe_first_wall. Physical material assignments and shielding electrical breaks remain pending.
+
+
+- [x] #ARC Add flibe_first_wall as the homogeneous nominal 4.5 cm cooling region between the sourced vessel faces, with sector scaling, color override, no overlap, and shared-face imprint checks. Individual channels/ribs and physical materials remain unspecified.
+
+
+- [x] #ARC Add flibe_blanket from the tank inner contour minus the entire vessel envelope and neutron shield, preserving shared interfaces and separating bulk liquid from flibe_first_wall. Tank shell and physical material definitions remain pending.

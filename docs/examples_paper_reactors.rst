@@ -68,7 +68,7 @@ Six central-solenoid modules are also included as rectangular solid envelopes
 extracted from the public device_V3A.json element distributions (in cm). Names
 central_solenoid_1 through central_solenoid_6 correspond to CS1U, CS1L, CS2U,
 CS2L, CS3U, CS3L. These do not resolve turns or separate cases. Double-null
-X-points, the remaining vessel layers, blanket, and divertor remain unimplemented.
+X-points, the blanket tank shell, and separate divertor target/baffle parts remain unimplemented.
 PF names pf_coil_1 through pf_coil_10 (and pf_coil_case_1 through pf_coil_case_10)
 map to PF1U, PF1L, PF2U, PF2L, ..., PF5U, PF5L. JSON element envelopes are
 assumed to be case-inclusive outer dimensions; changing case thickness changes
@@ -102,3 +102,38 @@ avoids overlap, but is an approximation rather than an equilibrium reconstructio
 The plasma metadata still describes the underlying analytical shaping inputs.
 The wall has a neutral gray display color, overridable with colors["first_wall"].
 A tungsten material composition/density is not assigned by the CAD constructor.
+
+
+.. #ARC Add FLiBe cooling/blanket regions and the blanket tank from the remaining data.
+
+The inner_vessel and outer_vessel parts use the explicit inner/outer JSON contours
+for the nominal 1 cm inner and 3 cm outer vessel walls. The inner_vessel inner
+surface reuses the first_wall outer contour so their interface matches exactly.
+The nominal 4.5 cm cooling space between vessel walls is filled by flibe_first_wall.
+The neutron_shield part revolves the supplied solid shield polygon. The paper
+uses vanadium vessel walls and tungsten-carbide shielding as reference assumptions;
+these CAD solids do not assign material compositions or densities. All three parts
+support rotation_angle and colors keyed by their names. No offsets, inferred
+thicknesses, shielding electrical breaks, or automatic clearance cuts are added.
+
+
+.. #ARC Individual cooling channels/ribs and physical FLiBe composition remain unspecified.
+
+The flibe_first_wall part is the entire inter-wall cooling region, constructed
+from the outer perimeter of inner_vessel and the inner perimeter of outer_vessel.
+Those faces are reused, so both interfaces match the surrounding vessel walls.
+The homogeneous region is revolved through rotation_angle; its light green display
+color can be overridden with colors["flibe_first_wall"]. It does not represent the
+bulk blanket outside the vessel, and no FLiBe material composition or density is
+assigned by the component name.
+
+
+.. #ARC Add tank shell, detailed penetrations, and physical materials separately.
+
+The flibe_blanket part is the homogeneous bulk liquid region inside the JSON
+blanket-tank inner contour, excluding the complete outer vessel envelope and
+neutron_shield. It therefore excludes both the plasma cavity and flibe_first_wall
+cooling region. The inner tank contour is converted from metres to cm and the
+resulting section is revolved through rotation_angle. The tank's thin annular
+shell is not represented as liquid. The display color is overridable with
+colors["flibe_blanket"]; composition, density, and lithium enrichment remain unspecified.

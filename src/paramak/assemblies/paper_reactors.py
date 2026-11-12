@@ -983,7 +983,7 @@ def arc_from_2026_paper(
     pf_coil_case_thickness: float = 3.0,  #ARC Borrowed SPARC default in cm; confirm for ARC.
     colors: dict | None = None,
 ) -> Assembly:
-    """Create a plasma, magnet, and first-wall approximation of ARC V3A.
+    """Create a plasma, magnet, vessel-wall, and shield approximation of ARC V3A.
 
     #ARC Plasma: Howard et al. (2026), pp.3–4, doi:10.1017/S0022377826101573.
     #ARC Smooth plasma, approximate magnets, and sourced tungsten first-wall contours.
@@ -1010,6 +1010,12 @@ def arc_from_2026_paper(
         The first_wall part uses the JSON tungsten layer contours (nominal 0.5 cm);
         this is geometry only, without a physical material assignment. The smooth
         plasma approximation is clipped to the first-wall cavity to avoid overlaps.
+        Inner and outer vessel walls are named inner_vessel and outer_vessel;
+        neutron_shield uses the supplied solid shield polygon. flibe_first_wall
+        fills the nominal 4.5 cm vessel cooling space as one homogeneous region;
+        no physical materials or individual channels are assigned. flibe_blanket
+        fills the tank interior outside the full vessel envelope and neutron shield;
+        the enclosing tank shell itself is not yet included.
         Its triangularity metadata is the angular shaping
         coefficient, not the paper geometric triangularity target of 0.65.
 
@@ -1159,9 +1165,185 @@ def arc_from_2026_paper(
     #ARC Keep Boolean faces: spline surface unification can fail on this intersection.
     plasma = plasma.intersect(_revolve_face(first_wall_inner_face, rotation_angle), clean=False)
 
-    #ARC 4. Insert ARC vessel and internal-component R/Z profile coordinates.
-    #ARC vessel = _revolve(outer_profile, rotation_angle).cut(cavity)
-    #ARC inner_vessel = _revolve(profile, rotation_angle), only if applicable.
+    #ARC Inner/outer vessel walls: device_V3A.json wall.description_2d[1].vessel.unit[1:3].
+    #ARC Preserve supplied contours; coordinates below are metres, converted to cm.
+    #ARC The inner wall's inner contour is exactly the first wall's outer contour.
+    inner_vessel_outer_m = [
+        (3.405, 0.0),
+        (3.405, -0.8515435),
+        (3.663569, -2.094665),
+        (3.445, -2.293364),
+        (3.445, -2.339271),
+        (3.749385, -2.491463),
+        (4.347336, -3.488048),
+        (4.762009, -4.105),
+        (5.325, -4.105),
+        (5.325, -3.326601),
+        (4.945517, -3.500958),
+        (4.199703, -2.352796),
+        (4.780676, -1.850599),
+        (5.241569, -1.309551),
+        (5.683384, -0.7572814),
+        (5.835, -0.3024342),
+        (5.835, 0.0),
+        (5.835, 0.3024342),
+        (5.683384, 0.7572814),
+        (5.241569, 1.309551),
+        (4.780676, 1.850599),
+        (4.199703, 2.352796),
+        (4.945517, 3.500958),
+        (5.325, 3.326601),
+        (5.325, 4.105),
+        (4.762009, 4.105),
+        (4.347336, 3.488048),
+        (3.749385, 2.491463),
+        (3.445, 2.339271),
+        (3.445, 2.293364),
+        (3.663569, 2.094665),
+        (3.405, 0.8515435),
+    ]
+    inner_vessel_outer_face = _profile_face(_straight([(100 * r, 100 * z) for r, z in inner_vessel_outer_m]))
+    inner_vessel_section = _single_face(inner_vessel_outer_face.cut(first_wall_outer_face).clean())
+    inner_vessel = _revolve_face(inner_vessel_section, rotation_angle)
+
+    outer_vessel_inner_m = [
+        (3.36, 0.0),
+        (3.36, -0.8561739),
+        (3.614277, -2.07866),
+        (3.4, -2.273458),
+        (3.4, -2.367082),
+        (3.71754, -2.525852),
+        (4.309343, -3.512191),
+        (4.738034, -4.15),
+        (5.37, -4.15),
+        (5.37, -3.256402),
+        (4.962069, -3.44383),
+        (4.258812, -2.361184),
+        (4.812703, -1.882396),
+        (5.276274, -1.338204),
+        (5.723537, -0.7791256),
+        (5.88, -0.3097367),
+        (5.88, 0.0),
+        (5.88, 0.3097367),
+        (5.723537, 0.7791256),
+        (5.276274, 1.338204),
+        (4.812703, 1.882396),
+        (4.258812, 2.361184),
+        (4.962069, 3.44383),
+        (5.37, 3.256402),
+        (5.37, 4.15),
+        (4.738034, 4.15),
+        (4.309343, 3.512191),
+        (3.71754, 2.525852),
+        (3.4, 2.367082),
+        (3.4, 2.273458),
+        (3.614277, 2.07866),
+        (3.36, 0.8561739),
+    ]
+    outer_vessel_outer_m = [
+        (3.33, 0.0),
+        (3.33, -0.8592609),
+        (3.581416, -2.067991),
+        (3.37, -2.260187),
+        (3.37, -2.385623),
+        (3.69631, -2.548778),
+        (4.284015, -3.528287),
+        (4.722052, -4.18),
+        (5.4, -4.18),
+        (5.4, -3.209604),
+        (4.973104, -3.405745),
+        (4.298218, -2.366775),
+        (4.834055, -1.903594),
+        (5.299412, -1.357306),
+        (5.750306, -0.7936884),
+        (5.91, -0.314605),
+        (5.91, 0.0),
+        (5.91, 0.314605),
+        (5.750306, 0.7936884),
+        (5.299412, 1.357306),
+        (4.834055, 1.903594),
+        (4.298218, 2.366775),
+        (4.973104, 3.405745),
+        (5.4, 3.209604),
+        (5.4, 4.18),
+        (4.722052, 4.18),
+        (4.284015, 3.528287),
+        (3.69631, 2.548778),
+        (3.37, 2.385623),
+        (3.37, 2.260187),
+        (3.581416, 2.067991),
+        (3.33, 0.8592609),
+    ]
+    outer_vessel_inner_face = _profile_face(_straight([(100 * r, 100 * z) for r, z in outer_vessel_inner_m]))
+    outer_vessel_outer_face = _profile_face(_straight([(100 * r, 100 * z) for r, z in outer_vessel_outer_m]))
+    outer_vessel_section = _single_face(outer_vessel_outer_face.cut(outer_vessel_inner_face).clean())
+    outer_vessel = _revolve_face(outer_vessel_section, rotation_angle)
+    #ARC Homogenized FLiBe first-wall cooling space, using the existing vessel interfaces.
+    #ARC Individual channels/ribs and physical material properties are not modeled.
+    flibe_first_wall_section = _single_face(outer_vessel_inner_face.cut(inner_vessel_outer_face).clean())
+    flibe_first_wall = _revolve_face(flibe_first_wall_section, rotation_angle)
+
+    #ARC Neutron shield: device_V3A.json wall.description_2d[3].vessel.unit[0].element[0].
+    #ARC Solid axisymmetric polygon; electrical breaks and materials are not modeled.
+    neutron_shield_m = [
+        (2.48, 0.0),
+        (2.48, 1.35),
+        (2.61, 2.37),
+        (2.92, 3.12),
+        (3.51, 3.95),
+        (4.11, 4.37),
+        (3.22, 3.3),
+        (2.77, 2.35),
+        (3.12, 0.75),
+        (3.12, 0.0),
+        (3.12, -0.75),
+        (2.77, -2.35),
+        (3.22, -3.3),
+        (4.11, -4.37),
+        (3.51, -3.95),
+        (2.92, -3.12),
+        (2.61, -2.37),
+        (2.48, -1.35),
+    ]
+    neutron_shield_face = _profile_face(_straight([(100 * r, 100 * z) for r, z in neutron_shield_m]))
+    neutron_shield = _revolve_face(neutron_shield_face, rotation_angle)
+
+    #ARC Bulk FLiBe: tank interior from wall.description_2d[2].vessel.unit[0].
+    #ARC Use outline_inner; the thin outline_inner/outline_outer annulus is the tank.
+    #ARC Subtract the complete vessel envelope, including its cavity and cooling space,
+    #ARC and the solid neutron shield to obtain a separate, non-overlapping liquid region.
+    blanket_tank_inner_m = [
+        (2.48, 0.0),
+        (2.48, 1.35),
+        (2.61, 2.37),
+        (2.92, 3.12),
+        (3.51, 3.95),
+        (4.11, 4.37),
+        (5.05, 4.68),
+        (5.65, 4.62),
+        (5.65, 2.5),
+        (5.65, 1.8),
+        (6.45, 1.1),
+        (7.2, 1.1),
+        (7.2, 0.0),
+        (7.2, -1.1),
+        (6.45, -1.1),
+        (5.65, -1.8),
+        (5.65, -2.5),
+        (5.65, -4.62),
+        (5.05, -4.68),
+        (4.11, -4.37),
+        (3.51, -3.95),
+        (2.92, -3.12),
+        (2.61, -2.37),
+        (2.48, -1.35),
+    ]
+    blanket_tank_inner_face = _profile_face(_straight([(100 * r, 100 * z) for r, z in blanket_tank_inner_m]))
+    flibe_blanket_section = _single_face(
+        blanket_tank_inner_face.cut(outer_vessel_outer_face).cut(neutron_shield_face).clean()
+    )
+    flibe_blanket = _revolve_face(flibe_blanket_section, rotation_angle)
+    #ARC Homogeneous bulk region; detailed penetrations and physical materials remain unspecified.
 
     #ARC 5. Confirm separate ARC blanket/divertor components and insert profiles.
     #ARC blanket/divertor = _revolve(profile, rotation_angle)
@@ -1301,10 +1483,25 @@ def arc_from_2026_paper(
     #ARC          elongation=elongation, triangularity=triangularity))
     #ARC Return implemented plasma, solenoids, and PF packs/cases; remaining components are pending.
     return _build_assembly(
-        [("plasma", plasma)] + central_solenoid + pf_coils + [("toroidal_field_coil", tf_coils), ("first_wall", first_wall)],
+        [("plasma", plasma)] + central_solenoid + pf_coils + [
+            ("toroidal_field_coil", tf_coils),
+            ("first_wall", first_wall),
+            ("inner_vessel", inner_vessel),
+            ("flibe_first_wall", flibe_first_wall),
+            ("outer_vessel", outer_vessel),
+            ("neutron_shield", neutron_shield),
+            ("flibe_blanket", flibe_blanket),
+        ],
         {},
         colors,
-        {"first_wall": (0.7, 0.7, 0.7)},
+        {
+            "first_wall": (0.7, 0.7, 0.7),
+            "inner_vessel": (0.0, 0.8, 0.8),
+            "outer_vessel": (0.0, 0.5, 0.7),
+            "flibe_first_wall": (0.5, 0.9, 0.5),
+            "neutron_shield": (0.0, 0.5, 0.2),
+            "flibe_blanket": (0.6, 0.85, 0.35),
+        },
         dict(
             major_radius=major_radius,
             minor_radius=minor_radius,

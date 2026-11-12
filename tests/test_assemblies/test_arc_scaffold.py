@@ -1,7 +1,9 @@
 import inspect
 import math
 
+import cadquery as cq
 import pytest
+from cadquery.occ_impl.assembly import imprint
 
 import paramak
 
@@ -27,7 +29,7 @@ def test_plasma_geometry_and_metadata(angle):
     assert reactor.names() == (
         ["plasma"] + [f"central_solenoid_{i}" for i in range(1, 7)]
         + [name for i in range(1, 11) for name in (f"pf_coil_{i}", f"pf_coil_case_{i}")]
-        + ["toroidal_field_coil", "first_wall"]
+        + ["toroidal_field_coil", "first_wall", "inner_vessel", "flibe_first_wall", "outer_vessel", "neutron_shield", "flibe_blanket"]
     )
     assert reactor.major_radius == 462.0
     assert reactor.minor_radius == 118.0
@@ -202,3 +204,131 @@ def test_first_wall_geometry(angle):
 def test_first_wall_color_override():
     reactor = paramak.arc_from_2026_paper(colors={"first_wall": (0.3, 0.4, 0.5)})
     assert reactor.objects["first_wall"].color.toTuple()[:3] == pytest.approx((0.3, 0.4, 0.5))
+
+
+@pytest.mark.parametrize("angle", [90, 180, 360])
+def test_vessel_walls_and_neutron_shield(angle):
+    #ARC Independent polygon-moment volumes from the supplied JSON, in cm3.
+    reactor = paramak.arc_from_2026_paper(rotation_angle=angle)
+    expected = {
+        "inner_vessel": (6105123.0299052, 583.5, 410.50000000000006),
+        "outer_vessel": (18883600.83873242, 591.0, 418.0),
+        "neutron_shield": (55362184.56153011, 411.0, 437.0),
+    }
+    for name, (full_volume, rmax, zmax) in expected.items():
+        shape = reactor.objects[name].obj.val()
+        assert shape.isValid()
+        assert len(shape.Solids()) == 1
+        assert shape.Volume() == pytest.approx(full_volume * angle / 360, rel=1e-6)
+        box = shape.BoundingBox()
+        assert box.xmax == pytest.approx(rmax, abs=1e-5)
+        assert box.zmax == pytest.approx(zmax, abs=1e-5)
+        assert box.zmin == pytest.approx(-zmax, abs=1e-5)
+        if angle < 360:
+            assert box.ymin >= -1e-5
+        if angle == 90:
+            assert box.xmin >= -1e-5
+        for child in reactor.children:
+            if child.name != name:
+                assert shape.intersect(child.obj.val()).Volume() == pytest.approx(0, abs=1e-4), (name, child.name)
+    first = reactor.objects["first_wall"].obj.val()
+    inner = reactor.objects["inner_vessel"].obj.val()
+    outer = reactor.objects["outer_vessel"].obj.val()
+    assert first.distance(inner) == pytest.approx(0, abs=1e-5)
+    assert inner.distance(outer) > 0
+
+
+def test_vessel_and_shield_colors():
+    colors = {name: (0.2, 0.4, 0.6) for name in ("inner_vessel", "outer_vessel", "neutron_shield")}
+    reactor = paramak.arc_from_2026_paper(colors=colors)
+    for name, color in colors.items():
+        assert reactor.objects[name].color.toTuple()[:3] == pytest.approx(color)
+
+
+@pytest.mark.parametrize("angle", [90, 180, 360])
+def test_flibe_first_wall_geometry(angle):
+    #ARC Volume is the difference of independently integrated JSON vessel boundary polygons.
+    reactor = paramak.arc_from_2026_paper(rotation_angle=angle)
+    flibe = reactor.objects["flibe_first_wall"].obj.val()
+    assert flibe.isValid()
+    assert len(flibe.Solids()) == 1
+    assert flibe.Volume() == pytest.approx(27833226.82232392 * angle / 360, rel=1e-6)
+    box = flibe.BoundingBox()
+    assert box.xmax == pytest.approx(588, abs=1e-5)
+    assert box.zmin == pytest.approx(-415, abs=1e-5)
+    assert box.zmax == pytest.approx(415, abs=1e-5)
+    if angle < 360:
+        assert box.ymin >= -1e-5
+    if angle == 90:
+        assert box.xmin >= -1e-5
+    for name in ("inner_vessel", "outer_vessel"):
+        vessel = reactor.objects[name].obj.val()
+        assert flibe.distance(vessel) == pytest.approx(0, abs=1e-5)
+        assert flibe.intersect(vessel).Volume() == pytest.approx(0, abs=1e-4)
+
+
+def test_flibe_first_wall_interfaces_imprint():
+    #ARC Verify shared faces on both sides of the filled cooling region.
+    reactor = paramak.arc_from_2026_paper()
+    assembly = cq.Assembly()
+    for name in ("inner_vessel", "flibe_first_wall", "outer_vessel"):
+        assembly.add(reactor.objects[name].obj, name=name)
+    _, origins = imprint(assembly)
+    faces = {}
+    for solid, names in origins.items():
+        assert len(names) == 1
+        for face in solid.Faces():
+            faces.setdefault(face, set()).add(names[0].split("/")[-1])
+    pairs = {frozenset(names) for names in faces.values() if len(names) == 2}
+    assert frozenset(("inner_vessel", "flibe_first_wall")) in pairs
+    assert frozenset(("outer_vessel", "flibe_first_wall")) in pairs
+
+
+def test_flibe_first_wall_color():
+    reactor = paramak.arc_from_2026_paper(colors={"flibe_first_wall": (0.2, 0.5, 0.8)})
+    assert reactor.objects["flibe_first_wall"].color.toTuple()[:3] == pytest.approx((0.2, 0.5, 0.8))
+
+
+@pytest.mark.parametrize("angle", [90, 180, 360])
+def test_flibe_blanket_geometry(angle):
+    #ARC Independent polygon-moment volume: tank cavity minus vessel envelope and shield.
+    reactor = paramak.arc_from_2026_paper(rotation_angle=angle)
+    blanket = reactor.objects["flibe_blanket"].obj.val()
+    assert blanket.isValid()
+    assert len(blanket.Solids()) == 1
+    assert blanket.Volume() == pytest.approx(431989820.1713178 * angle / 360, rel=1e-6)
+    box = blanket.BoundingBox()
+    assert box.xmax == pytest.approx(720, abs=1e-5)
+    assert box.zmax == pytest.approx(468, abs=1e-5)
+    assert box.zmin == pytest.approx(-468, abs=1e-5)
+    if angle < 360:
+        assert box.ymin >= -1e-5
+    if angle == 90:
+        assert box.xmin >= -1e-5
+    for child in reactor.children:
+        if child.name != "flibe_blanket":
+            assert blanket.intersect(child.obj.val()).Volume() == pytest.approx(0, abs=1e-4), child.name
+    for name in ("outer_vessel", "neutron_shield"):
+        assert blanket.distance(reactor.objects[name].obj.val()) == pytest.approx(0, abs=1e-5)
+
+
+def test_flibe_blanket_interfaces_imprint():
+    #ARC Both excluded solids must meet the bulk liquid on shared imprinted faces.
+    reactor = paramak.arc_from_2026_paper()
+    assembly = cq.Assembly()
+    for name in ("outer_vessel", "neutron_shield", "flibe_blanket"):
+        assembly.add(reactor.objects[name].obj, name=name)
+    _, origins = imprint(assembly)
+    faces = {}
+    for solid, names in origins.items():
+        assert len(names) == 1
+        for face in solid.Faces():
+            faces.setdefault(face, set()).add(names[0].split("/")[-1])
+    pairs = {frozenset(names) for names in faces.values() if len(names) == 2}
+    assert frozenset(("outer_vessel", "flibe_blanket")) in pairs
+    assert frozenset(("neutron_shield", "flibe_blanket")) in pairs
+
+
+def test_flibe_blanket_color():
+    reactor = paramak.arc_from_2026_paper(colors={"flibe_blanket": (0.2, 0.7, 0.3)})
+    assert reactor.objects["flibe_blanket"].color.toTuple()[:3] == pytest.approx((0.2, 0.7, 0.3))
