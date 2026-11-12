@@ -983,17 +983,17 @@ def arc_from_2026_paper(
     pf_coil_case_thickness: float = 3.0,  #ARC Borrowed SPARC default in cm; confirm for ARC.
     colors: dict | None = None,
 ) -> Assembly:
-    """Create a plasma, central-solenoid, and PF-coil approximation of ARC V3A.
+    """Create a plasma, magnet, and first-wall approximation of ARC V3A.
 
     #ARC Plasma: Howard et al. (2026), pp.3–4, doi:10.1017/S0022377826101573.
-    #ARC Smooth plasma and solid solenoid envelopes; no vessel or TF coils yet.
+    #ARC Smooth plasma, approximate magnets, and sourced tungsten first-wall contours.
     #ARC Solenoids: device_V3A.json, pf_active.coil cs1u/l, cs2u/l, cs3u/l.
     #ARC Coil locations are sourced; envelope solids approximate the public element model.
 
     Args:
         rotation_angle: sector angle in degrees, greater than 0 and at most 360.
         number_of_tf_coils: positive TF-coil count, default 18 from Hillesheim et al.
-            (2026), p.10; TF geometry is not built yet.
+            (2026), p.10; equally spaced TF solids are clipped to rotation_angle.
         pf_coil_case_thickness: assumed positive case thickness in cm, default 3.
             PF element envelopes are treated as case-inclusive outer dimensions.
             This split is a modeling assumption, not a measured ARC case size.
@@ -1004,7 +1004,12 @@ def arc_from_2026_paper(
         CS1U, CS1L, CS2U, CS2L, CS3U, CS3L. Solenoids are rectangular solid
         envelopes without separate cases or resolved turns. Ten PF winding packs
         and ten separate cases are named pf_coil_N and pf_coil_case_N, ordered
-        PF1U, PF1L, PF2U, PF2L, ..., PF5U, PF5L.
+        PF1U, PF1L, PF2U, PF2L, ..., PF5U, PF5L. The toroidal_field_coil
+        part uses user-supplied inner/outer profiles, straight segments, and an
+        assumed total extrusion thickness of 40 cm; it has no case/pack split.
+        The first_wall part uses the JSON tungsten layer contours (nominal 0.5 cm);
+        this is geometry only, without a physical material assignment. The smooth
+        plasma approximation is clipped to the first-wall cavity to avoid overlaps.
         Its triangularity metadata is the angular shaping
         coefficient, not the paper geometric triangularity target of 0.65.
 
@@ -1074,6 +1079,86 @@ def arc_from_2026_paper(
         rotation_angle,
     )
 
+    # Tungsten first wall: device_V3A.json wall.description_2d[1].vessel.unit[0].
+    # Use both supplied contours, not a new offset; source coordinates are metres.
+    first_wall_inner_m = [
+        (3.42, 0.0),
+        (3.42, 0.85),
+        (3.68, 2.1),
+        (3.46, 2.3),
+        (3.46, 2.33),
+        (3.76, 2.48),
+        (4.36, 3.48),
+        (4.77, 4.09),
+        (5.31, 4.09),
+        (5.31, 3.35),
+        (4.94, 3.52),
+        (4.18, 2.35),
+        (4.77, 1.84),
+        (5.23, 1.3),
+        (5.67, 0.75),
+        (5.82, 0.3),
+        (5.82, 0.0),
+        (5.82, -0.3),
+        (5.67, -0.75),
+        (5.23, -1.3),
+        (4.77, -1.84),
+        (4.18, -2.35),
+        (4.94, -3.52),
+        (5.31, -3.35),
+        (5.31, -4.09),
+        (4.77, -4.09),
+        (4.36, -3.48),
+        (3.76, -2.48),
+        (3.46, -2.33),
+        (3.46, -2.3),
+        (3.68, -2.1),
+        (3.42, -0.85),
+    ]
+    first_wall_outer_m = [
+        (3.415, 0.0),
+        (3.415, -0.8505145),
+        (3.674523, -2.098222),
+        (3.455, -2.297788),
+        (3.455, -2.33309),
+        (3.756462, -2.483821),
+        (4.355779, -3.482683),
+        (4.767336, -4.095),
+        (5.315, -4.095),
+        (5.315, -3.3422),
+        (4.941839, -3.513653),
+        (4.186568, -2.350932),
+        (4.773559, -1.843533),
+        (5.233856, -1.303184),
+        (5.674461, -0.7524271),
+        (5.825, -0.3008114),
+        (5.825, 0.0),
+        (5.825, 0.3008114),
+        (5.674461, 0.7524271),
+        (5.233856, 1.303184),
+        (4.773559, 1.843533),
+        (4.186568, 2.350932),
+        (4.941839, 3.513653),
+        (5.315, 3.3422),
+        (5.315, 4.095),
+        (4.767336, 4.095),
+        (4.355779, 3.482683),
+        (3.756462, 2.483821),
+        (3.455, 2.33309),
+        (3.455, 2.297788),
+        (3.674523, 2.098222),
+        (3.415, 0.8505145),
+    ]
+    first_wall_outer_face = _profile_face(_straight([(100 * r, 100 * z) for r, z in first_wall_outer_m]))
+    first_wall_inner_face = _profile_face(_straight([(100 * r, 100 * z) for r, z in first_wall_inner_m]))
+    first_wall_section = _single_face(first_wall_outer_face.cut(first_wall_inner_face).clean())
+    first_wall = _revolve_face(first_wall_section, rotation_angle)
+    #ARC The smooth plasma fit protrudes locally beyond the sourced limiter contour.
+    #ARC Preserve the wall profiles and contain the approximate plasma in its cavity.
+    #ARC Replace this clipping with a checked equilibrium-derived plasma boundary later.
+    #ARC Keep Boolean faces: spline surface unification can fail on this intersection.
+    plasma = plasma.intersect(_revolve_face(first_wall_inner_face, rotation_angle), clean=False)
+
     #ARC 4. Insert ARC vessel and internal-component R/Z profile coordinates.
     #ARC vessel = _revolve(outer_profile, rotation_angle).cut(cavity)
     #ARC inner_vessel = _revolve(profile, rotation_angle), only if applicable.
@@ -1085,12 +1170,127 @@ def arc_from_2026_paper(
     #ARC SPARC divertor-coil centres=(207, +/-144), (207, +/-125), sizes=15x15 cm.
     #ARC Insert ARC-specific profiles for any antenna or EFCCU coils retained.
 
-    #ARC 6. Confirm ARC TF construction; SPARC uses Princeton-D placeholders:
-    #ARC r1=72, r2=339, thickness=33, distance=33 (cm).
-    #ARC tf_coils = toroidal_field_coil_princeton_d(...,
-    #ARC     azimuthal_placement_angles=_tf_placement_angles(number_of_tf_coils),
-    #ARC     rotation_angle=rotation_angle)
-    #ARC For custom TF profiles use _clip_to_sector; support partial/full turns.
+    #ARC 6. TF profiles: fill BOTH closed perimeters in R/Z coordinates, in cm.
+    #ARC Each point is (R, Z, "straight") or (R, Z, "spline").
+    #ARC List points consecutively around each perimeter; repeat the first at the end.
+    #ARC The outer perimeter includes the entire outside edge and the inboard leg.
+    #ARC User-supplied outer perimeter in metres; retain source precision.
+    _tf_outer_points_m = [
+        (1.5074554987568587, 3.3923282715247196),
+        (1.7586289812671465, 3.3923282715247196),
+        (1.9574746549211248, 3.799689553100859),
+        (2.365631564000343, 4.384618572799932),
+        (2.7947195966220852, 4.802425015442126),
+        (3.3493943704989713, 5.199341135952211),
+        (4.102914818029836, 5.544031451132021),
+        (4.96109088327332, 5.700708867122844),
+        (5.777404701431756, 5.638037900726515),
+        (6.405338407707476, 5.4082443572733085),
+        (6.980944305126887, 5.0217733978292785),
+        (7.451894584833677, 4.5308508277247),
+        (7.8495859321416335, 3.9981476133559015),
+        (8.132156099965709, 3.507225043251323),
+        (8.45658851487483, 2.7551734464953728),
+        (8.66589975030007, 2.024012171871533),
+        (8.791486491555212, 1.3346315415119108),
+        (8.87521098572531, 0.530354139425687),
+        (8.896142109267835, -0.25303294052842773),
+        (8.791486491555212, -1.391555496728408),
+        (8.603106379672496, -2.195832898814631),
+        (8.310070650077162, -3.0627812672971864),
+        (8.037966044024351, -3.6581554480623133),
+        (7.723999190886491, -4.149078018166891),
+        (7.493756831918726, -4.4519876890824825),
+        (7.137927731695817, -4.838458648526512),
+        (6.8239608785579575, -5.120477997309994),
+        (6.478597340106311, -5.329381218631092),
+        (6.028578183942044, -5.5382844399521876),
+        (5.547162342463992, -5.653181211678792),
+        (5.212264365783608, -5.674071533810901),
+        (4.866900827331962, -5.663626372744847),
+        (4.375019424082648, -5.6009554063485165),
+        (3.8726724590620716, -5.433832829291639),
+        (3.3912566175840198, -5.224929607970543),
+        (2.8889096525634432, -4.890684453856787),
+        (2.5016838670267494, -4.525103816544865),
+        (2.051664710862483, -3.950619957911851),
+        (1.8214223518947183, -3.5119231931375445),
+        (1.7690945430384089, -3.4074715824769957),
+        (1.5074554987568587, -3.4074715824769957),
+        (1.486524375214335, -1.8824780668329861),
+        (1.486524375214335, -0.5246071282458544),
+        (1.4969899369855963, 0.7497025218128393),
+        (1.5074554987568587, 1.8986702390788741),
+        (1.5074554987568587, 2.8491798960898667),
+    ]
+    #ARC Convert to cm, connect supplied points by straight segments, and close.
+    #ARC Do not infer spline smoothing or enforce symmetry on the measured outline.
+    _tf_outer_points = [
+        (100 * r, 100 * z, "straight")
+        for r, z in _tf_outer_points_m + [_tf_outer_points_m[0]]
+    ]
+    #ARC The inner perimeter bounds the TF opening, not the vessel or plasma.
+    #ARC It must lie inside the outer perimeter, leaving the coil cross-section.
+    #ARC User-supplied inner perimeter in metres; retain source precision.
+    _tf_inner_points_m = [
+        (2.397028249314129, 0.2274444685100958),
+        (2.407493811085391, 0.9272702599357725),
+        (2.4179593728566533, 1.6479863734935574),
+        (2.5435461141117974, 2.4000379702495076),
+        (2.8365818437071333, 3.1834250502036223),
+        (3.2866009998714, 3.8414701973650787),
+        (3.7889479648919755, 4.321947606403603),
+        (4.375019424082648, 4.635302438385248),
+        (4.971556445044582, 4.781534693310016),
+        (5.348316668810014, 4.791979854376072),
+        (5.798335824974281, 4.656192760517358),
+        (6.227423857596023, 4.3637282506678226),
+        (6.6355807666752415, 3.9250314858935176),
+        (6.918150934499315, 3.4758895600531585),
+        (7.273980034722224, 2.671612157966934),
+        (7.5251535172325115, 1.7733283062862162),
+        (7.661205820258918, 0.7601476828788947),
+        (7.703068067343966, -0.16947165199998881),
+        (7.650740258487656, -0.8901877655577737),
+        (7.5565502025462985, -1.6109038791155594),
+        (7.368170090663582, -2.373400636937566),
+        (7.127462169924555, -3.0418909451650773),
+        (6.803029755015433, -3.6581554480623133),
+        (6.426269531250001, -4.159523179232947),
+        (6.0076470603995205, -4.535548977610921),
+        (5.463437848293896, -4.744452198932018),
+        (5.128539871613512, -4.765342521064127),
+        (4.80410745670439, -4.744452198932018),
+        (4.040121447402264, -4.472878011214593),
+        (3.474981111754116, -4.034181246440289),
+        (3.014496393818587, -3.4701425488733264),
+        (2.763322911308299, -3.031445784099022),
+        (2.574942799425583, -2.5196328918623347),
+        (2.4598216199417013, -2.028710321757753),
+        (2.407493811085391, -1.2871038860678592),
+        (2.407493811085391, -0.5872780946421834),
+    ]
+    #Convert to cm and close with straight segments, matching the outer profile.
+    _tf_inner_points = [
+        (100 * r, 100 * z, "straight")
+        for r, z in _tf_inner_points_m + [_tf_inner_points_m[0]]
+    ]
+    #Assumed total toroidal thickness in cm, not a published dimension.
+    #Extrude plus/minus 20 cm; 40 cm fits nominal 18-coil inboard spacing.
+    _tf_distance = 40.0
+    outer_wire = create_wire_workplane_from_points(points=_tf_outer_points, plane="XZ")
+    inner_wire = create_wire_workplane_from_points(points=_tf_inner_points, plane="XZ")
+    single_tf_coil = outer_wire.extrude(_tf_distance / 2, both=True).cut(
+        inner_wire.extrude(_tf_distance / 2, both=True)
+    ).val()
+    #Preserve the supplied profiles; no Princeton-D fit or automatic PF cuts.
+    placed_tf_coils = [
+        single_tf_coil.rotate((0, 0, 0), (0, 0, 1), angle)
+        for angle in _tf_placement_angles(number_of_tf_coils)
+    ]
+    tf_coils = _clip_to_sector(
+        cq.Workplane("XZ").add(cq.Compound.makeCompound(placed_tf_coils)), rotation_angle
+    )
 
     #ARC 7. Define unique component names, required shared faces, and clearances.
     #ARC parts = [("plasma", plasma), ("vessel", vessel), ...]
@@ -1101,10 +1301,10 @@ def arc_from_2026_paper(
     #ARC          elongation=elongation, triangularity=triangularity))
     #ARC Return implemented plasma, solenoids, and PF packs/cases; remaining components are pending.
     return _build_assembly(
-        [("plasma", plasma)] + central_solenoid + pf_coils,
+        [("plasma", plasma)] + central_solenoid + pf_coils + [("toroidal_field_coil", tf_coils), ("first_wall", first_wall)],
         {},
         colors,
-        {},
+        {"first_wall": (0.7, 0.7, 0.7)},
         dict(
             major_radius=major_radius,
             minor_radius=minor_radius,

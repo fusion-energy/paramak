@@ -27,6 +27,7 @@ def test_plasma_geometry_and_metadata(angle):
     assert reactor.names() == (
         ["plasma"] + [f"central_solenoid_{i}" for i in range(1, 7)]
         + [name for i in range(1, 11) for name in (f"pf_coil_{i}", f"pf_coil_case_{i}")]
+        + ["toroidal_field_coil", "first_wall"]
     )
     assert reactor.major_radius == 462.0
     assert reactor.minor_radius == 118.0
@@ -142,3 +143,62 @@ def test_pf_case_thickness_and_colors():
 def test_invalid_pf_case_thickness(thickness):
     with pytest.raises(ValueError, match="pf_coil_case_thickness"):
         paramak.arc_from_2026_paper(pf_coil_case_thickness=thickness)
+
+
+@pytest.mark.parametrize("angle", [90, 180, 360])
+def test_tf_profile_extrusion(angle):
+    #ARC Reference polygon area from the user profiles, cm2; extrusion assumption is 40 cm.
+    reactor = paramak.arc_from_2026_paper(rotation_angle=angle)
+    tf = reactor.objects["toroidal_field_coil"].obj.val()
+    assert tf.isValid()
+    assert tf.Volume() == pytest.approx(283368.27020694205 * 40 * 18 * angle / 360, rel=1e-6)
+    box = tf.BoundingBox()
+    assert box.xmax == pytest.approx(889.6142109267835, abs=1e-5)
+    assert box.zmin == pytest.approx(-567.4071533810901, abs=1e-5)
+    assert box.zmax == pytest.approx(570.0708867122844, abs=1e-5)
+    if angle < 360:
+        assert box.ymin >= -1e-5
+    if angle == 90:
+        assert box.xmin >= -1e-5
+    if angle == 360:
+        solids = tf.Solids()
+        assert len(solids) == 18
+        for first, second in zip(solids, solids[1:] + solids[:1]):
+            assert first.intersect(second).Volume() == pytest.approx(0, abs=1e-5)
+
+
+def test_tf_custom_count_and_color():
+    reactor = paramak.arc_from_2026_paper(
+        rotation_angle=360, number_of_tf_coils=6,
+        colors={"toroidal_field_coil": (0.2, 0.3, 0.4)},
+    )
+    tf = reactor.objects["toroidal_field_coil"]
+    assert len(tf.obj.val().Solids()) == 6
+    assert tf.obj.val().Volume() == pytest.approx(283368.27020694205 * 40 * 6, rel=1e-6)
+    assert tf.color.toTuple()[:3] == pytest.approx((0.2, 0.3, 0.4))
+
+
+@pytest.mark.parametrize("angle", [90, 180, 360])
+def test_first_wall_geometry(angle):
+    #ARC Independent full-turn volume from the JSON polygon moments; cm3.
+    reactor = paramak.arc_from_2026_paper(rotation_angle=angle)
+    wall = reactor.objects["first_wall"].obj.val()
+    assert wall.isValid()
+    assert len(wall.Solids()) == 1
+    assert wall.Volume() == pytest.approx(3041653.552999719 * angle / 360, rel=1e-6)
+    box = wall.BoundingBox()
+    assert box.xmax == pytest.approx(582.5, abs=1e-5)
+    assert box.zmax == pytest.approx(409.5, abs=1e-5)
+    assert box.zmin == pytest.approx(-409.5, abs=1e-5)
+    if angle < 360:
+        assert box.ymin >= -1e-5
+    if angle == 90:
+        assert box.xmin >= -1e-5
+    for child in reactor.children:
+        if child.name != "first_wall":
+            assert wall.intersect(child.obj.val()).Volume() == pytest.approx(0, abs=1e-4)
+
+
+def test_first_wall_color_override():
+    reactor = paramak.arc_from_2026_paper(colors={"first_wall": (0.3, 0.4, 0.5)})
+    assert reactor.objects["first_wall"].color.toTuple()[:3] == pytest.approx((0.3, 0.4, 0.5))

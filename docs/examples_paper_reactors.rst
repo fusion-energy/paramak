@@ -68,7 +68,7 @@ Six central-solenoid modules are also included as rectangular solid envelopes
 extracted from the public device_V3A.json element distributions (in cm). Names
 central_solenoid_1 through central_solenoid_6 correspond to CS1U, CS1L, CS2U,
 CS2L, CS3U, CS3L. These do not resolve turns or separate cases. Double-null
-X-points, vessel, blanket, divertor, and TF coils remain unimplemented.
+X-points, the remaining vessel layers, blanket, and divertor remain unimplemented.
 PF names pf_coil_1 through pf_coil_10 (and pf_coil_case_1 through pf_coil_case_10)
 map to PF1U, PF1L, PF2U, PF2L, ..., PF5U, PF5L. JSON element envelopes are
 assumed to be case-inclusive outer dimensions; changing case thickness changes
@@ -77,3 +77,28 @@ the winding/case split while preserving those dimensions.
 .. #ARC Confirm PF-case thickness and case-inclusive envelope interpretation from engineering data.
 
 No ARC rendering or export example is executed at this stage.
+
+
+.. #ARC Replace the assumed 40 cm TF extrusion when engineering data are available.
+
+The TF part is built from the supplied outer (46 points) and inner (36 points)
+R/Z perimeters, stored in metres and converted to cm. Straight segments join
+consecutive points, with automatic closure. Their difference is extruded by
+20 cm on each side of the placement plane: 40 cm total, an explicit modeling
+assumption rather than a published ARC dimension. Eighteen coils are placed by
+default and clipped to rotation_angle. No smoothing, Princeton-D fitting,
+automatic PF cuts, or separate TF winding/case split is applied. Other coil
+counts require checking packing with this fixed width.
+
+
+.. #ARC Replace the cavity-clipped smooth plasma with a checked equilibrium boundary.
+
+The first_wall part uses the tungsten first-wall inner/outer contours from
+``device_V3A.json``, converted from metres to cm and revolved through rotation_angle.
+Its nominal thickness is 0.5 cm; no new offset or thickness assumption is introduced.
+The smooth plasma fit would protrude locally through the supplied wall, so it is
+intersected with the inner cavity. This preserves the sourced wall geometry and
+avoids overlap, but is an approximation rather than an equilibrium reconstruction.
+The plasma metadata still describes the underlying analytical shaping inputs.
+The wall has a neutral gray display color, overridable with colors["first_wall"].
+A tungsten material composition/density is not assigned by the CAD constructor.

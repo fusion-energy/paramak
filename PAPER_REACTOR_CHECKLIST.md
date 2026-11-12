@@ -211,4 +211,12 @@ ruff check .
 git diff --check
 ```
 
-The constructor returns a plasma, solenoid, and PF pack/case approximation (R=462 cm, a=118 cm, elongation=1.8, primitive triangularity=arcsin(0.65)). TF count 18 is sourced from Hillesheim p.10; TF geometry is not yet built. PF-case thickness is now used to split ten JSON-derived PF envelopes into packs and cases; its 3 cm default and case-inclusive interpretation remain provisional. Six solenoid envelope solids are extracted from device_V3A.json and do not specify detailed turns/cases. It is exported but intentionally absent from active geometry, imprint, transport, animation, and export registries. Use the earlier focused ARC test commands after registering real geometry. No physical material assignments are introduced.
+The constructor returns a plasma, solenoid, and PF pack/case approximation (R=462 cm, a=118 cm, elongation=1.8, primitive triangularity=arcsin(0.65)). TF count 18 is sourced from Hillesheim p.10; TF geometry now uses the supplied inner/outer polygons with assumed 40 cm total extrusion. PF-case thickness is now used to split ten JSON-derived PF envelopes into packs and cases; its 3 cm default and case-inclusive interpretation remain provisional. Six solenoid envelope solids are extracted from device_V3A.json and do not specify detailed turns/cases. It is exported but intentionally absent from active geometry, imprint, transport, animation, and export registries. Use the earlier focused ARC test commands after registering real geometry. No physical material assignments are introduced.
+
+
+- [x] #ARC Build TF solids from the supplied outer/inner profiles, with assumed 40 cm total extrusion and 18 default placements. Princeton-D estimates are not used.
+- [ ] #ARC Replace the assumed TF extrusion width with engineering data; check packing when changing coil count.
+
+
+- [x] #ARC Add first_wall from the JSON tungsten layer's inner/outer contours (nominal 0.5 cm), with sector revolution, color overrides, and no runtime dependency on the reference JSON.
+- [ ] #ARC Replace the smooth plasma approximation with a checked equilibrium boundary. It is currently clipped to the first-wall inner cavity because the analytical fit otherwise overlaps the sourced wall locally; preserve the supplied first-wall geometry.
