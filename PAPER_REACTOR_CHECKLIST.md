@@ -189,13 +189,13 @@ The existing CI workflow runs for pull requests targeting any branch and pushes 
 ## ARC 2026 scaffold completion roadmap
 
 - [ ] #ARC Verify paper citation, DOI, figure, and units; the API year is provisional attribution.
-- [ ] #ARC Review every borrowed SPARC default and geometry placeholder in `arc_from_2026_paper`.
+- [ ] #ARC Review remaining borrowed SPARC defaults and geometry placeholders in `arc_from_2026_paper`.
 - [ ] #ARC Insert ARC dimensions/profiles, confirm component topology, contacts, clearances, and colors.
-- [ ] #ARC Replace `NotImplementedError` with assembly construction and matching plasma metadata.
+- [x] #ARC Return the implemented plasma, six solenoid envelopes, and ten PF packs/cases in an Assembly with matching metadata; other components remain pending.
 - [ ] #ARC Replace scaffold tests with ARC-specific geometry regressions and register in `PAPER_REACTORS`, `EXPECTED_PARTS`, and `MESH_SIZES`.
 - [ ] #ARC Register the `arc` imprint builder and expected touching pairs in `REACTORS`.
 - [ ] #ARC Pass 18 shared geometry/validation cases, 2 imprint cases, and 3 transport cases, plus paper-specific regressions.
-- [ ] #ARC Add executable rendering/export/animation examples only after geometry is implemented.
+- [ ] #ARC Add executable rendering/export/animation examples only after full reactor geometry is implemented.
 
 Every new Python scaffold comment uses the literal `#ARC` tag. Docstrings and Markdown use the same label; reStructuredText comments use `.. #ARC`. Existing unrelated comments are unchanged. Find completion points with:
 
@@ -203,7 +203,7 @@ Every new Python scaffold comment uses the literal `#ARC` tag. Docstrings and Ma
 rg -n '#ARC' src tests docs PAPER_REACTOR_CHECKLIST.md
 ```
 
-Current scaffold validation (no geometry or transport is attempted):
+Current plasma, solenoid, and PF pack/case validation (geometry, metadata, volume scaling, colors, and invalid inputs; no transport):
 
 ```bash
 python -m pytest -v tests/test_assemblies/test_arc_scaffold.py
@@ -211,4 +211,4 @@ ruff check .
 git diff --check
 ```
 
-The constructor is exported but intentionally absent from active geometry, imprint, transport, animation, and export registries. Use the earlier focused ARC test commands after registering real geometry. No physical material assignments are introduced.
+The constructor returns a plasma, solenoid, and PF pack/case approximation (R=462 cm, a=118 cm, elongation=1.8, primitive triangularity=arcsin(0.65)). TF count 18 is sourced from Hillesheim p.10; TF geometry is not yet built. PF-case thickness is now used to split ten JSON-derived PF envelopes into packs and cases; its 3 cm default and case-inclusive interpretation remain provisional. Six solenoid envelope solids are extracted from device_V3A.json and do not specify detailed turns/cases. It is exported but intentionally absent from active geometry, imprint, transport, animation, and export registries. Use the earlier focused ARC test commands after registering real geometry. No physical material assignments are introduced.

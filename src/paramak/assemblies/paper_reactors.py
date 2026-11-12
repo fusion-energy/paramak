@@ -979,44 +979,100 @@ def eu_demo_from_2015_paper(
 
 def arc_from_2026_paper(
     rotation_angle: float = 180.0,
-    number_of_tf_coils: int = 18,  #ARC Borrowed SPARC default; replace with ARC count.
+    number_of_tf_coils: int = 18,
     pf_coil_case_thickness: float = 3.0,  #ARC Borrowed SPARC default in cm; confirm for ARC.
     colors: dict | None = None,
 ) -> Assembly:
-    """Scaffold for a future ARC paper reactor; no geometry is returned yet.
+    """Create a plasma, central-solenoid, and PF-coil approximation of ARC V3A.
 
-    #ARC Supply the verified 2026 paper citation, DOI, figure, and approximations.
-    #ARC All defaults are borrowed from SPARC and are not verified ARC values.
+    #ARC Plasma: Howard et al. (2026), pp.3–4, doi:10.1017/S0022377826101573.
+    #ARC Smooth plasma and solid solenoid envelopes; no vessel or TF coils yet.
+    #ARC Solenoids: device_V3A.json, pf_active.coil cs1u/l, cs2u/l, cs3u/l.
+    #ARC Coil locations are sourced; envelope solids approximate the public element model.
 
     Args:
         rotation_angle: sector angle in degrees, greater than 0 and at most 360.
-        number_of_tf_coils: positive integer count distributed over 360 degrees.
-        pf_coil_case_thickness: provisional PF case thickness in cm.
+        number_of_tf_coils: positive TF-coil count, default 18 from Hillesheim et al.
+            (2026), p.10; TF geometry is not built yet.
+        pf_coil_case_thickness: assumed positive case thickness in cm, default 3.
+            PF element envelopes are treated as case-inclusive outer dimensions.
+            This split is a modeling assumption, not a measured ARC case size.
         colors: optional RGB(A) overrides keyed by component name.
 
     Returns:
-        An Assembly once ARC geometry is implemented.
+        An Assembly with plasma and six central_solenoid_N parts, ordered
+        CS1U, CS1L, CS2U, CS2L, CS3U, CS3L. Solenoids are rectangular solid
+        envelopes without separate cases or resolved turns. Ten PF winding packs
+        and ten separate cases are named pf_coil_N and pf_coil_case_N, ordered
+        PF1U, PF1L, PF2U, PF2L, ..., PF5U, PF5L.
+        Its triangularity metadata is the angular shaping
+        coefficient, not the paper geometric triangularity target of 0.65.
 
     Raises:
-        ValueError: if the sector angle or TF-coil count is invalid.
-        NotImplementedError: for valid inputs until ARC geometry is supplied.
+        ValueError: if the sector angle, TF-coil count, or PF case thickness
+            is invalid, including cases too thick to leave a winding pack.
     """
     _validate(rotation_angle, number_of_tf_coils)
 
-    #ARC 1. Replace SPARC plasma placeholders (cm except dimensionless shaping):
-    #ARC major_radius = 185.0; elongation = 1.97; triangularity = 0.31
-    #ARC paper_minor_radius = 57.0; minor_radius = paper_minor_radius - 6.0
-    #ARC Review the SPARC-only 6 cm clearance adjustment independently for ARC.
-    #ARC plasma = plasma_simplified(..., rotation_angle=rotation_angle)
+    major_radius = 462.0
+    minor_radius = 118.0
+    elongation = 1.8
 
-    #ARC 2. Supply ARC solenoid modules; SPARC has six at R=53.5, width=27.7.
-    #ARC SPARC Z centres: [-169.58, -118.43, -46.54, 46.54, 118.43, 169.58].
-    #ARC SPARC heights: [41.5, 40.5, 82.95, 82.95, 40.5, 41.5].
-    #ARC central_solenoid = [(name, poloidal_field_coil(...)), ...]
+    # Geometric triangularity target 0.65; primitive coefficient is asin(delta).
+    triangularity = float(np.arcsin(0.65))
 
-    #ARC 3. Supply ARC PF centres and outer widths/heights (SPARC has 8 coils).
-    #ARC pf_coils = _pf_coils_with_cases(centres, widths, heights,
-    #ARC     pf_coil_case_thickness, rotation_angle)
+    # ARC Smooth boundary; replace with equilibrium data for double-null geometry.
+    plasma = plasma_simplified(
+        major_radius=major_radius,
+        minor_radius=minor_radius,
+        elongation=elongation,
+        triangularity=triangularity,
+        rotation_angle=rotation_angle,
+    )
+
+    solenoid_bounds = [
+        (72.690000000000, 148.310000000000, 5.671739130435, 144.328260869565),  #ARC CS1U
+        (72.690000000000, 148.310000000000, -144.328260869565, -5.671739130435),  #ARC CS1L
+        (72.690000000000, 148.310000000000, 155.671739130435, 224.328260869565),  #ARC CS2U
+        (72.690000000000, 148.310000000000, -224.328260869565, -155.671739130435),  #ARC CS2L
+        (72.690000000000, 148.310000000000, 235.671739130435, 304.328260869565),  #ARC CS3U
+        (72.690000000000, 148.310000000000, -304.328260869565, -235.671739130435),  #ARC CS3L
+    ]
+    central_solenoid = [
+        (
+            f"central_solenoid_{index}",
+            poloidal_field_coil(
+                height=zmax - zmin,
+                width=rmax - rmin,
+                center_point=((rmin + rmax) / 2, (zmin + zmax) / 2),
+                rotation_angle=rotation_angle,
+            ),
+        )
+        for index, (rmin, rmax, zmin, zmax) in enumerate(solenoid_bounds, 1)
+    ]
+
+    # PF bounds from device_V3A.json annular-element extents, converted to cm.
+    # Assume envelopes include cases; actual ARC case dimensions remain unknown.
+    # Split the fixed outer size into pack/case exactly as the other paper models.
+    pf_bounds = [
+        (110.500000000000, 169.500000000000, 360.500000000000, 419.500000000000),  #ARC PF1U
+        (110.500000000000, 169.500000000000, -419.500000000000, -360.500000000000),  #ARC PF1L
+        (155.521739130435, 224.478260869565, 440.521739130435, 509.478260869565),  #ARC PF2U
+        (155.521739130435, 224.478260869565, -509.478260869565, -440.521739130435),  #ARC PF2L
+        (595.562500000000, 644.437500000000, 270.562500000000, 319.437500000000),  #ARC PF3U
+        (595.562500000000, 644.437500000000, -319.437500000000, -270.562500000000),  #ARC PF3L
+        (595.562500000000, 644.437500000000, 200.562500000000, 249.437500000000),  #ARC PF4U
+        (595.562500000000, 644.437500000000, -249.437500000000, -200.562500000000),  #ARC PF4L
+        (675.538461538462, 714.461538461538, 140.538461538462, 179.461538461538),  #ARC PF5U
+        (675.538461538462, 714.461538461538, -179.461538461538, -140.538461538462),  #ARC PF5L
+    ]
+    pf_coils = _pf_coils_with_cases(
+        [((rmin + rmax) / 2, (zmin + zmax) / 2) for rmin, rmax, zmin, zmax in pf_bounds],
+        [rmax - rmin for rmin, rmax, _, _ in pf_bounds],
+        [zmax - zmin for _, _, zmin, zmax in pf_bounds],
+        pf_coil_case_thickness,
+        rotation_angle,
+    )
 
     #ARC 4. Insert ARC vessel and internal-component R/Z profile coordinates.
     #ARC vessel = _revolve(outer_profile, rotation_angle).cut(cavity)
@@ -1043,6 +1099,16 @@ def arc_from_2026_paper(
     #ARC return _build_assembly(parts, cuts, colors, default_colors,
     #ARC     dict(major_radius=major_radius, minor_radius=minor_radius,
     #ARC          elongation=elongation, triangularity=triangularity))
-    raise NotImplementedError(
-        "arc_from_2026_paper is a scaffold: supply ARC paper geometry and review the borrowed SPARC defaults."
+    #ARC Return implemented plasma, solenoids, and PF packs/cases; remaining components are pending.
+    return _build_assembly(
+        [("plasma", plasma)] + central_solenoid + pf_coils,
+        {},
+        colors,
+        {},
+        dict(
+            major_radius=major_radius,
+            minor_radius=minor_radius,
+            elongation=elongation,
+            triangularity=triangularity,
+        ),
     )

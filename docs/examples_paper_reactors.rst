@@ -53,11 +53,27 @@ EU DEMO
 ARC scaffold
 ------------
 
-.. #ARC Replace this scaffold description with a verified paper citation and geometry example.
+.. #ARC Add vessel, blanket, divertor, and TF coils when sourced geometry is available.
 
 ``paramak.arc_from_2026_paper(rotation_angle=180.0, number_of_tf_coils=18,
 pf_coil_case_thickness=3.0, colors=None)`` is an unfinished scaffold.
-Its defaults are borrowed from SPARC, not verified ARC design values.
-Valid calls raise ``NotImplementedError`` until ARC geometry is supplied.
+The default TF-coil count of 18 is sourced from Hillesheim et al. (2026), p.10.
+Ten PF coils have separate winding packs and cases. The default 3 cm case
+thickness is a provisional SPARC value, not a verified ARC dimension.
+It returns a smooth plasma approximation using R=462 cm, a=118 cm,
+elongation 1.8, and geometric triangularity target 0.65 from Howard et al.
+(2026), doi:10.1017/S0022377826101573. The primitive uses an angular shaping
+coefficient of arcsin(0.65), which is also reported as assembly triangularity.
+Six central-solenoid modules are also included as rectangular solid envelopes
+extracted from the public device_V3A.json element distributions (in cm). Names
+central_solenoid_1 through central_solenoid_6 correspond to CS1U, CS1L, CS2U,
+CS2L, CS3U, CS3L. These do not resolve turns or separate cases. Double-null
+X-points, vessel, blanket, divertor, and TF coils remain unimplemented.
+PF names pf_coil_1 through pf_coil_10 (and pf_coil_case_1 through pf_coil_case_10)
+map to PF1U, PF1L, PF2U, PF2L, ..., PF5U, PF5L. JSON element envelopes are
+assumed to be case-inclusive outer dimensions; changing case thickness changes
+the winding/case split while preserving those dimensions.
+
+.. #ARC Confirm PF-case thickness and case-inclusive envelope interpretation from engineering data.
 
 No ARC rendering or export example is executed at this stage.
