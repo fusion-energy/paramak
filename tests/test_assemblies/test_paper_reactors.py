@@ -41,6 +41,7 @@ EXPECTED_PARTS = {
         "neutron_shield", 
         "flibe_first_wall", 
         "flibe_blanket",
+        "outer_blanket_wall",
     ],
     paramak.sparc_from_2020_paper: [
         "plasma",
@@ -173,6 +174,10 @@ def test_pf_coil_case_thickness_changes_the_split_not_the_coil_size(reactor_func
     thin = part_volumes(reactor_function(rotation_angle=10, pf_coil_case_thickness=1))
     thick = part_volumes(reactor_function(rotation_angle=10, pf_coil_case_thickness=5))
     assert thick["pf_coil_case_1"] > thin["pf_coil_case_1"]
+    if reactor_function is paramak.arc_from_2026_paper:
+        # the ARC data gives the winding pack size, the case is added around it
+        assert thick["pf_coil_1"] == pytest.approx(thin["pf_coil_1"], rel=1e-6)
+        return
     assert thick["pf_coil_1"] < thin["pf_coil_1"]
     assert thick["pf_coil_1"] + thick["pf_coil_case_1"] == pytest.approx(
         thin["pf_coil_1"] + thin["pf_coil_case_1"], rel=1e-6
@@ -266,24 +271,29 @@ def test_arc_defaults():
 
 @pytest.mark.parametrize("angle", [90, 180, 360])
 def test_arc_plasma_geometry_and_metadata(angle, arc_reference_reactors):
-    # Validate the smooth approximation; full equilibrium geometry is pending.
+    # Reference values measured from the boundary stored in the TokaMaker eqdsk file.
     reactor = arc_reference_reactors[angle]
     assert reactor.names() == (
         ["plasma"] + [f"central_solenoid_{i}" for i in range(1, 7)]
         + [name for i in range(1, 11) for name in (f"pf_coil_{i}", f"pf_coil_case_{i}")]
-        + ["toroidal_field_coil", "tungsten_first_wall", "inner_vacuum_vessel", "flibe_first_wall", "outer_vacuum_vessel", "neutron_shield", "flibe_blanket"]
+        + ["toroidal_field_coil", "tungsten_first_wall", "inner_vacuum_vessel", "flibe_first_wall", "outer_vacuum_vessel", "neutron_shield", "flibe_blanket", "outer_blanket_wall"]
     )
-    assert reactor.major_radius == 462.0
-    assert reactor.minor_radius == 118.0
-    assert reactor.elongation == 1.8
-    assert math.sin(reactor.triangularity) == pytest.approx(0.65)
+    assert reactor.major_radius == pytest.approx(461.7919445, abs=1e-6)
+    assert reactor.minor_radius == pytest.approx(116.9309615, abs=1e-6)
+    assert reactor.elongation == pytest.approx(1.93261, abs=1e-5)
+    assert reactor.triangularity == pytest.approx(0.60799, abs=1e-5)
     shape = reactor.objects["plasma"].obj.val()
     assert shape.isValid()
-    assert shape.Volume() > 0
+    assert len(shape.Solids()) == 1
+    # full-turn volume of the 800-point boundary polygon is 184.56 m3
+    assert shape.Volume() == pytest.approx(184.56e6 * angle / 360, rel=5e-3)
     box = shape.BoundingBox()
-    assert box.zmax == pytest.approx(118 * 1.8, abs=0.1)
-    assert box.zmin == pytest.approx(-118 * 1.8, abs=0.1)
-    assert box.xmax == pytest.approx(462 + 118, abs=0.1)
+    assert box.zmax == pytest.approx(226.034069, abs=0.1)
+    assert box.zmin == pytest.approx(-225.929689, abs=0.1)
+    assert box.xmax == pytest.approx(578.722906, abs=0.1)
+    # the equilibrium boundary sits clear of the first wall
+    wall = reactor.objects["tungsten_first_wall"].obj.val()
+    assert shape.distance(wall) == pytest.approx(2.86, abs=0.05)
 
 
 
@@ -299,13 +309,11 @@ def test_arc_plasma_sector_volume_and_color():
 
 @pytest.mark.parametrize("angle", [90, 180, 360])
 def test_arc_solenoid_envelopes(angle, arc_reference_reactors):
-    # Independent reference expectations from cs1u/l, cs2u/l, cs3u/l elements.
+    # Filament grid extents (centres plus half a grid spacing) of cs1u/l, cs2u/l, cs3u/l.
     reactor = arc_reference_reactors[angle]
-    inner_radius, outer_radius = 72.69, 148.31
+    inner_radius, outer_radius = 72, 149
     for index, (centre_z, height) in enumerate(
-        [(75, 138.6565217391304), (-75, 138.6565217391304),
-         (190, 68.6565217391304), (-190, 68.6565217391304),
-         (270, 68.6565217391304), (-270, 68.6565217391304)], 1
+        [(75, 140), (-75, 140), (190, 70), (-190, 70), (270, 70), (-270, 70)], 1
     ):
         shape = reactor.objects[f"central_solenoid_{index}"].obj.val()
         assert shape.isValid()
@@ -331,33 +339,37 @@ def test_arc_solenoid_color_override():
 
 @pytest.mark.parametrize("angle", [90, 180, 360])
 def test_arc_pf_coil_envelopes_and_cases(angle, arc_reference_reactors):
-    # Independent envelope expectations from JSON; 3 cm casing is assumed.
+    # Winding packs are the JSON filament grid extents; an assumed 3 cm case surrounds them.
     reactor = arc_reference_reactors[angle]
     for index in range(1, 11):
         pair = (index - 1) // 2
         centre_r = [140, 190, 620, 620, 695][pair]
         centre_z = [390, 475, 295, 225, 160][pair] * (1 if index % 2 else -1)
-        size = [59, 68.9565217391304, 48.875, 48.875, 38.9230769230769][pair]
+        size = [60, 70, 50, 50, 40][pair]
         core = reactor.objects[f"pf_coil_{index}"].obj.val()
         case = reactor.objects[f"pf_coil_case_{index}"].obj.val()
         assert core.isValid() and case.isValid()
         assert core.Volume() > 0 and case.Volume() > 0
         outer = case.BoundingBox()
         inner = core.BoundingBox()
-        assert outer.xmax == pytest.approx(centre_r + size / 2, abs=1e-5)
-        assert outer.zmin == pytest.approx(centre_z - size / 2, abs=1e-5)
-        assert outer.zmax == pytest.approx(centre_z + size / 2, abs=1e-5)
-        assert inner.zmin == pytest.approx(outer.zmin + 3, abs=1e-5)
-        assert inner.zmax == pytest.approx(outer.zmax - 3, abs=1e-5)
+        assert inner.xmax == pytest.approx(centre_r + size / 2, abs=1e-5)
+        assert inner.zmin == pytest.approx(centre_z - size / 2, abs=1e-5)
+        assert inner.zmax == pytest.approx(centre_z + size / 2, abs=1e-5)
+        assert outer.xmax == pytest.approx(inner.xmax + 3, abs=1e-5)
+        assert outer.zmin == pytest.approx(inner.zmin - 3, abs=1e-5)
+        assert outer.zmax == pytest.approx(inner.zmax + 3, abs=1e-5)
         assert core.intersect(case).Volume() == pytest.approx(0, abs=1e-5)
         assert core.distance(case) == pytest.approx(0, abs=1e-5)
         expected = math.pi * ((centre_r + size / 2)**2 - (centre_r - size / 2)**2) * size * angle / 360
+        assert core.Volume() == pytest.approx(expected, rel=1e-6)
+        outer_size = size + 6
+        expected = math.pi * ((centre_r + outer_size / 2)**2 - (centre_r - outer_size / 2)**2) * outer_size * angle / 360
         assert core.fuse(case).Volume() == pytest.approx(expected, rel=1e-6)
 
 
 
 def test_arc_pf_case_thickness_and_colors():
-    # Hypothesized thickness changes the split while preserving the outer envelope.
+    # The assumed case is added around the winding pack, which keeps its size.
     thin = paramak.arc_from_2026_paper(rotation_angle=30, pf_coil_case_thickness=1)
     thick = paramak.arc_from_2026_paper(
         rotation_angle=30, pf_coil_case_thickness=5,
@@ -367,11 +379,8 @@ def test_arc_pf_case_thickness_and_colors():
         core, case = f"pf_coil_{index}", f"pf_coil_case_{index}"
         def volume(assembly, name):
             return assembly.objects[name].obj.val().Volume()
-        assert volume(thick, core) < volume(thin, core)
+        assert volume(thick, core) == pytest.approx(volume(thin, core), rel=1e-6)
         assert volume(thick, case) > volume(thin, case)
-        assert volume(thick, core) + volume(thick, case) == pytest.approx(
-            volume(thin, core) + volume(thin, case), rel=1e-6,
-        )
     assert thick.objects["pf_coil_1"].color.toTuple()[:3] == pytest.approx((0.1, 0.2, 0.3))
     assert thick.objects["pf_coil_case_1"].color.toTuple()[:3] == pytest.approx((0.4, 0.5, 0.6))
 
@@ -384,7 +393,7 @@ def test_arc_tf_profile_extrusion(angle, arc_reference_reactors):
     reactor = arc_reference_reactors[angle]
     tf = reactor.objects["toroidal_field_coil"].obj.val()
     assert tf.isValid()
-    assert tf.Volume() == pytest.approx(283368.27020694205 * 40 * 18 * angle / 360, rel=0.01)
+    assert tf.Volume() == pytest.approx(282664.2849663841 * 40 * 18 * angle / 360, rel=0.01)
     edge_types = {edge.geomType() for edge in tf.Edges()}
     assert {"BSPLINE", "LINE"} <= edge_types
     box = tf.BoundingBox()
@@ -410,7 +419,7 @@ def test_arc_tf_custom_count_and_color():
     )
     tf = reactor.objects["toroidal_field_coil"]
     assert len(tf.obj.val().Solids()) == 6
-    assert tf.obj.val().Volume() == pytest.approx(283368.27020694205 * 40 * 6, rel=0.01)
+    assert tf.obj.val().Volume() == pytest.approx(282664.2849663841 * 40 * 6, rel=0.01)
     assert tf.color.toTuple()[:3] == pytest.approx((0.2, 0.3, 0.4))
 
 
@@ -579,7 +588,53 @@ def test_arc_flibe_blanket_color():
 
 
 
+@pytest.mark.parametrize("angle", [90, 180, 360])
+def test_arc_outer_blanket_wall_geometry(angle, arc_reference_reactors):
+    # Independent polygon-moment volume between the two JSON Blanket contours, in cm3.
+    reactor = arc_reference_reactors[angle]
+    wall = reactor.objects["outer_blanket_wall"].obj.val()
+    assert wall.isValid()
+    assert len(wall.Solids()) == 1
+    assert wall.Volume() == pytest.approx(14487629.277982116 * angle / 360, rel=1e-6)
+    box = wall.BoundingBox()
+    assert box.xmax == pytest.approx(722, abs=1e-5)
+    assert box.zmax == pytest.approx(470.0323, abs=1e-5)
+    assert box.zmin == pytest.approx(-470.0323, abs=1e-5)
+    if angle < 360:
+        assert box.ymin >= -1e-5
+    if angle == 90:
+        assert box.xmin >= -1e-5
+    for child in reactor.children:
+        if child.name != "outer_blanket_wall":
+            assert wall.intersect(child.obj.val()).Volume() == pytest.approx(0, abs=1e-4), child.name
+    for name in ("flibe_blanket", "neutron_shield"):
+        assert wall.distance(reactor.objects[name].obj.val()) == pytest.approx(0, abs=1e-5)
+    # the wall is clear of the toroidal field coils
+    assert wall.distance(reactor.objects["toroidal_field_coil"].obj.val()) > 3
+
+
+
+def test_arc_outer_blanket_wall_interfaces_imprint_and_color(arc_reference_reactors):
+    # The wall must meet the bulk liquid and the shield on shared imprinted faces.
+    reactor = arc_reference_reactors[180]
+    assembly = cq.Assembly()
+    for name in ("neutron_shield", "flibe_blanket", "outer_blanket_wall"):
+        assembly.add(reactor.objects[name].obj, name=name)
+    _, origins = imprint(assembly)
+    faces = {}
+    for solid, names in origins.items():
+        assert len(names) == 1
+        for face in solid.Faces():
+            faces.setdefault(face, set()).add(names[0].split("/")[-1])
+    pairs = {frozenset(names) for names in faces.values() if len(names) == 2}
+    assert frozenset(("flibe_blanket", "outer_blanket_wall")) in pairs
+    assert frozenset(("neutron_shield", "outer_blanket_wall")) in pairs
+    colored = paramak.arc_from_2026_paper(colors={"outer_blanket_wall": (0.2, 0.3, 0.8)})
+    assert colored.objects["outer_blanket_wall"].color.toTuple()[:3] == pytest.approx((0.2, 0.3, 0.8))
+
+
+
 @pytest.mark.parametrize("thickness", [20])
-def test_arc_case_too_thick_for_smallest_coil(thickness):
+def test_arc_case_too_thick_to_clear_the_tf_coils(thickness):
     with pytest.raises(ValueError, match="pf_coil_case_thickness"):
         paramak.arc_from_2026_paper(pf_coil_case_thickness=thickness)
