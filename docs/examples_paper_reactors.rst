@@ -57,8 +57,7 @@ ARC
 
 The inner and outer TF profiles were read off Figure 2; the other component
 profiles and coil locations come from the attached JSON. The model uses an
-assumed 40 cm TF extrusion and 3 cm PF-case thickness. Its smooth plasma is
-clipped to the first-wall cavity, and physical materials are not assigned.
+assumed 40 cm TF extrusion and 3 cm PF-case thickness.
 
 .. cadquery::
     :select: result
