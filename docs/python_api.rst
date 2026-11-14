@@ -15,6 +15,7 @@ Assemblies
 Reactors from papers
 --------------------
 
+.. autofunction:: arc_from_2026_paper
 .. autofunction:: sparc_from_2020_paper
 .. autofunction:: iter_from_2020_paper
 .. autofunction:: eu_demo_from_2015_paper
