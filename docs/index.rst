@@ -15,6 +15,7 @@ Paramak documentation
    install
    examples
    python_api
+   examples_vis
 
 Parameter driven CAD creation for fusion reactors.
 

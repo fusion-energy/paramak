@@ -27,7 +27,6 @@ These examples show how to make various reactors with different options.
 .. toctree::
    :maxdepth: 3
 
-   examples_vis
    examples_tokamak
    examples_spherical_tokamak
    examples_paper_reactors
