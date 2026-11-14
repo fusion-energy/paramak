@@ -49,3 +49,23 @@ EU DEMO
     import paramak
 
     result = paramak.eu_demo_from_2015_paper(rotation_angle=180)
+
+ARC
+---
+
+- Based on Figure 2 of J. C. Hillesheim et al., "Overview of the physics basis for the ARC fusion power plant", Journal of Plasma Physics 92, E69 (2026), `doi:10.1017/S0022377826101706 <https://doi.org/10.1017/S0022377826101706>`_, and the accompanying ``device_V3A.json`` file described in Appendix A.
+
+The inner and outer TF profiles were read off Figure 2; the plasma boundary
+comes from the attached TokaMaker equilibrium file and the other component
+profiles and coil locations from the attached JSON. The model uses an
+assumed 40 cm TF extrusion and an assumed 3 cm case added around each PF
+winding pack.
+
+.. cadquery::
+    :select: result
+    :width: 100%
+    :height: 600px
+
+    import paramak
+
+    result = paramak.arc_from_2026_paper(rotation_angle=180)
