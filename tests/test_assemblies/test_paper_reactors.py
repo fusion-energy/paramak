@@ -192,7 +192,8 @@ def test_invalid_pf_coil_case_thickness(reactor_function, pf_coil_case_thickness
 
 
 @pytest.mark.parametrize("reactor_function", PAPER_REACTORS, ids=lambda f: f.__name__)
-@pytest.mark.parametrize("rotation_angle", [30, 180, 360])
+# the 180 degree builds are transported by test_imprint.py
+@pytest.mark.parametrize("rotation_angle", [30, 360])
 @pytest.mark.skipif(not importlib.util.find_spec("cad_to_dagmc"), reason="Skipping transport tests")
 def test_transport(reactor_function, rotation_angle, tmp_path, monkeypatch):
     """Meshes the reactor into a DAGMC geometry and transports neutrons through
@@ -255,7 +256,7 @@ def test_arc_public_export():
 
 
 def test_arc_defaults():
-    # TF default is sourced from Hillesheim p.10; PF case remains provisional.
+    # 18 TF coils is the ARC V3A baseline (page 10 of the paper), the PF coil case thickness is assumed
     parameters = inspect.signature(paramak.arc_from_2026_paper).parameters
     assert parameters["number_of_tf_coils"].default == 18
     assert parameters["rotation_angle"].default == 180.0
@@ -331,10 +332,17 @@ def test_arc_solenoid_envelopes(angle, arc_reference_reactors):
         assert box.xmax == pytest.approx(outer_radius, abs=1e-5)
         expected_volume = math.pi * (outer_radius**2 - inner_radius**2) * height * angle / 360
         assert shape.Volume() == pytest.approx(expected_volume, rel=1e-6)
-    shapes = [child.obj.val() for child in reactor.children]
-    for i, first in enumerate(shapes):
-        for second in shapes[i + 1 :]:
-            assert first.intersect(second).Volume() == pytest.approx(0, abs=1e-5)
+
+
+# test_imprint.py checks the 180 degree build
+@pytest.mark.parametrize("angle", [90, 360])
+def test_arc_parts_do_not_overlap(angle, arc_reference_reactors):
+    "imprinting splits any region shared by two parts into a solid of its own"
+    reactor = arc_reference_reactors[angle]
+    solid_count = sum(len(obj.moved(loc).Solids()) for obj, _, loc, _ in reactor)
+    shape, origins = imprint(reactor)
+    assert len(shape.Solids()) == solid_count
+    assert [names for names in origins.values() if len(names) > 1] == []
 
 
 @pytest.mark.parametrize("angle", [90, 180, 360])
@@ -431,9 +439,6 @@ def test_arc_tungsten_first_wall_geometry(angle, arc_reference_reactors):
         assert box.ymin >= -1e-5
     if angle == 90:
         assert box.xmin >= -1e-5
-    other_parts = (child for child in reactor.children if child.name != "tungsten_first_wall")
-    for part in other_parts:
-        assert wall.intersect(part.obj.val()).Volume() == pytest.approx(0, abs=1e-4), part.name
 
 
 @pytest.mark.parametrize("angle", [90, 180, 360])
@@ -458,9 +463,6 @@ def test_arc_vessel_walls_and_neutron_shield(angle, arc_reference_reactors):
             assert box.ymin >= -1e-5
         if angle == 90:
             assert box.xmin >= -1e-5
-        for child in reactor.children:
-            if child.name != name:
-                assert shape.intersect(child.obj.val()).Volume() == pytest.approx(0, abs=1e-4), (name, child.name)
     first = reactor.objects["tungsten_first_wall"].obj.val()
     inner = reactor.objects["inner_vacuum_vessel"].obj.val()
     outer = reactor.objects["outer_vacuum_vessel"].obj.val()
@@ -523,9 +525,6 @@ def test_arc_flibe_blanket_geometry(angle, arc_reference_reactors):
         assert box.ymin >= -1e-5
     if angle == 90:
         assert box.xmin >= -1e-5
-    for child in reactor.children:
-        if child.name != "flibe_blanket":
-            assert blanket.intersect(child.obj.val()).Volume() == pytest.approx(0, abs=1e-4), child.name
     for name in ("outer_vacuum_vessel", "neutron_shield"):
         assert blanket.distance(reactor.objects[name].obj.val()) == pytest.approx(0, abs=1e-5)
 
@@ -563,9 +562,6 @@ def test_arc_outer_blanket_wall_geometry(angle, arc_reference_reactors):
         assert box.ymin >= -1e-5
     if angle == 90:
         assert box.xmin >= -1e-5
-    for child in reactor.children:
-        if child.name != "outer_blanket_wall":
-            assert wall.intersect(child.obj.val()).Volume() == pytest.approx(0, abs=1e-4), child.name
     for name in ("flibe_blanket", "neutron_shield"):
         assert wall.distance(reactor.objects[name].obj.val()) == pytest.approx(0, abs=1e-5)
     # the wall is clear of the toroidal field coils

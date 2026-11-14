@@ -1193,7 +1193,7 @@ _ARC_MAX_PF_COIL_CASE_THICKNESS = 6.0
 def arc_from_2026_paper(
     rotation_angle: float = 180.0,
     number_of_tf_coils: int = 18,
-    pf_coil_case_thickness: float = 3.0,  # Borrowed SPARC default in cm
+    pf_coil_case_thickness: float = 3.0,
     colors: dict | None = None,
 ) -> Assembly:
     """Creates a simplified ARC V3A reactor from a published paper and its data.
@@ -1218,9 +1218,12 @@ def arc_from_2026_paper(
     The plasma is the 800-point boundary stored in
     ARC_V3A_kinetic_tokamaker_800res.eqdsk, with its two X-points kept as
     corners. The assembly major radius, minor radius, elongation and
-    triangularity are measured from that boundary (461.8 cm, 116.9 cm, 1.93
-    and 0.61), so they differ slightly from the nominal 462 cm, 118 cm, 1.8
-    and 0.65 in Table 2 of the paper.
+    triangularity are measured from that boundary, and they do not all match
+    the separatrix values in Table 2 (page 10) of the paper. The major radius
+    (461.8 cm against 462 cm) and minor radius (116.9 cm against 118 cm)
+    agree to within 1%, but the boundary is more elongated (1.93 against
+    1.8) and less triangular (0.61 against 0.65), and the plasma volume is
+    184.6 m3 against 189 m3.
     Solenoid module and poloidal field coil winding pack cross-sections are
     the extents of the JSON filament grids (outermost filament centres plus
     half a grid spacing). The JSON has no coil cases, so an assumed case is
@@ -1610,13 +1613,14 @@ def arc_from_2026_paper(
     outer_blanket_wall_section = _single_face(blanket_tank_outer_face.cut(blanket_tank_inner_face).clean())
     outer_blanket_wall = _revolve_face(outer_blanket_wall_section, rotation_angle)
 
-    # 6. TF profiles: fill BOTH closed perimeters in R/Z coordinates, in cm.
-    # Coordinates below are metres; each connection describes the outgoing edge.
+    # Toroidal field coils: the region between an outer and an inner
+    # perimeter read off Figure 2, in metres, where each connection describes
+    # the outgoing edge.
     # The inboard legs and outer horizontal shoulders are straight and the
     # remaining arcs are splines. The outer inboard leg is made vertical at its
     # most common digitized radius (digitized spread 2 cm), which keeps it clear
     # of the central solenoid.
-    _tf_outer_points_m = [
+    tf_outer_points_m = [
         (1.5074554987568587, 3.3923282715247196, "straight"),
         (1.7586289812671465, 3.3923282715247196, "spline"),
         (1.9574746549211248, 3.799689553100859, "spline"),
@@ -1664,11 +1668,11 @@ def arc_from_2026_paper(
         (1.5074554987568587, 1.8986702390788741, "straight"),
         (1.5074554987568587, 2.8491798960898667, "straight"),
     ]
-    _tf_outer_points = [
-        (100 * r, 100 * z, connection) for r, z, connection in _tf_outer_points_m + [_tf_outer_points_m[0]]
+    tf_outer_points = [
+        (100 * r, 100 * z, connection) for r, z, connection in tf_outer_points_m + [tf_outer_points_m[0]]
     ]
     # The inner perimeter bounds the TF opening, not the vessel or plasma.
-    _tf_inner_points_m = [
+    tf_inner_points_m = [
         (2.397028249314129, 0.2274444685100958, "straight"),
         (2.407493811085391, 0.9272702599357725, "straight"),
         (2.4179593728566533, 1.6479863734935574, "spline"),
@@ -1706,14 +1710,14 @@ def arc_from_2026_paper(
         (2.407493811085391, -1.2871038860678592, "straight"),
         (2.407493811085391, -0.5872780946421834, "straight"),
     ]
-    _tf_inner_points = [
-        (100 * r, 100 * z, connection) for r, z, connection in _tf_inner_points_m + [_tf_inner_points_m[0]]
+    tf_inner_points = [
+        (100 * r, 100 * z, connection) for r, z, connection in tf_inner_points_m + [tf_inner_points_m[0]]
     ]
-    _tf_distance = 40.0
-    outer_wire = create_wire_workplane_from_points(points=_tf_outer_points, plane="XZ")
-    inner_wire = create_wire_workplane_from_points(points=_tf_inner_points, plane="XZ")
+    tf_thickness = 40.0
+    outer_wire = create_wire_workplane_from_points(points=tf_outer_points, plane="XZ")
+    inner_wire = create_wire_workplane_from_points(points=tf_inner_points, plane="XZ")
     single_tf_coil = (
-        outer_wire.extrude(_tf_distance / 2, both=True).cut(inner_wire.extrude(_tf_distance / 2, both=True)).val()
+        outer_wire.extrude(tf_thickness / 2, both=True).cut(inner_wire.extrude(tf_thickness / 2, both=True)).val()
     )
     # Interpolate the supplied contours; no Princeton-D fit or automatic PF cuts.
     placed_tf_coils = [
