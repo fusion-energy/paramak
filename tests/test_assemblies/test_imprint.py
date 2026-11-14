@@ -9,9 +9,10 @@ what imprinting makes. These tests check two things on the imprinted geometry:
   but is left a sliver away, or meets it on surfaces that are only nearly
   coincident, does not imprint and would leave a gap in the DAGMC geometry
 
-Parts that only touch along a line, such as the outer blanket layer of
-tokamak_from_plasma meeting the centre column at the midplane, correctly share
-no face and are not listed.
+Parts that only touch along a line share no face and are hard to mesh, so the
+builds avoid them. The blanket made by tokamak_from_plasma is curved on the
+inboard side and would meet the centre column along a circle at the midplane,
+so its build has a 2 cm gap between the two, taken off the plasma.
 """
 
 import importlib
@@ -41,6 +42,17 @@ TOKAMAK_RADIAL_BUILD = [
     (L.SOLID, 20),
     (L.SOLID, 120),
     (L.SOLID, 10),
+]
+
+# the same overall size as TOKAMAK_RADIAL_BUILD with a 2 cm gap between the
+# centre column and the blanket, so the curved blanket does not touch the
+# centre column along a line
+TOKAMAK_FROM_PLASMA_RADIAL_BUILD = [
+    *TOKAMAK_RADIAL_BUILD[:3],
+    (L.GAP, 2),
+    *TOKAMAK_RADIAL_BUILD[3:7],
+    (L.PLASMA, 298),
+    *TOKAMAK_RADIAL_BUILD[8:],
 ]
 
 SPHERICAL_RADIAL_BUILD = [
@@ -75,7 +87,7 @@ def segments(arc_length, number_of_segments, gap, name):
 
 def tokamak_from_plasma(**kwargs):
     return paramak.tokamak_from_plasma(
-        radial_build=TOKAMAK_RADIAL_BUILD, elongation=2, triangularity=0.55, **kwargs
+        radial_build=TOKAMAK_FROM_PLASMA_RADIAL_BUILD, elongation=2, triangularity=0.55, **kwargs
     )
 
 
@@ -105,19 +117,17 @@ def tokamak():
 
 
 def with_divertor():
-    divertor = (
-        cq.Workplane("XZ").polyline([(300, -700), (300, 0), (400, 0), (400, -700)]).close().revolve(180)
-    )
+    divertor = cq.Workplane("XZ").polyline([(300, -700), (300, 0), (400, 0), (400, -700)]).close().revolve(180)
     return tokamak_from_plasma(rotation_angle=180, extra_intersect_shapes=[divertor])
 
 
 def with_poloidal_segments():
-    arc = paramak.poloidal_arc_length(TOKAMAK_RADIAL_BUILD, elongation=2, triangularity=0.55)
+    arc = paramak.poloidal_arc_length(TOKAMAK_FROM_PLASMA_RADIAL_BUILD, elongation=2, triangularity=0.55)
     return tokamak_from_plasma(rotation_angle=180, poloidal_build=[None, segments(arc, 6, 5, "row"), None, None])
 
 
 def with_toroidal_sectors():
-    arc = paramak.toroidal_arc_length(TOKAMAK_RADIAL_BUILD, rotation_angle=90)
+    arc = paramak.toroidal_arc_length(TOKAMAK_FROM_PLASMA_RADIAL_BUILD, rotation_angle=90)
     sectors = segments(arc, 4, 20, "sector")
     return tokamak_from_plasma(rotation_angle=90, toroidal_build=[None, sectors, sectors, None])
 
@@ -249,6 +259,13 @@ def test_neighbouring_parts_share_faces(imprinted):
     assert {name for pair in expected_pairs for name in pair} <= set(names)
     missing = {tuple(sorted(pair)) for pair in expected_pairs} - shared
     assert missing == set(), f"parts that should touch but share no face: {sorted(missing)}"
+
+
+def test_tokamak_from_plasma_blanket_clears_centre_column():
+    "the 2 cm gap in the build keeps the curved blanket off the centre column"
+    reactor = tokamak_from_plasma(rotation_angle=180)
+    parts = {name.split("/")[-1]: obj.moved(loc) for obj, name, loc, _ in reactor}
+    assert parts["layer_2"].distance(parts["layer_5"]) == pytest.approx(2, abs=1e-6)
 
 
 @pytest.mark.parametrize("reactor", list(REACTORS))
