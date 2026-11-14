@@ -15,13 +15,17 @@ inboard side and would meet the centre column along a circle at the midplane,
 so its build has a 2 cm gap between the two, taken off the plasma.
 """
 
+import importlib
 from collections import defaultdict
+from pathlib import Path
 
 import cadquery as cq
 import pytest
 from cadquery.occ_impl.assembly import imprint
 
 import paramak
+
+from .test_utils import transport_particles_on_h5m_geometry
 
 L = paramak.LayerType
 
@@ -262,3 +266,35 @@ def test_tokamak_from_plasma_blanket_clears_centre_column():
     reactor = tokamak_from_plasma(rotation_angle=180)
     parts = {name.split("/")[-1]: obj.moved(loc) for obj, name, loc, _ in reactor}
     assert parts["layer_2"].distance(parts["layer_5"]) == pytest.approx(2, abs=1e-6)
+
+
+@pytest.mark.parametrize("reactor", list(REACTORS))
+@pytest.mark.skipif(not importlib.util.find_spec("cad_to_dagmc"), reason="Skipping transport tests")
+def test_transport(reactor, tmp_path, monkeypatch):
+    """Meshes the reactor into a DAGMC geometry and transports neutrons through
+    it with OpenMC. Overlapping or badly imprinted volumes lose particles, and
+    OpenMC stops with an error when more than a few are lost."""
+    from cad_to_dagmc import CadToDagmc
+
+    cross_sections_xml = str(Path(__file__).parents[1] / "cross_sections.xml")
+    monkeypatch.chdir(tmp_path)
+
+    build, _expected_pairs = REACTORS[reactor]
+    assembly = build()
+    # one tag per solid, as a part can be several solids (the PF coils cut the
+    # outer layer of the spherical tokamak in three). Tags are numbered by part
+    # to keep them short, as the 28 character mat_extra_intersect_shapes_1
+    # comes back from the h5m file as mat_extra_intersect_shapes_10.
+    material_tags = [f"mat_{index}" for index, (obj, *_) in enumerate(assembly) for _ in obj.Solids()]
+
+    my_model = CadToDagmc()
+    my_model.add_cadquery_object(cadquery_object=assembly, material_tags=material_tags)
+    my_model.export_dagmc_h5m_file(filename="dagmc.h5m", min_mesh_size=5, max_mesh_size=50)
+
+    flux = transport_particles_on_h5m_geometry(
+        h5m_filename="dagmc.h5m",
+        material_tags=material_tags,
+        nuclides=["H1"] * len(set(material_tags)),
+        cross_sections_xml=cross_sections_xml,
+    )
+    assert flux > 0.0
