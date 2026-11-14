@@ -1,7 +1,9 @@
 """Makes the reactors from papers animation on the front page of the
 documentation. The SPARC, ITER, EU DEMO and ARC reactors are shown one after
 the other, each built with a rotation_angle that sweeps from 1 to 360 degrees
-and back again.
+and back again. Each frame is labelled in the lower left corner with the
+reactor name and the paper its geometry is from, so the source stays with the
+animation if it is copied, as the Paramak watermark does.
 
 This writes an mp4 on a white background and a webm with a transparent
 background (so the animation also works on dark pages), in the same format as
@@ -17,7 +19,7 @@ from concurrent.futures import ProcessPoolExecutor
 import cadquery as cq
 import numpy as np
 from cadquery.occ_impl.assembly import toVTKAssy
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from vtkmodules.vtkIOImage import vtkPNGWriter
 from vtkmodules.vtkRenderingCore import vtkRenderer, vtkRenderWindow, vtkWindowToImageFilter
 from vtkmodules.vtkRenderingOpenGL2 import vtkOpenGLRenderer  # noqa: F401 loads the OpenGL backend
@@ -36,6 +38,15 @@ ZOOM = 1.2
 SIZE = (640, 512)  # the same size as the tokamak and spherical tokamak animations
 RENDER_SCALE = 2  # frames are rendered larger then cropped to the reactor and scaled down
 MARGIN = 0.03  # space left around the reactor, as a fraction of the cropped size
+# the reactor name and the paper its geometry is from, drawn in the lower left
+# corner, which is clear of the reactor in every frame
+LABELS = {
+    "sparc": ("SPARC", "Creely et al. 2020"),
+    "iter": ("ITER", "ITER Project 2020"),
+    "eu_demo": ("EU DEMO", "Kemp et al. 2015"),
+    "arc": ("ARC", "Hillesheim et al. 2026"),
+}
+LABEL_COLOR = (102, 102, 102, 255)  # the grey of the watermark
 
 
 def add_watermark(reactor, z):
@@ -142,8 +153,29 @@ def crop_box(label):
     )
 
 
+def draw_label(image, label):
+    """Draws the reactor name and its paper in the lower left corner. It is
+    drawn on the finished frame, so it is the same size for every reactor and
+    reads flat on to the viewer. Pillow's built in font is used so no font
+    file is needed, with a stroke to make the name bold."""
+    name, paper = LABELS[label]
+    draw = ImageDraw.Draw(image)
+    left, bottom = 16, SIZE[1] - 28
+    draw.text((left, bottom), paper, font=ImageFont.load_default(size=15), fill=LABEL_COLOR, anchor="ls")
+    draw.text(
+        (left, bottom - 24),
+        name,
+        font=ImageFont.load_default(size=34),
+        fill=LABEL_COLOR,
+        anchor="ls",
+        stroke_width=1,
+        stroke_fill=LABEL_COLOR,
+    )
+
+
 def crop_frames(label):
-    """Crops all the frames of a reactor to its crop box and scales them to SIZE."""
+    """Crops all the frames of a reactor to its crop box, scales them to SIZE
+    and labels them."""
     box = crop_box(label)
     for angle in ANGLES:
         for path in frame_paths(label, angle):
@@ -153,7 +185,9 @@ def crop_frames(label):
             background = (255, 255, 255, 255) if mode == "RGB" else (0, 0, 0, 0)
             cropped = Image.new("RGBA", (box[2] - box[0], box[3] - box[1]), background)
             cropped.paste(image.convert("RGBA"), (-box[0], -box[1]))
-            cropped.resize(SIZE, Image.Resampling.LANCZOS).convert(mode).save(path)
+            frame = cropped.resize(SIZE, Image.Resampling.LANCZOS)
+            draw_label(frame, label)
+            frame.convert(mode).save(path)
 
 
 if __name__ == "__main__":
