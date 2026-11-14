@@ -1665,8 +1665,7 @@ def arc_from_2026_paper(
         (1.5074554987568587, 2.8491798960898667, "straight"),
     ]
     _tf_outer_points = [
-        (100 * r, 100 * z, connection)
-        for r, z, connection in _tf_outer_points_m + [_tf_outer_points_m[0]]
+        (100 * r, 100 * z, connection) for r, z, connection in _tf_outer_points_m + [_tf_outer_points_m[0]]
     ]
     # The inner perimeter bounds the TF opening, not the vessel or plasma.
     _tf_inner_points_m = [
@@ -1708,29 +1707,25 @@ def arc_from_2026_paper(
         (2.407493811085391, -0.5872780946421834, "straight"),
     ]
     _tf_inner_points = [
-        (100 * r, 100 * z, connection)
-        for r, z, connection in _tf_inner_points_m + [_tf_inner_points_m[0]]
+        (100 * r, 100 * z, connection) for r, z, connection in _tf_inner_points_m + [_tf_inner_points_m[0]]
     ]
     _tf_distance = 40.0
     outer_wire = create_wire_workplane_from_points(points=_tf_outer_points, plane="XZ")
     inner_wire = create_wire_workplane_from_points(points=_tf_inner_points, plane="XZ")
-    single_tf_coil = outer_wire.extrude(_tf_distance / 2, both=True).cut(
-        inner_wire.extrude(_tf_distance / 2, both=True)
-    ).val()
+    single_tf_coil = (
+        outer_wire.extrude(_tf_distance / 2, both=True).cut(inner_wire.extrude(_tf_distance / 2, both=True)).val()
+    )
     # Interpolate the supplied contours; no Princeton-D fit or automatic PF cuts.
     placed_tf_coils = [
-        single_tf_coil.rotate((0, 0, 0), (0, 0, 1), angle)
-        for angle in _tf_placement_angles(number_of_tf_coils)
+        single_tf_coil.rotate((0, 0, 0), (0, 0, 1), angle) for angle in _tf_placement_angles(number_of_tf_coils)
     ]
-    tf_coils = _clip_to_sector(
-        cq.Workplane("XZ").add(cq.Compound.makeCompound(placed_tf_coils)), rotation_angle
-    )
+    tf_coils = _clip_to_sector(cq.Workplane("XZ").add(cq.Compound.makeCompound(placed_tf_coils)), rotation_angle)
 
     return _build_assembly(
-        [("plasma", plasma)] + 
-            central_solenoid + 
-            pf_coils + 
-            [
+        [("plasma", plasma)]
+        + central_solenoid
+        + pf_coils
+        + [
             ("toroidal_field_coil", tf_coils),
             ("tungsten_first_wall", tungsten_first_wall),
             ("inner_vacuum_vessel", inner_vacuum_vessel),

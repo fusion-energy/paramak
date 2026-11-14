@@ -1,6 +1,11 @@
 from importlib.metadata import version
 
-from .assemblies.paper_reactors import arc_from_2026_paper, eu_demo_from_2015_paper, iter_from_2020_paper, sparc_from_2020_paper
+from .assemblies.paper_reactors import (
+    arc_from_2026_paper,
+    eu_demo_from_2015_paper,
+    iter_from_2020_paper,
+    sparc_from_2020_paper,
+)
 from .assemblies.spherical_tokamak import (
     spherical_poloidal_arc_length,
     spherical_tokamak,
