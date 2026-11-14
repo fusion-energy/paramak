@@ -211,6 +211,19 @@ REACTORS = {
         lambda: paramak.eu_demo_from_2015_paper(rotation_angle=180),
         pf_coils_in_cases(6) | {("blanket", "divertor"), ("pf_coil_case_6", "toroidal_field_coil")},
     ),
+    "arc": (
+        lambda: paramak.arc_from_2026_paper(rotation_angle=180),
+        pf_coils_in_cases(10)
+        | {
+            ("inner_vacuum_vessel", "tungsten_first_wall"),
+            ("flibe_first_wall", "inner_vacuum_vessel"),
+            ("flibe_first_wall", "outer_vacuum_vessel"),
+            ("flibe_blanket", "outer_vacuum_vessel"),
+            ("flibe_blanket", "neutron_shield"),
+            ("flibe_blanket", "outer_blanket_wall"),
+            ("neutron_shield", "outer_blanket_wall"),
+        },
+    ),
 }
 
 
@@ -251,6 +264,11 @@ def test_neighbouring_parts_share_faces(imprinted):
     assert missing == set(), f"parts that should touch but share no face: {sorted(missing)}"
 
 
+# mesh sizes (cm) for reactors with parts too thin for the default (5, 50),
+# such as the 0.5 cm tungsten first wall of ARC
+MESH_SIZES = {"arc": (1, 20)}
+
+
 @pytest.mark.parametrize("reactor", list(REACTORS))
 @pytest.mark.skipif(not importlib.util.find_spec("cad_to_dagmc"), reason="Skipping transport tests")
 def test_transport(reactor, tmp_path, monkeypatch):
@@ -272,7 +290,8 @@ def test_transport(reactor, tmp_path, monkeypatch):
 
     my_model = CadToDagmc()
     my_model.add_cadquery_object(cadquery_object=assembly, material_tags=material_tags)
-    my_model.export_dagmc_h5m_file(filename="dagmc.h5m", min_mesh_size=5, max_mesh_size=50)
+    min_mesh_size, max_mesh_size = MESH_SIZES.get(reactor, (5, 50))
+    my_model.export_dagmc_h5m_file(filename="dagmc.h5m", min_mesh_size=min_mesh_size, max_mesh_size=max_mesh_size)
 
     flux = transport_particles_on_h5m_geometry(
         h5m_filename="dagmc.h5m",

@@ -1,7 +1,7 @@
 """Makes the reactors from papers animation on the front page of the
-documentation. The SPARC, ITER and EU DEMO reactors are shown one after the
-other, each built with a rotation_angle that sweeps from 1 to 360 degrees and
-back again.
+documentation. The SPARC, ITER, EU DEMO and ARC reactors are shown one after
+the other, each built with a rotation_angle that sweeps from 1 to 360 degrees
+and back again.
 
 This writes an mp4 on a white background and a webm with a transparent
 background (so the animation also works on dark pages), in the same format as
@@ -28,6 +28,7 @@ REACTORS = {
     "sparc": paramak.sparc_from_2020_paper,
     "iter": paramak.iter_from_2020_paper,
     "eu_demo": paramak.eu_demo_from_2015_paper,
+    "arc": paramak.arc_from_2026_paper,
 }
 ANGLES = [1, 5] + list(range(10, 361, 10))
 PAUSE_FRAMES = 10  # number of frames to hold the fully built and the thinnest reactors
