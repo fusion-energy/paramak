@@ -94,10 +94,12 @@ def test_vacuum_fills_the_gap(reactor, rotation_angle):
 
 
 @pytest.mark.parametrize("reactor", list(FIRST_WALL))
-def test_include_vacuum_false(reactor):
-    with_vacuum, without_vacuum = build(reactor), build(reactor, include_vacuum=False)
-    assert "vacuum" not in without_vacuum.names()
-    assert with_vacuum.names() == without_vacuum.names() + ["vacuum"]
+def test_vacuum_can_be_removed(reactor):
+    assembly = build(reactor)
+    names, solid_count = assembly.names(), len(assembly.toCompound().Solids())
+    assert assembly.remove("vacuum") is assembly
+    assert assembly.names() == names[:-1]
+    assert len(assembly.toCompound().Solids()) == solid_count - 1
 
 
 def test_vacuum_color():
@@ -135,9 +137,6 @@ def test_vacuum_name_must_be_unique():
     radial_build = [*TOKAMAK_FROM_PLASMA_RADIAL_BUILD[:-1], (L.SOLID, 10, "vacuum")]
     with pytest.raises(ValueError, match="vacuum"):
         paramak.tokamak_from_plasma(radial_build=radial_build, rotation_angle=90)
-    # without the vacuum part the name is free to use
-    reactor = paramak.tokamak_from_plasma(radial_build=radial_build, rotation_angle=90, include_vacuum=False)
-    assert "vacuum" in reactor.names()
 
 
 @pytest.mark.parametrize(
@@ -160,7 +159,7 @@ def test_paper_reactor_vacuum_is_enclosed(reactor_function):
     assert vacuum.distance(shapes["plasma"]) == pytest.approx(0, abs=1e-6)
     box, reactor_box = vacuum.BoundingBox(), cq.Compound.makeCompound(list(shapes.values())).BoundingBox()
     assert reactor_box.zmin < box.zmin and box.zmax < reactor_box.zmax
-    assert assembly.names() == reactor_function(rotation_angle=90, include_vacuum=False).names() + ["vacuum"]
+    assert assembly.names()[-1] == "vacuum"
 
 
 @pytest.mark.skipif(not importlib.util.find_spec("cad_to_dagmc"), reason="Skipping transport tests")
@@ -174,7 +173,9 @@ def test_transport_with_and_without_vacuum(tmp_path, monkeypatch):
 
     fluxes = []
     for include_vacuum in (False, True):
-        assembly = build("tokamak_from_plasma", rotation_angle=30, include_vacuum=include_vacuum)
+        assembly = build("tokamak_from_plasma", rotation_angle=30)
+        if not include_vacuum:
+            assembly.remove("vacuum")
         material_tags = [
             "vacuum" if name.split("/")[-1] in ("plasma", "vacuum") else f"mat_{index}"
             for index, (shape, name, _loc, _color) in enumerate(assembly)

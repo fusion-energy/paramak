@@ -444,7 +444,6 @@ def tokamak_from_plasma(
     poloidal_build: SegmentBuild | None = None,
     toroidal_build: SegmentBuild | None = None,
     rotation_start_angle: float = 0.0,
-    include_vacuum: bool = True,
 ) -> Assembly:
     """
     Creates a tokamak fusion reactor from a radial build and plasma parameters.
@@ -503,18 +502,14 @@ def tokamak_from_plasma(
             Sectors are named "<layer name>_<sector name>", or
             "<layer name>_<poloidal segment name>_<sector name>" when the
             layer also has a poloidal_build entry. Defaults to None.
-        include_vacuum: if True (the default) a part called "vacuum" is added
-            that fills the gap between the plasma and the first wall (the
-            first LayerType.SOLID after the plasma), so DAGMC transport does
-            not have to track particles through the implicit complement
-            there. The plasma, the first wall and the extra_cut_shapes (such
-            as a divertor reaching into the gap) are cut from it, so it
-            overlaps nothing. Give it no material (a "vacuum" or "void"
-            material tag) for transport.
-            Defaults to True.
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the tokamak fusion reactor.
+        The assembly includes a part called "vacuum" that fills the gap
+        between the plasma and the first wall (the first LayerType.SOLID
+        after the plasma), so DAGMC transport does not have to track
+        particles through the implicit complement there. Give it a "vacuum"
+        or "void" material tag, or drop it with assembly.remove("vacuum").
     """
 
     if extra_cut_shapes is None:
@@ -540,7 +535,6 @@ def tokamak_from_plasma(
         colors=colors,
         poloidal_build=poloidal_build,
         toroidal_build=toroidal_build,
-        include_vacuum=include_vacuum,
     )
 
 
@@ -555,7 +549,6 @@ def tokamak(
     poloidal_build: SegmentBuild | None = None,
     toroidal_build: SegmentBuild | None = None,
     rotation_start_angle: float = 0.0,
-    include_vacuum: bool = True,
 ) -> Assembly:
     """
     Creates a tokamak fusion reactor from a radial and vertical build.
@@ -619,18 +612,14 @@ def tokamak(
             Sectors are named "<layer name>_<sector name>", or
             "<layer name>_<poloidal segment name>_<sector name>" when the
             layer also has a poloidal_build entry. Defaults to None.
-        include_vacuum: if True (the default) a part called "vacuum" is added
-            that fills the gap between the plasma and the first wall (the
-            first LayerType.SOLID after the plasma), so DAGMC transport does
-            not have to track particles through the implicit complement
-            there. The plasma, the first wall and the extra_cut_shapes (such
-            as a divertor reaching into the gap) are cut from it, so it
-            overlaps nothing. Give it no material (a "vacuum" or "void"
-            material tag) for transport.
-            Defaults to True.
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the tokamak fusion reactor.
+        The assembly includes a part called "vacuum" that fills the gap
+        between the plasma and the first wall (the first LayerType.SOLID
+        after the plasma), so DAGMC transport does not have to track
+        particles through the implicit complement there. Give it a "vacuum"
+        or "void" material tag, or drop it with assembly.remove("vacuum").
     """
 
     if extra_cut_shapes is None:
@@ -696,7 +685,7 @@ def tokamak(
         extra_cut_shapes, extra_intersect_shapes, inner_radial_build, blanket_layers
     )
 
-    names = [*cut_names, *intersect_names, *layer_names, "plasma", *(["vacuum"] if include_vacuum else [])]
+    names = [*cut_names, *intersect_names, *layer_names, "plasma", "vacuum"]
     validate_unique_assembly_names(names, "tokamak()")
 
     my_assembly = Assembly()
@@ -750,17 +739,16 @@ def tokamak(
         my_assembly.add(entry, name=name, color=cq.Color(*color))
 
     my_assembly.add(plasma, name="plasma", color=cq.Color(*resolve_assembly_color("plasma", None, colors)))
-    if include_vacuum:
-        create_vacuum(
-            my_assembly,
-            radial_build,
-            vertical_build,
-            triangularity,
-            rotation_angle,
-            rotation_start_angle,
-            extra_cut_shapes,
-            colors,
-        )
+    create_vacuum(
+        my_assembly,
+        radial_build,
+        vertical_build,
+        triangularity,
+        rotation_angle,
+        rotation_start_angle,
+        extra_cut_shapes,
+        colors,
+    )
 
     my_assembly.elongation = elongation
     my_assembly.triangularity = triangularity
