@@ -62,7 +62,8 @@ def test_transport_with_magnets(rotation_angle):
     assert Path(f"spherical_tokamak_with_magnets_{rotation_angle}.step").exists()
 
     my_model = CadToDagmc()
-    material_tags = ["mat1"] * 11  # rear wall is being split into 2 parts by the magnet that is cut out
+    # rear wall is being split into 2 parts by the magnet that is cut out, plus the vacuum
+    material_tags = ["mat1"] * 12
     my_model.add_cadquery_object(cadquery_object=my_reactor, material_tags=material_tags)
     my_model.export_dagmc_h5m_file(min_mesh_size=2, max_mesh_size=30.0)
 
@@ -102,7 +103,7 @@ def test_transport_without_magnets():
     reactor.export("spherical_tokamak.step")
 
     my_model = CadToDagmc()
-    material_tags = ["mat1"] * 6
+    material_tags = ["mat1"] * 7  # six parts and the vacuum
     my_model.add_cadquery_object(cadquery_object=reactor, material_tags=material_tags)
 
     my_model.export_dagmc_h5m_file(filename="dagmc.h5m", min_mesh_size=10.0, max_mesh_size=100.0)
@@ -183,7 +184,7 @@ def test_named_layers_spherical_tokamak():
         ],
         rotation_angle=180,
     )
-    assert from_radial_build.names() == ["central column", "tf coil", "first wall", "blanket", "plasma"]
+    assert from_radial_build.names() == ["central column", "tf coil", "first wall", "blanket", "plasma", "vacuum"]
 
     renamed = (
         paramak.spherical_tokamak_from_plasma(
@@ -204,7 +205,7 @@ def test_named_layers_spherical_tokamak():
         .rename("layer_3", "first wall")
         .rename("layer_4", "blanket")
     )
-    assert renamed.names() == ["central column", "tf coil", "first wall", "blanket", "plasma"]
+    assert renamed.names() == ["central column", "tf coil", "first wall", "blanket", "plasma", "vacuum"]
 
 SPHERICAL_RADIAL_BUILD = [
     (paramak.LayerType.GAP, 10),
@@ -288,6 +289,7 @@ def test_spherical_poloidal_build_names_and_volumes():
         *[f"layer_4_module_{i}" for i in range(1, number_of_modules + 1)],
         "layer_5",
         "plasma",
+        "vacuum",
     ]
     unsegmented_volumes = volumes(unsegmented)
     segmented_volumes = volumes(segmented)
@@ -363,7 +365,7 @@ def test_spherical_poloidal_build_with_named_layer_and_spherical_tokamak():
         rotation_angle=90,
         poloidal_build=[None, [(paramak.LayerType.SOLID, arc_length / 2, "lower"), (paramak.LayerType.SOLID, arc_length / 2, "upper")]],
     )
-    assert reactor.names() == ["layer_1", "blanket_lower", "blanket_upper", "plasma"]
+    assert reactor.names() == ["layer_1", "blanket_lower", "blanket_upper", "plasma", "vacuum"]
 
 
 @pytest.mark.parametrize(

@@ -281,6 +281,7 @@ def test_arc_plasma_geometry_and_metadata(angle, arc_reference_reactors):
             "neutron_shield",
             "flibe_blanket",
             "outer_blanket_wall",
+            "vacuum",
         ]
     )
     assert reactor.major_radius == pytest.approx(461.7919445, abs=1e-6)

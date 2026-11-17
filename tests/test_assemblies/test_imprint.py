@@ -168,39 +168,53 @@ def with_tf_coils():
     )
 
 
+def vacuum_against(*parts):
+    "the vacuum fills the gap between the plasma and the first wall"
+    return {("plasma", "vacuum")} | {(part, "vacuum") for part in parts}
+
+
 def pf_coils_in_cases(count):
     return {(f"pf_coil_{i}", f"pf_coil_case_{i}") for i in range(1, count + 1)}
 
 
 # (builder, pairs of parts that must share faces once imprinted)
 REACTORS = {
-    "tokamak_from_plasma": (lambda: tokamak_from_plasma(rotation_angle=180), TOKAMAK_LAYERS),
+    "tokamak_from_plasma": (lambda: tokamak_from_plasma(rotation_angle=180), TOKAMAK_LAYERS | vacuum_against("layer_3")),
     # the vertical build gives the centre column and the inner blanket leg a
     # straight face in common
-    "tokamak": (tokamak, TOKAMAK_LAYERS | {("layer_2", "layer_5")}),
+    "tokamak": (tokamak, TOKAMAK_LAYERS | {("layer_2", "layer_5")} | vacuum_against("layer_3")),
     "divertor": (
         with_divertor,
-        TOKAMAK_LAYERS | {("extra_intersect_shapes_1", layer) for layer in ("layer_3", "layer_4", "layer_5")},
+        TOKAMAK_LAYERS
+        | {("extra_intersect_shapes_1", layer) for layer in ("layer_3", "layer_4", "layer_5")}
+        | vacuum_against("layer_3", "extra_intersect_shapes_1"),
     ),
     "poloidal_segments": (
         with_poloidal_segments,
-        {("layer_1", "layer_2"), ("layer_4", "layer_5")} | {(f"layer_3_row_{i}", "layer_4") for i in range(1, 7)},
+        {("layer_1", "layer_2"), ("layer_4", "layer_5")}
+        | {(f"layer_3_row_{i}", "layer_4") for i in range(1, 7)}
+        | vacuum_against(*(f"layer_3_row_{i}" for i in range(1, 7))),
     ),
     "toroidal_sectors": (
         with_toroidal_sectors,
         {("layer_1", "layer_2")}
         | {(f"layer_3_sector_{i}", f"layer_4_sector_{i}") for i in range(1, 5)}
-        | {(f"layer_4_sector_{i}", "layer_5") for i in range(1, 5)},
+        | {(f"layer_4_sector_{i}", "layer_5") for i in range(1, 5)}
+        | vacuum_against(*(f"layer_3_sector_{i}" for i in range(1, 5))),
     ),
-    "spherical_tokamak_from_plasma": (lambda: spherical_tokamak_from_plasma(rotation_angle=180), SPHERICAL_LAYERS),
+    "spherical_tokamak_from_plasma": (
+        lambda: spherical_tokamak_from_plasma(rotation_angle=180),
+        SPHERICAL_LAYERS | vacuum_against("layer_2", "layer_3"),
+    ),
     "spherical_pf_coils": (
         with_pf_coils,
         SPHERICAL_LAYERS
         | {(f"poloidal_field_coil_{i}", f"poloidal_field_coil_case_{i + 1}") for i in (1, 3, 5, 7)}
-        | {(layer, f"poloidal_field_coil_case_{i}") for layer in ("layer_4", "layer_5") for i in (4, 6)},
+        | {(layer, f"poloidal_field_coil_case_{i}") for layer in ("layer_4", "layer_5") for i in (4, 6)}
+        | vacuum_against("layer_2", "layer_3"),
     ),
     # the coils sit clear of the blanket so they only need not to overlap
-    "spherical_tf_coils": (with_tf_coils, SPHERICAL_LAYERS),
+    "spherical_tf_coils": (with_tf_coils, SPHERICAL_LAYERS | vacuum_against("layer_2", "layer_3")),
     "sparc": (
         lambda: paramak.sparc_from_2020_paper(rotation_angle=180),
         pf_coils_in_cases(8)
@@ -209,17 +223,21 @@ REACTORS = {
             ("inner_vessel", "vessel"),
             ("inner_vessel", "vs_coil_1"),
             ("inner_vessel", "vs_coil_2"),
-        },
+        }
+        | vacuum_against("antenna", "inner_vessel"),
     ),
     "iter": (
         lambda: paramak.iter_from_2020_paper(rotation_angle=180),
         pf_coils_in_cases(6)
         | {("blanket", "divertor"), ("blanket", "vessel"), ("divertor", "vessel")}
-        | {(f"central_solenoid_{i}", f"central_solenoid_{i + 1}") for i in range(1, 6)},
+        | {(f"central_solenoid_{i}", f"central_solenoid_{i + 1}") for i in range(1, 6)}
+        | vacuum_against("blanket", "divertor", "vessel"),
     ),
     "eu_demo": (
         lambda: paramak.eu_demo_from_2015_paper(rotation_angle=180),
-        pf_coils_in_cases(6) | {("blanket", "divertor"), ("pf_coil_case_6", "toroidal_field_coil")},
+        pf_coils_in_cases(6)
+        | {("blanket", "divertor"), ("pf_coil_case_6", "toroidal_field_coil")}
+        | vacuum_against("blanket", "divertor"),
     ),
     "arc": (
         lambda: paramak.arc_from_2026_paper(rotation_angle=180),
@@ -232,7 +250,8 @@ REACTORS = {
             ("flibe_blanket", "neutron_shield"),
             ("flibe_blanket", "outer_blanket_wall"),
             ("neutron_shield", "outer_blanket_wall"),
-        },
+        }
+        | vacuum_against("tungsten_first_wall"),
     ),
 }
 
@@ -282,8 +301,11 @@ def test_tokamak_from_plasma_blanket_clears_centre_column():
 
 
 # mesh sizes (cm) for reactors with parts too thin for the default (5, 50),
-# such as the 0.5 cm tungsten first wall of ARC
-MESH_SIZES = {"arc": (1, 20)}
+# such as the 0.5 cm tungsten first wall of ARC and the vacuum of SPARC, which
+# is under 1 cm thick where the plasma comes closest to the inner vessel.
+# Coarser facets of the plasma and inner vessel cross in that gap and lose
+# particles.
+MESH_SIZES = {"arc": (1, 20), "sparc": (1, 20)}
 
 
 @pytest.mark.parametrize("reactor", list(REACTORS))

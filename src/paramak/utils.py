@@ -478,6 +478,9 @@ DEFAULT_LAYER_COLORS = [
 
 DEFAULT_PLASMA_COLOR = (1.0, 0.7, 0.8, 0.25)
 
+# white and nearly fully transparent, so the vacuum does not hide the reactor
+DEFAULT_VACUUM_COLOR = (1.0, 1.0, 1.0, 0.05)
+
 
 def resolve_assembly_color(
     name: str, layer_index: int | None = None, colors: dict | None = None, layer_name: str | None = None
@@ -503,6 +506,8 @@ def resolve_assembly_color(
         return colors[layer_name]
     if name == "plasma":
         return DEFAULT_PLASMA_COLOR
+    if name == "vacuum":
+        return DEFAULT_VACUUM_COLOR
     lower_name = name.lower()
     if "divertor" in lower_name or "extra_intersect" in lower_name:
         return (0.8, 0.2, 0.2)
