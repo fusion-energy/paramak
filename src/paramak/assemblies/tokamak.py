@@ -42,6 +42,7 @@ from .poloidal import (
 )
 from .spherical_tokamak import get_plasma_value
 from .toroidal import apply_toroidal_sectors, get_toroidal_build_sectors
+from .vacuum import add_vacuum, revolved_profile
 
 def count_cylinder_layers(radial_build):
     before_plasma = 0
@@ -315,6 +316,36 @@ def create_layers_from_plasma(
     return layers
 
 
+def create_vacuum(
+    assembly, radial_build, vertical_build, triangularity, rotation_angle, rotation_start_angle, extra_cut_shapes, colors
+):
+    """Adds the vacuum between the plasma and the first wall, the first solid
+    layer after the plasma, to the assembly.
+
+    The envelope reaches halfway into the first wall, so only the plasma, the
+    first wall and the extra_cut_shapes (which are added whole and can reach
+    into the gap) need cutting from it. The extra_intersect_shapes only take
+    parts of the layers. The first wall is used without its poloidal or
+    toroidal segmentation, so the vacuum stops at the plasma facing surface
+    even where there are gaps between the segments.
+    """
+    major_radius, minor_radius, elongation = get_plasma_geometry(radial_build, vertical_build)
+    pair = next(pair for pair in get_layer_pairs(radial_build, vertical_build) if pair["type"] == LayerType.SOLID)
+    first_wall = create_layer(pair, minor_radius, major_radius, triangularity, elongation, rotation_angle)
+    offset, thickness = poloidal_profile(*pair["offsets"]), poloidal_profile(*pair["thicknesses"])
+    # an outboard and an inboard spline, joined at the top and bottom
+    curves = []
+    for thetas in (np.linspace(-90.0, 90.0, 200), np.linspace(90.0, 270.0, 200)):
+        r, z = offset_curve_coordinates(
+            major_radius, minor_radius, triangularity, elongation, 0.0, thetas, offset(thetas) + thickness(thetas) / 2
+        )
+        curves.append(list(zip(r, z)))
+    curves[1][-1] = curves[0][0]
+    envelope = revolved_profile(curves, rotation_angle, rotation_start_angle)
+    cutters = [rotate_about_z(first_wall, rotation_start_angle), *extra_cut_shapes]
+    return add_vacuum(assembly, cutters, envelope=envelope, colors=colors)
+
+
 def vertical_build_from_radial_build(radial_build, elongation):
     """Makes the vertical build used by tokamak_from_plasma, where the layers
     above and below the plasma have the same thickness as the inboard layers."""
@@ -413,6 +444,7 @@ def tokamak_from_plasma(
     poloidal_build: SegmentBuild | None = None,
     toroidal_build: SegmentBuild | None = None,
     rotation_start_angle: float = 0.0,
+    include_vacuum: bool = True,
 ) -> Assembly:
     """
     Creates a tokamak fusion reactor from a radial build and plasma parameters.
@@ -471,6 +503,15 @@ def tokamak_from_plasma(
             Sectors are named "<layer name>_<sector name>", or
             "<layer name>_<poloidal segment name>_<sector name>" when the
             layer also has a poloidal_build entry. Defaults to None.
+        include_vacuum: if True (the default) a part called "vacuum" is added
+            that fills the gap between the plasma and the first wall (the
+            first LayerType.SOLID after the plasma), so DAGMC transport does
+            not have to track particles through the implicit complement
+            there. The plasma, the first wall and the extra_cut_shapes (such
+            as a divertor reaching into the gap) are cut from it, so it
+            overlaps nothing. Give it no material (a "vacuum" or "void"
+            material tag) for transport.
+            Defaults to True.
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the tokamak fusion reactor.
@@ -499,6 +540,7 @@ def tokamak_from_plasma(
         colors=colors,
         poloidal_build=poloidal_build,
         toroidal_build=toroidal_build,
+        include_vacuum=include_vacuum,
     )
 
 
@@ -513,6 +555,7 @@ def tokamak(
     poloidal_build: SegmentBuild | None = None,
     toroidal_build: SegmentBuild | None = None,
     rotation_start_angle: float = 0.0,
+    include_vacuum: bool = True,
 ) -> Assembly:
     """
     Creates a tokamak fusion reactor from a radial and vertical build.
@@ -576,6 +619,15 @@ def tokamak(
             Sectors are named "<layer name>_<sector name>", or
             "<layer name>_<poloidal segment name>_<sector name>" when the
             layer also has a poloidal_build entry. Defaults to None.
+        include_vacuum: if True (the default) a part called "vacuum" is added
+            that fills the gap between the plasma and the first wall (the
+            first LayerType.SOLID after the plasma), so DAGMC transport does
+            not have to track particles through the implicit complement
+            there. The plasma, the first wall and the extra_cut_shapes (such
+            as a divertor reaching into the gap) are cut from it, so it
+            overlaps nothing. Give it no material (a "vacuum" or "void"
+            material tag) for transport.
+            Defaults to True.
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the tokamak fusion reactor.
@@ -644,7 +696,8 @@ def tokamak(
         extra_cut_shapes, extra_intersect_shapes, inner_radial_build, blanket_layers
     )
 
-    validate_unique_assembly_names([*cut_names, *intersect_names, *layer_names, "plasma"], "tokamak()")
+    names = [*cut_names, *intersect_names, *layer_names, "plasma", *(["vacuum"] if include_vacuum else [])]
+    validate_unique_assembly_names(names, "tokamak()")
 
     my_assembly = Assembly()
 
@@ -697,6 +750,17 @@ def tokamak(
         my_assembly.add(entry, name=name, color=cq.Color(*color))
 
     my_assembly.add(plasma, name="plasma", color=cq.Color(*resolve_assembly_color("plasma", None, colors)))
+    if include_vacuum:
+        create_vacuum(
+            my_assembly,
+            radial_build,
+            vertical_build,
+            triangularity,
+            rotation_angle,
+            rotation_start_angle,
+            extra_cut_shapes,
+            colors,
+        )
 
     my_assembly.elongation = elongation
     my_assembly.triangularity = triangularity

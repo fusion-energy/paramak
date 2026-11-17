@@ -21,6 +21,7 @@ from ..workplanes.poloidal_field_coil_case import poloidal_field_coil_case
 from ..workplanes.revolved_shape import revolved_shape
 from ..workplanes.toroidal_field_coil_princeton_d import toroidal_field_coil_princeton_d
 from .assembly import Assembly
+from .vacuum import add_vacuum
 
 
 def _validate(rotation_angle: float, number_of_tf_coils: int | None = None) -> None:
@@ -157,7 +158,9 @@ def _pf_coils_with_cases(center_points, widths, heights, case_thickness: float, 
     return parts
 
 
-def _build_assembly(parts, cuts, colors, default_colors, plasma_parameters) -> Assembly:
+def _build_assembly(
+    parts, cuts, colors, default_colors, plasma_parameters, vacuum_parts=None, rotation_angle: float = 360.0
+) -> Assembly:
     """Adds the named parts to an Assembly.
 
     Args:
@@ -171,6 +174,11 @@ def _build_assembly(parts, cuts, colors, default_colors, plasma_parameters) -> A
         default_colors: colors keyed by part name used when no user color is
             given, other parts get a color based on their name.
         plasma_parameters: plasma shape attributes to set on the assembly.
+        vacuum_parts: the names of the parts that enclose the plasma. If
+            given, a "vacuum" part is added that fills the space between them
+            and the plasma, see add_vacuum. They are listed explicitly for the
+            same reason as the cuts.
+        rotation_angle: the angle of the sector the parts are built in.
     """
     solids = dict(parts)
     assembly = Assembly()
@@ -193,6 +201,8 @@ def _build_assembly(parts, cuts, colors, default_colors, plasma_parameters) -> A
         assembly.add(solid, name=name, color=cq.Color(*color))
     for key, value in plasma_parameters.items():
         setattr(assembly, key, value)
+    if vacuum_parts is not None:
+        add_vacuum(assembly, [solids[name] for name in vacuum_parts], colors=colors, rotation_angle=rotation_angle)
     return assembly
 
 
@@ -201,6 +211,7 @@ def sparc_from_2020_paper(
     number_of_tf_coils: int = 18,
     pf_coil_case_thickness: float = 3.0,
     colors: dict | None = None,
+    include_vacuum: bool = True,
 ) -> Assembly:
     """Creates a simplified SPARC reactor from a figure in a published paper.
 
@@ -226,6 +237,11 @@ def sparc_from_2020_paper(
             its case) is taken from the paper figure.
         colors: optional dictionary of RGB(A) colors keyed by part name, used
             in place of the default colors.
+        include_vacuum: if True (the default) a part called "vacuum" is added
+            that fills the space between the plasma and the plasma facing
+            components, so DAGMC transport does not have to track particles
+            through the implicit complement there. Give it no material (a
+            "vacuum" or "void" material tag) for transport.
 
     Returns:
         A paramak Assembly with a named part for each component.
@@ -431,6 +447,8 @@ def sparc_from_2020_paper(
             "elongation": elongation,
             "triangularity": triangularity,
         },
+        vacuum_parts=["inner_vessel", "antenna"] if include_vacuum else None,
+        rotation_angle=rotation_angle,
     )
 
 
@@ -439,6 +457,7 @@ def iter_from_2020_paper(
     number_of_tf_coils: int = 18,
     pf_coil_case_thickness: float = 10.0,
     colors: dict | None = None,
+    include_vacuum: bool = True,
 ) -> Assembly:
     """Creates a simplified ITER reactor from a figure in a published paper.
 
@@ -464,6 +483,11 @@ def iter_from_2020_paper(
             its case) is taken from the paper figure.
         colors: optional dictionary of RGB(A) colors keyed by part name, used
             in place of the default colors.
+        include_vacuum: if True (the default) a part called "vacuum" is added
+            that fills the space between the plasma and the plasma facing
+            components, so DAGMC transport does not have to track particles
+            through the implicit complement there. Give it no material (a
+            "vacuum" or "void" material tag) for transport.
 
     Returns:
         A paramak Assembly with a named part for each component.
@@ -679,6 +703,8 @@ def iter_from_2020_paper(
             "elongation": elongation,
             "triangularity": triangularity,
         },
+        vacuum_parts=["blanket", "divertor", "vessel"] if include_vacuum else None,
+        rotation_angle=rotation_angle,
     )
 
 
@@ -687,6 +713,7 @@ def eu_demo_from_2015_paper(
     number_of_tf_coils: int = 16,
     pf_coil_case_thickness: float = 10.0,
     colors: dict | None = None,
+    include_vacuum: bool = True,
 ) -> Assembly:
     """Creates a simplified EU DEMO reactor from a figure in a published paper.
 
@@ -711,6 +738,11 @@ def eu_demo_from_2015_paper(
             its case) is taken from the paper figure.
         colors: optional dictionary of RGB(A) colors keyed by part name, used
             in place of the default colors.
+        include_vacuum: if True (the default) a part called "vacuum" is added
+            that fills the space between the plasma and the plasma facing
+            components, so DAGMC transport does not have to track particles
+            through the implicit complement there. Give it no material (a
+            "vacuum" or "void" material tag) for transport.
 
     Returns:
         A paramak Assembly with a named part for each component.
@@ -974,6 +1006,8 @@ def eu_demo_from_2015_paper(
             "elongation": elongation,
             "triangularity": triangularity,
         },
+        vacuum_parts=["blanket", "divertor"] if include_vacuum else None,
+        rotation_angle=rotation_angle,
     )
 
 
@@ -1195,6 +1229,7 @@ def arc_from_2026_paper(
     number_of_tf_coils: int = 18,
     pf_coil_case_thickness: float = 3.0,
     colors: dict | None = None,
+    include_vacuum: bool = True,
 ) -> Assembly:
     """Creates a simplified ARC V3A reactor from a published paper and its data.
 
@@ -1246,6 +1281,11 @@ def arc_from_2026_paper(
             outer coil size and leaves the winding pack unchanged.
         colors: optional dictionary of RGB(A) colors keyed by part name, used
             in place of the default colors.
+        include_vacuum: if True (the default) a part called "vacuum" is added
+            that fills the space between the plasma and the plasma facing
+            components, so DAGMC transport does not have to track particles
+            through the implicit complement there. Give it no material (a
+            "vacuum" or "void" material tag) for transport.
 
     Returns:
         A paramak Assembly with a named part for each component.
@@ -1756,4 +1796,6 @@ def arc_from_2026_paper(
             elongation=elongation,
             triangularity=triangularity,
         ),
+        vacuum_parts=["tungsten_first_wall"] if include_vacuum else None,
+        rotation_angle=rotation_angle,
     )

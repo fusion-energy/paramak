@@ -183,7 +183,7 @@ def test_named_layers_spherical_tokamak():
         ],
         rotation_angle=180,
     )
-    assert from_radial_build.names() == ["central column", "tf coil", "first wall", "blanket", "plasma"]
+    assert from_radial_build.names() == ["central column", "tf coil", "first wall", "blanket", "plasma", "vacuum"]
 
     renamed = (
         paramak.spherical_tokamak_from_plasma(
@@ -204,7 +204,7 @@ def test_named_layers_spherical_tokamak():
         .rename("layer_3", "first wall")
         .rename("layer_4", "blanket")
     )
-    assert renamed.names() == ["central column", "tf coil", "first wall", "blanket", "plasma"]
+    assert renamed.names() == ["central column", "tf coil", "first wall", "blanket", "plasma", "vacuum"]
 
 SPHERICAL_RADIAL_BUILD = [
     (paramak.LayerType.GAP, 10),
@@ -288,6 +288,7 @@ def test_spherical_poloidal_build_names_and_volumes():
         *[f"layer_4_module_{i}" for i in range(1, number_of_modules + 1)],
         "layer_5",
         "plasma",
+        "vacuum",
     ]
     unsegmented_volumes = volumes(unsegmented)
     segmented_volumes = volumes(segmented)
@@ -363,7 +364,7 @@ def test_spherical_poloidal_build_with_named_layer_and_spherical_tokamak():
         rotation_angle=90,
         poloidal_build=[None, [(paramak.LayerType.SOLID, arc_length / 2, "lower"), (paramak.LayerType.SOLID, arc_length / 2, "upper")]],
     )
-    assert reactor.names() == ["layer_1", "blanket_lower", "blanket_upper", "plasma"]
+    assert reactor.names() == ["layer_1", "blanket_lower", "blanket_upper", "plasma", "vacuum"]
 
 
 @pytest.mark.parametrize(

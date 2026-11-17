@@ -212,6 +212,8 @@ def test_rotation_start_angle_comes_after_the_other_arguments(function):
         parameter.name
         for parameter in inspect.signature(function).parameters.values()
         if parameter.kind in (parameter.POSITIONAL_OR_KEYWORD, parameter.KEYWORD_ONLY)
+        # include_vacuum was added after rotation_start_angle
+        and parameter.name != "include_vacuum"
     ]
     assert names[-1] == "rotation_start_angle"
 
