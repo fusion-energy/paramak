@@ -62,7 +62,8 @@ def test_transport_with_magnets(rotation_angle):
     assert Path(f"spherical_tokamak_with_magnets_{rotation_angle}.step").exists()
 
     my_model = CadToDagmc()
-    material_tags = ["mat1"] * 11  # rear wall is being split into 2 parts by the magnet that is cut out
+    # rear wall is being split into 2 parts by the magnet that is cut out, plus the vacuum
+    material_tags = ["mat1"] * 12
     my_model.add_cadquery_object(cadquery_object=my_reactor, material_tags=material_tags)
     my_model.export_dagmc_h5m_file(min_mesh_size=2, max_mesh_size=30.0)
 
@@ -102,7 +103,7 @@ def test_transport_without_magnets():
     reactor.export("spherical_tokamak.step")
 
     my_model = CadToDagmc()
-    material_tags = ["mat1"] * 6
+    material_tags = ["mat1"] * 7  # six parts and the vacuum
     my_model.add_cadquery_object(cadquery_object=reactor, material_tags=material_tags)
 
     my_model.export_dagmc_h5m_file(filename="dagmc.h5m", min_mesh_size=10.0, max_mesh_size=100.0)

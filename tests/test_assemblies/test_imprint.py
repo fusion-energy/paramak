@@ -301,8 +301,11 @@ def test_tokamak_from_plasma_blanket_clears_centre_column():
 
 
 # mesh sizes (cm) for reactors with parts too thin for the default (5, 50),
-# such as the 0.5 cm tungsten first wall of ARC
-MESH_SIZES = {"arc": (1, 20)}
+# such as the 0.5 cm tungsten first wall of ARC and the vacuum of SPARC, which
+# is under 1 cm thick where the plasma comes closest to the inner vessel.
+# Coarser facets of the plasma and inner vessel cross in that gap and lose
+# particles.
+MESH_SIZES = {"arc": (1, 20), "sparc": (1, 20)}
 
 
 @pytest.mark.parametrize("reactor", list(REACTORS))
