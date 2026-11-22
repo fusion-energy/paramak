@@ -74,9 +74,10 @@ def get_vacuum_pair(pairs, overlap):
     gap entry between the two.
 
     The pair starts overlap (cm) inside the plasma, so cutting the plasma from
-    it leaves the faces of the plasma itself. A layer that started on the
-    plasma surface would have faces made from different splines that only
-    nearly match the plasma, which gmsh cannot mesh.
+    it leaves the faces of the plasma itself. A face made separately from the
+    plasma, even from the same points with the same revolve, is not merged
+    with the plasma's face when the parts are imprinted. That leaves a zero
+    volume solid between them, which breaks the meshing.
     """
     first_wall = next(pair for pair in pairs if pair["type"] == LayerType.SOLID)
     return {
