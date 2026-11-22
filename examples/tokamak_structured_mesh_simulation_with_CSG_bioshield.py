@@ -61,18 +61,19 @@ my_reactor = paramak.tokamak_from_plasma(
     rotation_angle=180,
 )
 
+# removing the plasma from the CadQuery Assembly as we don't need this in the
+# DAGMC mesh for the neutronics simulation.
+my_reactor.remove(name="plasma")
+
+
 # this prints all the names of the parts in the reactor, this is useful for
 # knowing the material tags to use in the simulation
 print(my_reactor.names())
 
-# the plasma and the vacuum between the plasma and the first wall are given the
-# "vacuum" material tag, which OpenMC treats as void. Keeping these volumes in
-# the DAGMC geometry, rather than leaving the space to the implicit complement,
-# makes the transport quicker.
-material_tags = ["layer_1", "layer_2", "layer_3", "layer_4", "layer_5", "vacuum", "vacuum"]
+material_tags = ["layer_1", "layer_2", "layer_3", "layer_4", "layer_5", "vacuum"]
 my_model = CadToDagmc()
 
-# one material tag per solid, the inner and outer layers are one solid
+# 6 material tags as inner and outer layers are one solid there are only 6 solids in model and plasma has been removed
 my_model.add_cadquery_object(cadquery_object=my_reactor, material_tags=material_tags)
 
 script_folder = Path(__file__).resolve().parent

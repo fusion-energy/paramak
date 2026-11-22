@@ -484,11 +484,6 @@ def spherical_tokamak_from_plasma(
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the spherical tokamak fusion reactor.
-        The assembly includes a part called "vacuum" that fills the gap
-        between the plasma and the first wall (the first LayerType.SOLID
-        after the plasma), so DAGMC transport does not have to track
-        particles through the implicit complement there. Give it a "vacuum"
-        or "void" material tag, or drop it with assembly.remove("vacuum").
     """
 
     if extra_cut_shapes is None:
@@ -592,11 +587,6 @@ def spherical_tokamak(
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the spherical tokamak fusion reactor.
-        The assembly includes a part called "vacuum" that fills the gap
-        between the plasma and the first wall (the first LayerType.SOLID
-        after the plasma), so DAGMC transport does not have to track
-        particles through the implicit complement there. Give it a "vacuum"
-        or "void" material tag, or drop it with assembly.remove("vacuum").
     """
 
     if extra_cut_shapes is None:

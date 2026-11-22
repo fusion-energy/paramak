@@ -48,11 +48,11 @@ my_reactor = paramak.tokamak(
     rotation_angle=180,
 )
 
+my_reactor.remove(name="plasma")  # removing as we don't need the plasma for this neutronics simulation
+
 my_model = CadToDagmc()
-# one material tag per solid, the inner and outer layers are one solid. The
-# plasma and the vacuum between the plasma and the first wall are given the
-# "vacuum" material tag, which OpenMC treats as void.
-material_tags = ["layer_1", "layer_2", "layer_3", "layer_4", "layer_5", "vacuum", "vacuum"]
+# as inner and outer layers are one solid there are only 6 solids in model
+material_tags = ["layer_1", "layer_2", "layer_3", "layer_4", "layer_5", "vacuum"]
 my_model.add_cadquery_object(cadquery_object=my_reactor, material_tags=material_tags)
 # my_model.export_dagmc_h5m_file(min_mesh_size=10.0, max_mesh_size=20.0, filename="dagmc.h5m")
 # my_model.export_unstructured_mesh_file(min_mesh_size=10.0, max_mesh_size=20.0, filename="unstructured_mesh.vtk")
