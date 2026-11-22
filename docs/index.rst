@@ -25,7 +25,7 @@ The style of reactor, sizes of components, plasma shape and number of radial or 
 
 `CAD-to-DAGMC <https://github.com/fusion-energy/cad_to_dagmc>`_, `Stellarmesh <https://github.com/stellarmesh/stellarmesh>`_ and `CAD-to-OpenMC <https://github.com/openmsr/CAD_to_OpenMC>`_ can be used to convert these CAD models to `DAGMC <https://github.com/svalinn/DAGMC>`_ compatible meshes for use in neutronics simulations with `OpenMC <https://github.com/openmc-dev/openmc>`_.
 
-Every reactor includes a part called ``vacuum`` that fills the gap between the plasma and the first wall, which makes DAGMC transport quicker than leaving that space to the implicit complement. Give this part (and usually the plasma) the material tag ``vacuum``, which OpenMC treats as void. CAD-to-DAGMC does this for you with ``material_tags="assembly_names"``, because the tag then comes from the part name. If you do not want the vacuum, remove it with ``reactor.remove("vacuum")``.
+Every reactor includes a part called ``vacuum`` that fills the gap between the plasma and the first wall, which makes DAGMC transport quicker than leaving that space to the implicit complement. Give this part the material tag ``vacuum``, which OpenMC treats as void. CAD-to-DAGMC does this for you with ``material_tags="assembly_names"``, because the tag then comes from the part name. The plasma is a separate part with its own ``plasma`` tag, give it a plasma material such as low density DT rather than void. If you do not want the vacuum, remove it with ``reactor.remove("vacuum")``.
 
 Paramak is open source and the source code is available on `GitHub <https://github.com/fusion-energy/paramak>`_.
 

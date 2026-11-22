@@ -176,8 +176,9 @@ def test_transport_with_and_without_vacuum(tmp_path, monkeypatch):
         assembly = build("tokamak_from_plasma", rotation_angle=30)
         if not include_vacuum:
             assembly.remove("vacuum")
+        # the plasma keeps its own material, only the vacuum part is void
         material_tags = [
-            "vacuum" if name.split("/")[-1] in ("plasma", "vacuum") else f"mat_{index}"
+            name.split("/")[-1] if name.split("/")[-1] in ("plasma", "vacuum") else f"mat_{index}"
             for index, (shape, name, _loc, _color) in enumerate(assembly)
             for _solid in shape.Solids()
         ]
