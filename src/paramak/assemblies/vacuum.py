@@ -1,11 +1,14 @@
 """The vacuum volume that fills the gap between the plasma and the first wall.
 
 DAGMC transport is quicker when particles stay out of the implicit complement,
-so the gap is given its own volume. The vacuum is made by cutting the plasma,
-the first wall and anything else that reaches into the gap (such as a divertor
-added with extra_cut_shapes) out of an envelope that reaches into the first
-wall. It then shares the faces of its neighbours, as DAGMC needs, and does not
-overlap them.
+so the gap is given its own volume. For the reactors made from a radial build
+the vacuum starts as a layer from just inside the plasma out to the first wall,
+built in the same way as the solid layers, so it follows non uniform gaps.
+Reactors without a radial build start from a box around the parts that enclose
+the plasma, which are cut from it. The plasma and anything else that reaches
+into the gap (such as a divertor added with extra_cut_shapes) are then cut
+from the vacuum, so it shares the faces of its neighbours, as DAGMC needs, and
+does not overlap them.
 """
 
 from __future__ import annotations
@@ -14,7 +17,7 @@ import math
 
 import cadquery as cq
 
-from ..utils import resolve_assembly_color, rotate_about_z
+from ..utils import LayerType, resolve_assembly_color, rotate_about_z
 
 VACUUM_NAME = "vacuum"
 
@@ -65,6 +68,25 @@ def _box_envelope(shapes, rotation_angle: float) -> cq.Workplane:
     return revolved_profile([[corners[i], corners[(i + 1) % 4]] for i in range(4)], rotation_angle)
 
 
+def get_vacuum_pair(pairs, overlap):
+    """Describes the vacuum as a layer pair, from inside the plasma out to the
+    first wall (the first solid layer after the plasma), so it covers every
+    gap entry between the two.
+
+    The pair starts overlap (cm) inside the plasma, so cutting the plasma from
+    it leaves the faces of the plasma itself. A layer that started on the
+    plasma surface would have faces made from different splines that only
+    nearly match the plasma, which gmsh cannot mesh.
+    """
+    first_wall = next(pair for pair in pairs if pair["type"] == LayerType.SOLID)
+    return {
+        "type": LayerType.GAP,
+        "name": None,
+        "offsets": tuple(-overlap for _ in first_wall["offsets"]),
+        "thicknesses": tuple(offset + overlap for offset in first_wall["offsets"]),
+    }
+
+
 def add_vacuum(
     assembly,
     cutters,
@@ -83,9 +105,9 @@ def add_vacuum(
         assembly: the assembly, it must contain a part named "plasma".
         cutters: the shapes to cut from the envelope, this must include
             everything that the envelope reaches into other than the plasma.
-        envelope: a solid around the plasma. Defaults to a revolved
-            rectangle around the cutters, in which case the cutters must
-            enclose the plasma.
+        envelope: a solid around the plasma, the plasma is cut from it.
+            Defaults to a revolved rectangle around the cutters, in which case
+            the cutters must enclose the plasma.
         colors: user colors keyed by part name.
         rotation_angle: the angle the default envelope is revolved by.
         tolerance: the distance (cm) from the plasma within which a solid is

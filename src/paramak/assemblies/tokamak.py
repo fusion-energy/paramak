@@ -42,7 +42,7 @@ from .poloidal import (
 )
 from .spherical_tokamak import get_plasma_value
 from .toroidal import apply_toroidal_sectors, get_toroidal_build_sectors
-from .vacuum import add_vacuum, revolved_profile
+from .vacuum import add_vacuum, get_vacuum_pair
 
 def count_cylinder_layers(radial_build):
     before_plasma = 0
@@ -319,31 +319,22 @@ def create_layers_from_plasma(
 def create_vacuum(
     assembly, radial_build, vertical_build, triangularity, rotation_angle, rotation_start_angle, extra_cut_shapes, colors
 ):
-    """Adds the vacuum between the plasma and the first wall, the first solid
-    layer after the plasma, to the assembly.
+    """Adds the vacuum between the plasma and the first wall to the assembly.
 
-    The envelope reaches halfway into the first wall, so only the plasma, the
-    first wall and the extra_cut_shapes (which are added whole and can reach
-    into the gap) need cutting from it. The extra_intersect_shapes only take
-    parts of the layers. The first wall is used without its poloidal or
-    toroidal segmentation, so the vacuum stops at the plasma facing surface
-    even where there are gaps between the segments.
+    The vacuum is built as a layer out to the first wall, in the same way as
+    the solid layers, so it follows non uniform gaps and shares its faces with
+    the first wall. It starts just inside the plasma, which is then cut from
+    it, so it also shares its faces with the plasma. Poloidal or toroidal
+    segmentation of the first wall does not change it, so the gaps between
+    segments are left to the implicit complement. The extra_cut_shapes are
+    added whole and can reach into the gap, so they are cut from it. The
+    extra_intersect_shapes only take parts of the layers.
     """
     major_radius, minor_radius, elongation = get_plasma_geometry(radial_build, vertical_build)
-    pair = next(pair for pair in get_layer_pairs(radial_build, vertical_build) if pair["type"] == LayerType.SOLID)
-    first_wall = create_layer(pair, minor_radius, major_radius, triangularity, elongation, rotation_angle)
-    offset, thickness = poloidal_profile(*pair["offsets"]), poloidal_profile(*pair["thicknesses"])
-    # an outboard and an inboard spline, joined at the top and bottom
-    curves = []
-    for thetas in (np.linspace(-90.0, 90.0, 200), np.linspace(90.0, 270.0, 200)):
-        r, z = offset_curve_coordinates(
-            major_radius, minor_radius, triangularity, elongation, 0.0, thetas, offset(thetas) + thickness(thetas) / 2
-        )
-        curves.append(list(zip(r, z)))
-    curves[1][-1] = curves[0][0]
-    envelope = revolved_profile(curves, rotation_angle, rotation_start_angle)
-    cutters = [rotate_about_z(first_wall, rotation_start_angle), *extra_cut_shapes]
-    return add_vacuum(assembly, cutters, envelope=envelope, colors=colors)
+    pair = get_vacuum_pair(get_layer_pairs(radial_build, vertical_build), overlap=0.01 * minor_radius)
+    layer = create_layer(pair, minor_radius, major_radius, triangularity, elongation, rotation_angle)
+    envelope = rotate_about_z(layer, rotation_start_angle)
+    return add_vacuum(assembly, extra_cut_shapes, envelope=envelope, colors=colors)
 
 
 def vertical_build_from_radial_build(radial_build, elongation):

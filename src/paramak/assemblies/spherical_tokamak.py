@@ -39,7 +39,7 @@ from .poloidal import (
     validate_segment_build,
 )
 from .toroidal import apply_toroidal_sectors, get_toroidal_build_sectors
-from .vacuum import add_vacuum, revolved_profile
+from .vacuum import add_vacuum, get_vacuum_pair, revolved_profile
 
 
 def get_spherical_layer_pairs(radial_build, vertical_build, layer_count=0):
@@ -267,32 +267,35 @@ def create_spherical_vacuum(
     """Adds the vacuum between the plasma, the centre column and the first
     wall (the first solid layer after the plasma) to the assembly.
 
-    The envelope reaches from the Z axis halfway into the first wall, so only
-    the plasma, the first wall, the centre column and the extra_cut_shapes
-    (which are added whole and can reach into the gap) need cutting from it.
-    The first wall is used without its poloidal or toroidal segmentation, so
-    the vacuum stops at the plasma facing surface even where there are gaps
-    between the segments.
+    The outboard part is built as a layer out to the first wall, in the same
+    way as the solid layers, so it follows non uniform gaps and shares its
+    faces with the first wall. Like the solid layers it is closed to the Z
+    axis along its top and bottom, so the space between the plasma and the
+    centre column is added from a rectangle that reaches from the Z axis to
+    the ends of the layer, and the two meet on flat faces. The layer starts
+    just inside the plasma, which is then cut from it along with the centre
+    column, so the vacuum also shares its faces with the plasma and the
+    centre column. Poloidal or toroidal segmentation of the first wall does
+    not change the vacuum, so the gaps between segments are left to the
+    implicit complement. The extra_cut_shapes are added whole and can reach
+    into the gap, so they are cut from it.
     """
     major_radius, minor_radius, elongation = get_plasma_geometry(radial_build, vertical_build)
-    pair = next(
-        pair for pair in get_spherical_layer_pairs(radial_build, vertical_build) if pair["type"] == LayerType.SOLID
-    )
-    first_wall = create_spherical_layer(
+    pair = get_vacuum_pair(get_spherical_layer_pairs(radial_build, vertical_build), overlap=0.01 * minor_radius)
+    outboard = create_spherical_layer(
         pair, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column
     )
-    offset, thickness = spherical_profile(*pair["offsets"]), spherical_profile(*pair["thicknesses"])
-    geometry = (major_radius, minor_radius, triangularity, elongation, sum_up_to_gap_before_plasma(radial_build))
-    # the path runs along the bottom, around the outboard side and along the top
-    positions = np.concatenate([[0.0], np.linspace(1.0, 2.0, 200), [3.0]])
-    r, z = spherical_path_coordinates(positions, lambda theta: offset(theta) + thickness(theta) / 2, geometry)
-    points = list(zip(r, z))
-    # closed along the Z axis, the centre column is cut from it
-    axis_bottom, axis_top = (0.0, z[0]), (0.0, z[-1])
-    curves = [[axis_bottom, points[1]], points[1:-1], [points[-2], axis_top], [axis_top, axis_bottom]]
-    envelope = revolved_profile(curves, rotation_angle, rotation_start_angle)
-    cutters = [rotate_about_z(first_wall, rotation_start_angle), center_column, *extra_cut_shapes]
-    return add_vacuum(assembly, cutters, envelope=envelope, colors=colors)
+    # the ends of the inner curve of the layer, worked out in the same way as
+    # blanket_from_plasma does so the flat faces match exactly
+    thetas = np.linspace(-90.0, 90.0, 200)
+    offset = spherical_profile(*pair["offsets"])
+    r, z = offset_curve_coordinates(
+        major_radius, minor_radius, triangularity, elongation, 0.0, thetas, np.array([offset(t) for t in thetas])
+    )
+    corners = [(0.0, z[0]), (r[0], z[0]), (r[-1], z[-1]), (0.0, z[-1])]
+    inboard = revolved_profile([[corners[i], corners[(i + 1) % 4]] for i in range(4)], rotation_angle)
+    envelope = rotate_about_z(outboard.union(inboard).cut(center_column), rotation_start_angle)
+    return add_vacuum(assembly, extra_cut_shapes, envelope=envelope, colors=colors)
 
 
 def spherical_vertical_build_from_radial_build(radial_build, elongation):

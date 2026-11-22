@@ -93,6 +93,77 @@ def test_vacuum_fills_the_gap(reactor, rotation_angle):
         assert volume(vacuum.intersect(shape)) < 1e-6 * volume(vacuum), f"vacuum overlaps {name}"
 
 
+def test_vacuum_follows_non_uniform_gaps():
+    """The vacuum is built like the solid layers, so it follows a gap that is
+    different inboard, outboard, above and below the plasma."""
+    from paramak.assemblies.tokamak import poloidal_profile
+
+    radial_build = [
+        (L.GAP, 10),
+        (L.SOLID, 30),
+        (L.SOLID, 50),
+        (L.SOLID, 10),
+        (L.SOLID, 120),
+        (L.SOLID, 20),
+        (L.GAP, 40),
+        (L.PLASMA, 300),
+        (L.GAP, 80),
+        (L.SOLID, 20, "first_wall"),
+        (L.SOLID, 120),
+        (L.SOLID, 10),
+    ]
+    vertical_build = [
+        (L.SOLID, 15),
+        (L.SOLID, 120),
+        (L.SOLID, 20),
+        (L.GAP, 50),
+        (L.PLASMA, 650),
+        (L.GAP, 100),
+        (L.SOLID, 20),
+        (L.SOLID, 120),
+        (L.SOLID, 15),
+    ]
+    assembly = paramak.tokamak(
+        radial_build=radial_build, vertical_build=vertical_build, triangularity=TRIANGULARITY, rotation_angle=90
+    )
+    shapes = parts(assembly)
+    vacuum = shapes.pop("vacuum")
+    assert len(vacuum.Solids()) == 1
+    assert vacuum.isValid()
+
+    a, major_radius, elongation = assembly.minor_radius, assembly.major_radius, assembly.elongation
+    thetas = np.linspace(0, 360, 20001)[:-1]
+    # the gap at the outboard midplane, top, inboard midplane and bottom
+    gap = poloidal_profile(80, 50, 40, 100)(thetas)
+    outer = revolved_volume(*offset_curve_coordinates(major_radius, a, TRIANGULARITY, elongation, 0, thetas, gap), 90)
+    plasma = revolved_volume(*offset_curve_coordinates(major_radius, a, TRIANGULARITY, elongation, 0, thetas, 0), 90)
+    assert volume(vacuum) == pytest.approx(outer - plasma, rel=1e-4)
+
+    for name in ("plasma", "first_wall"):
+        assert vacuum.distance(shapes[name]) == pytest.approx(0, abs=1e-6)
+    for name, shape in shapes.items():
+        assert volume(vacuum.intersect(shape)) < 1e-6 * volume(vacuum), f"vacuum overlaps {name}"
+
+
+@pytest.mark.parametrize("reactor", list(FIRST_WALL))
+def test_vacuum_covers_consecutive_gaps(reactor):
+    """A gap given as two entries makes the same vacuum as a single entry."""
+    radial_build = TOKAMAK_FROM_PLASMA_RADIAL_BUILD if reactor == "tokamak_from_plasma" else SPHERICAL_RADIAL_BUILD
+    i = next(i for i, item in enumerate(radial_build) if item[0] == L.PLASMA)
+    outboard = [(L.GAP, radial_build[i + 1][1] / 2)] * 2
+    if reactor == "tokamak_from_plasma":
+        # the inboard and outboard entries are paired, so both are split
+        inboard = [(L.GAP, radial_build[i - 1][1] / 2)] * 2
+        split = [*radial_build[: i - 1], *inboard, radial_build[i], *outboard, *radial_build[i + 2 :]]
+    else:
+        # the spherical inboard gap sets the size of the centre column
+        split = [*radial_build[: i + 1], *outboard, *radial_build[i + 2 :]]
+    kwargs = dict(elongation=ELONGATION, triangularity=TRIANGULARITY, rotation_angle=90)
+    single = parts(getattr(paramak, reactor)(radial_build=radial_build, **kwargs))["vacuum"]
+    double = parts(getattr(paramak, reactor)(radial_build=split, **kwargs))["vacuum"]
+    assert volume(double) == pytest.approx(volume(single), rel=1e-6)
+
+
 @pytest.mark.parametrize("reactor", list(FIRST_WALL))
 def test_vacuum_can_be_removed(reactor):
     assembly = build(reactor)
