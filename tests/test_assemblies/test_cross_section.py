@@ -3,6 +3,7 @@
 import math
 
 import pytest
+from cadquery.occ_impl.assembly import imprint
 from OCP.BRepGProp import BRepGProp
 from OCP.GProp import GProp_GProps
 
@@ -112,8 +113,6 @@ def test_tokamak_centre_column_and_blanket_do_not_overlap(rotation_angle):
     """With no gap in the build the curved blanket touches the straight centre
     column. The blanket's spline crosses the column by a fraction of a micron,
     which is cut from the blanket, so imprinting adds no solids."""
-    from cad_to_dagmc.core import imprint_assembly
-
     reactor = paramak.tokamak(
         radial_build=TOKAMAK_RADIAL_BUILD,
         vertical_build=TOKAMAK_VERTICAL_BUILD,
@@ -121,7 +120,7 @@ def test_tokamak_centre_column_and_blanket_do_not_overlap(rotation_angle):
         rotation_angle=rotation_angle,
     )
     shapes = parts(reactor)
-    shape, origins = imprint_assembly(reactor)
+    shape, origins = imprint(reactor)
     assert len(shape.Solids()) == sum(len(s.Solids()) for s in shapes.values())
     assert [o for o in origins.values() if len(o) > 1] == []
     assert share_a_face(shapes["layer_2"], shapes["layer_5"])
