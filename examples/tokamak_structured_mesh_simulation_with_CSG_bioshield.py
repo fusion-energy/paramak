@@ -70,7 +70,7 @@ my_reactor.remove(name="plasma")
 # knowing the material tags to use in the simulation
 print(my_reactor.names())
 
-material_tags = ["layer_1", "layer_2", "layer_3", "layer_4", "layer_5"]
+material_tags = ["layer_1", "layer_2", "layer_3", "layer_4", "layer_5", "vacuum"]
 my_model = CadToDagmc()
 
 # 6 material tags as inner and outer layers are one solid there are only 6 solids in model and plasma has been removed

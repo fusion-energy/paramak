@@ -78,7 +78,7 @@ def test_layer_names_are_contiguous_with_interior_gaps():
         rotation_angle=180,
     )
 
-    assert my_reactor.names() == ["layer_1", "layer_2", "layer_3", "layer_4", "layer_5", "plasma"]
+    assert my_reactor.names() == ["layer_1", "layer_2", "layer_3", "layer_4", "layer_5", "plasma", "vacuum"]
 
 
 def test_named_layers_tokamak():
@@ -98,7 +98,7 @@ def test_named_layers_tokamak():
         ],
         rotation_angle=180,
     )
-    assert from_radial_build.names() == ["central column", "first wall", "blanket", "plasma"]
+    assert from_radial_build.names() == ["central column", "first wall", "blanket", "plasma", "vacuum"]
 
     renamed = (
         paramak.tokamak_from_plasma(
@@ -119,7 +119,7 @@ def test_named_layers_tokamak():
         .rename("layer_2", "first wall")
         .rename("layer_3", "blanket")
     )
-    assert renamed.names() == ["central column", "first wall", "blanket", "plasma"]
+    assert renamed.names() == ["central column", "first wall", "blanket", "plasma", "vacuum"]
 
 POLOIDAL_RADIAL_BUILD = [
     (paramak.LayerType.GAP, 10),
@@ -222,6 +222,7 @@ def test_poloidal_build_names_and_volumes():
         "layer_4_outboard_2",
         "layer_5",
         "plasma",
+        "vacuum",
     ]
 
     unsegmented_volumes = volumes(unsegmented)
@@ -260,6 +261,7 @@ def test_poloidal_build_gaps_remove_volume():
         "layer_4",
         "layer_5",
         "plasma",
+        "vacuum",
     ]
     segmented_volumes = volumes(segmented)
     segment_volume = sum(segmented_volumes[name] for name in segmented_volumes if name.startswith("layer_3_"))
@@ -306,7 +308,7 @@ def test_poloidal_build_with_named_layer_and_tokamak():
         rotation_angle=90,
         poloidal_build=[None, [(paramak.LayerType.SOLID, arc_length / 2, "upper"), (paramak.LayerType.SOLID, arc_length / 2, "lower")]],
     )
-    assert reactor.names() == ["layer_1", "blanket_upper", "blanket_lower", "plasma"]
+    assert reactor.names() == ["layer_1", "blanket_upper", "blanket_lower", "plasma", "vacuum"]
 
 
 def test_same_segments_line_up_through_layers():
@@ -385,6 +387,7 @@ def test_unnamed_segments():
         "layer_4_segment",
         "layer_5",
         "plasma",
+        "vacuum",
     ]
 
 
@@ -591,6 +594,6 @@ def test_remove_plasma_from_reactor():
 
     assert result is reactor
     assert "plasma" not in reactor.names()
-    assert reactor.names() == ["layer_1", "layer_2", "layer_3", "layer_4", "layer_5"]
+    assert reactor.names() == ["layer_1", "layer_2", "layer_3", "layer_4", "layer_5", "vacuum"]
     assert len(reactor.toCompound().Solids()) == solid_count - 1
     assert reactor.major_radius == major_radius

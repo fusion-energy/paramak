@@ -35,7 +35,7 @@ SPHERICAL_RADIAL_BUILD = [
 
 # parts that are not segmented in these tests: two centre column layers, the
 # rear wall and the plasma
-UNSEGMENTED_PARTS = ["layer_1", "layer_2", "layer_5", "plasma"]
+UNSEGMENTED_PARTS = ["layer_1", "layer_2", "layer_5", "plasma", "vacuum"]
 
 
 def segments(arc_length, number_of_segments, gap, name):

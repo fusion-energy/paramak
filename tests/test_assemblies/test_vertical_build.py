@@ -25,7 +25,7 @@ def test_vertical_build_is_ordered_from_the_top(function, radial_build, _):
     "both reactors put the entries before the plasma above it"
 
     reactor = function(radial_build=radial_build, vertical_build=VERTICAL_BUILD, rotation_angle=90)
-    blanket = reactor.names()[-2]
+    blanket = reactor.names()[-3]
     zmin, zmax = z_range(reactor, blanket)
     assert zmax == pytest.approx(300 + 10 + 100, abs=1)
     assert zmin == pytest.approx(-(300 + 10 + 20), abs=1)
@@ -55,5 +55,5 @@ def test_centre_column_lines_up_with_the_blanket(function, radial_build, _):
     "the centre column covers the same heights as the blanket for an asymmetric vertical_build"
 
     reactor = function(radial_build=radial_build, vertical_build=VERTICAL_BUILD, rotation_angle=90)
-    centre_column, blanket = reactor.names()[0], reactor.names()[-2]
+    centre_column, blanket = reactor.names()[0], reactor.names()[-3]
     assert z_range(reactor, centre_column) == pytest.approx(z_range(reactor, blanket), abs=1)

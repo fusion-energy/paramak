@@ -19,6 +19,7 @@ from ..workplanes.plasma_simplified import plasma_simplified_points
 from ..workplanes.toroidal_field_coil_princeton_d import toroidal_field_coil_princeton_d
 from .assembly import Assembly
 from .cross_section import named_part, profile_face, rectangle_face, revolve_cross_section
+from .vacuum import VACUUM_NAME, vacuum_profile
 
 
 def _validate(rotation_angle: float, number_of_tf_coils: int | None = None) -> None:
@@ -148,7 +149,9 @@ def _pf_coils_with_cases(center_points, widths, heights, case_thickness: float):
     return parts
 
 
-def _build_assembly(parts, cuts, colors, default_colors, plasma_parameters, rotation_angle) -> Assembly:
+def _build_assembly(
+    parts, cuts, colors, default_colors, plasma_parameters, plasma_facing_parts, rotation_angle
+) -> Assembly:
     """Adds the named parts to an Assembly.
 
     The axisymmetric parts are given as 2D profiles in the XZ plane and are
@@ -167,6 +170,11 @@ def _build_assembly(parts, cuts, colors, default_colors, plasma_parameters, rota
         default_colors: colors keyed by part name used when no user color is
             given, other parts get a color based on their name.
         plasma_parameters: plasma shape attributes to set on the assembly.
+        plasma_facing_parts: the names of the parts that face the plasma and
+            together enclose it, such as the first wall and divertor. A
+            "vacuum" part fills the space between these and the plasma, see
+            vacuum_profile. They are listed explicitly for the same reason as
+            the cuts.
         rotation_angle: the angle in degrees the profiles are revolved by.
     """
     profiles = {name: _faces(part) for name, part in parts if not isinstance(part, cq.Workplane)}
@@ -174,6 +182,9 @@ def _build_assembly(parts, cuts, colors, default_colors, plasma_parameters, rota
         for cutter_name in cuts.get(name, []):
             cutter = cq.Compound.makeCompound(profiles[cutter_name])
             profiles[name] = cq.Compound.makeCompound(profiles[name]).cut(cutter).Faces()
+    profiles[VACUUM_NAME] = vacuum_profile(
+        profiles["plasma"], [face for name in plasma_facing_parts for face in profiles[name]]
+    )
     revolved = revolve_cross_section(profiles, rotation_angle)
     solids = {name: named_part(revolved[name], name) for name in profiles}
 
@@ -196,6 +207,8 @@ def _build_assembly(parts, cuts, colors, default_colors, plasma_parameters, rota
             default_color = PF_COIL_CASE_COLOR
         color = (colors or {}).get(name, default_color) or resolve_assembly_color(name)
         assembly.add(solids[name], name=name, color=cq.Color(*color))
+    vacuum_color = resolve_assembly_color(VACUUM_NAME, None, colors)
+    assembly.add(solids[VACUUM_NAME], name=VACUUM_NAME, color=cq.Color(*vacuum_color))
     for key, value in plasma_parameters.items():
         setattr(assembly, key, value)
     return assembly
@@ -425,6 +438,7 @@ def sparc_from_2020_paper(
             "elongation": elongation,
             "triangularity": triangularity,
         },
+        ["inner_vessel", "antenna"],
         rotation_angle,
     )
 
@@ -665,6 +679,7 @@ def iter_from_2020_paper(
             "elongation": elongation,
             "triangularity": triangularity,
         },
+        ["blanket", "divertor", "vessel"],
         rotation_angle,
     )
 
@@ -956,6 +971,7 @@ def eu_demo_from_2015_paper(
             "elongation": elongation,
             "triangularity": triangularity,
         },
+        ["blanket", "divertor"],
         rotation_angle,
     )
 
@@ -1733,5 +1749,6 @@ def arc_from_2026_paper(
             elongation=elongation,
             triangularity=triangularity,
         ),
+        ["tungsten_first_wall"],
         rotation_angle,
     )
