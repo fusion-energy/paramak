@@ -10,7 +10,12 @@ from OCP.GProp import GProp_GProps
 import paramak
 from paramak.assemblies.cross_section import profile_face, rectangle_face, revolve_cross_section
 
-from .test_imprint import TOKAMAK_FROM_PLASMA_RADIAL_BUILD, TOKAMAK_RADIAL_BUILD
+from .test_imprint import (
+    SPHERICAL_LAYERS,
+    SPHERICAL_RADIAL_BUILD,
+    TOKAMAK_FROM_PLASMA_RADIAL_BUILD,
+    TOKAMAK_RADIAL_BUILD,
+)
 
 L = paramak.LayerType
 TOKAMAK_VERTICAL_BUILD = [
@@ -124,3 +129,20 @@ def test_tokamak_centre_column_and_blanket_do_not_overlap(rotation_angle):
     assert len(shape.Solids()) == sum(len(s.Solids()) for s in shapes.values())
     assert [o for o in origins.values() if len(o) > 1] == []
     assert share_a_face(shapes["layer_2"], shapes["layer_5"])
+
+
+@pytest.mark.parametrize("rotation_angle, rotation_start_angle", [(63, 0), (180, 0), (360, 0), (63, 20)])
+def test_spherical_tokamak_layers_share_faces(rotation_angle, rotation_start_angle):
+    "the centre column and the layers closed towards it share their faces before any imprinting"
+    shapes = parts(
+        paramak.spherical_tokamak_from_plasma(
+            radial_build=SPHERICAL_RADIAL_BUILD,
+            elongation=2,
+            triangularity=0.55,
+            rotation_angle=rotation_angle,
+            rotation_start_angle=rotation_start_angle,
+        )
+    )
+    for first, second in SPHERICAL_LAYERS:
+        assert share_a_face(shapes[first], shapes[second]), f"{first} and {second} share no face"
+    assert all(shape.isValid() for shape in shapes.values())

@@ -29,7 +29,7 @@ from ..workplanes.blanket_from_plasma import (
 )
 from ..workplanes.plasma_simplified import plasma_simplified_points
 from .assembly import Assembly
-from .cross_section import profile_face, rectangle_face, revolve_cross_section
+from .cross_section import moved_part, named_part, profile_face, rectangle_face, revolve_cross_section
 from .poloidal import (
     SegmentBuild,
     get_poloidal_segment_angles,
@@ -39,7 +39,7 @@ from .poloidal import (
     validate_segment_build,
 )
 from .spherical_tokamak import get_plasma_value
-from .toroidal import apply_toroidal_sectors, get_toroidal_build_sectors
+from .toroidal import apply_toroidal_sectors_to_layers, get_toroidal_build_sectors
 
 def count_cylinder_layers(radial_build):
     before_plasma = 0
@@ -281,26 +281,6 @@ def blanket_layer_profiles(
             pair_profiles = [(pair["name"], layer_profile(pair, minor_radius, major_radius, triangularity, elongation))]
         profiles.extend((name, faces, pair["name"]) for name, faces in pair_profiles)
     return profiles
-
-
-def named_part(solids, name, layer_name=None):
-    """Returns a Workplane holding the solids of a part, with the name and
-    layer_name attributes that paramak sets on the parts of a reactor."""
-    part = cq.Workplane("XY").add(solids[0] if len(solids) == 1 else cq.Compound.makeCompound(solids))
-    part.name = name
-    if layer_name is not None:
-        part.layer_name = layer_name
-    return part
-
-
-def moved_part(part, location):
-    """Moves a part by a location, keeping its name and layer_name. Moving
-    keeps the faces it shares with its neighbours, rotating would copy them."""
-    moved = cq.Workplane("XY").add([shape.moved(location) for shape in part.vals()])
-    for attribute in ("name", "layer_name"):
-        if hasattr(part, attribute):
-            setattr(moved, attribute, getattr(part, attribute))
-    return moved
 
 
 def vertical_build_from_radial_build(radial_build, elongation):
@@ -629,20 +609,13 @@ def tokamak(
     plasma = named_part(solids[len(profiles) - 1], "plasma")
 
     if toroidal_sectors is not None:
-        toroidal_region_size = 4 * max(sum(item[1] for item in radial_build), blanket_rear_wall_end_height)
-        # toroidal_build has one entry per layer pair, in the same order as the pairs
-        pairs = get_layer_pairs(radial_build, vertical_build, len(column_profiles))
-        sectors_by_layer = {pair["name"]: sectors for pair, sectors in zip(pairs, toroidal_sectors)}
-        sectored = []
-        for layer in blanket_layers:
-            sectors = sectors_by_layer.get(layer.layer_name)
-            if sectors is None:
-                sectored.append(layer)
-                continue
-            for piece in apply_toroidal_sectors([layer], sectors, rotation_angle, toroidal_region_size):
-                piece.layer_name = layer.layer_name
-                sectored.append(piece)
-        blanket_layers = sectored
+        blanket_layers = apply_toroidal_sectors_to_layers(
+            blanket_layers,
+            get_layer_pairs(radial_build, vertical_build, len(column_profiles)),
+            toroidal_sectors,
+            rotation_angle,
+            4 * max(sum(item[1] for item in radial_build), blanket_rear_wall_end_height),
+        )
 
     # the reactor is built from 0 degrees then moved to rotation_start_angle,
     # before the extra shapes are applied as they are given in their final position
