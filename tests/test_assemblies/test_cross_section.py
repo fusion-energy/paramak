@@ -2,7 +2,6 @@
 
 import math
 
-import cadquery as cq
 import pytest
 from OCP.BRepGProp import BRepGProp
 from OCP.GProp import GProp_GProps
