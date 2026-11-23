@@ -12,15 +12,13 @@ import numpy as np
 from OCP.Standard import Standard_ConstructionError, Standard_Failure
 
 from ..utils import create_wire_workplane_from_points, resolve_assembly_color
-from ..workplanes.blanket_from_plasma import blanket_from_plasma
+from ..workplanes.blanket_from_plasma import blanket_from_plasma_points
 from ..workplanes.blanket_from_plasma import find_points as blanket_find_points
 from ..workplanes.cutting_wedge import cutting_wedge
-from ..workplanes.plasma_simplified import plasma_simplified
-from ..workplanes.poloidal_field_coil import poloidal_field_coil
-from ..workplanes.poloidal_field_coil_case import poloidal_field_coil_case
-from ..workplanes.revolved_shape import revolved_shape
+from ..workplanes.plasma_simplified import plasma_simplified_points
 from ..workplanes.toroidal_field_coil_princeton_d import toroidal_field_coil_princeton_d
 from .assembly import Assembly
+from .cross_section import named_part, profile_face, rectangle_face, revolve_cross_section
 
 
 def _validate(rotation_angle: float, number_of_tf_coils: int | None = None) -> None:
@@ -42,18 +40,6 @@ def _straight(points):
 
 def _spline(points):
     return [(r, z, "spline") for r, z in points]
-
-
-def _revolve(points, rotation_angle: float) -> cq.Workplane:
-    """Revolves a closed profile, see paramak.revolved_shape. A full 360
-    degree revolution is made from two 180 degree halves joined together, so
-    the surfaces have seam edges. Without these a profile made of a single
-    closed spline gives a surface that is periodic in both directions, which
-    can not be meshed for neutronics."""
-    if rotation_angle < 360:
-        return revolved_shape(points, rotation_angle=rotation_angle)
-    half = revolved_shape(points, rotation_angle=180)
-    return half.union(half.rotate((0, 0, 0), (0, 0, 1), 180))
 
 
 def _profile_face(points, offset: float = 0.0) -> cq.Face:
@@ -79,8 +65,10 @@ def _single_face(shape: cq.Shape) -> cq.Face:
 
 
 def _revolve_face(face: cq.Face, rotation_angle: float) -> cq.Workplane:
-    """Revolves a face in the XZ plane around the Z axis. A full 360 degree
-    revolution is made from two halves, see _revolve."""
+    """Revolves a face in the XZ plane around the Z axis, used for shapes that
+    cut a part rather than being parts. A full 360 degree revolution is made
+    from two 180 degree halves joined together, so the surfaces have seam
+    edges and are not periodic in both directions."""
     axis_start, axis_end = cq.Vector(0, 0, 0), cq.Vector(0, 0, 1)
     if rotation_angle < 360:
         solid = cq.Solid.revolve(face, rotation_angle, axis_start, axis_end)
@@ -88,6 +76,26 @@ def _revolve_face(face: cq.Face, rotation_angle: float) -> cq.Workplane:
         half = cq.Solid.revolve(face, 180, axis_start, axis_end)
         solid = half.fuse(half.rotate(axis_start, axis_end, 180)).clean()
     return cq.Workplane("XZ").add(solid)
+
+
+def _plasma_profile(**kwargs) -> cq.Face:
+    """The profile of a plasma_simplified plasma, see plasma_simplified_points."""
+    return profile_face(plasma_simplified_points(**kwargs))
+
+
+def _rectangle(center_point, width, height) -> cq.Face:
+    """The profile of a rectangular coil, as made by poloidal_field_coil."""
+    r, z = center_point
+    return rectangle_face(r - width / 2, r + width / 2, z - height / 2, z + height / 2)
+
+
+def _faces(shape) -> list[cq.Face]:
+    "the faces of a 2D profile, given as a face, a shape or a list of faces"
+    if isinstance(shape, cq.Face):
+        return [shape]
+    if isinstance(shape, cq.Shape):
+        return shape.Faces()
+    return list(shape)
 
 
 def _tf_placement_angles(number_of_tf_coils: int) -> list[float]:
@@ -107,13 +115,13 @@ def _clip_to_sector(solid: cq.Workplane, rotation_angle: float) -> cq.Workplane:
 PF_COIL_CASE_COLOR = (0.9, 0.4, 0.4)
 
 
-def _pf_coils_with_cases(center_points, widths, heights, case_thickness: float, rotation_angle: float):
+def _pf_coils_with_cases(center_points, widths, heights, case_thickness: float):
     """Makes each poloidal field coil as a winding pack inside a case of
     constant thickness. The widths and heights are the outer size of each
     coil (including the case), as read off the paper figures.
 
     Returns:
-        a list of (name, solid) tuples, a pf_coil_N winding pack and a
+        a list of (name, profile) tuples, a pf_coil_N winding pack and a
         pf_coil_case_N case for each coil.
     """
     if (
@@ -134,63 +142,60 @@ def _pf_coils_with_cases(center_points, widths, heights, case_thickness: float, 
     parts = []
     for counter, (center_point, width, height) in enumerate(zip(center_points, widths, heights), 1):
         core_width, core_height = width - 2 * case_thickness, height - 2 * case_thickness
-        parts.append(
-            (
-                f"pf_coil_{counter}",
-                poloidal_field_coil(
-                    height=core_height, width=core_width, center_point=center_point, rotation_angle=rotation_angle
-                ),
-            )
-        )
-        parts.append(
-            (
-                f"pf_coil_case_{counter}",
-                poloidal_field_coil_case(
-                    coil_height=core_height,
-                    coil_width=core_width,
-                    casing_thickness=case_thickness,
-                    center_point=center_point,
-                    rotation_angle=rotation_angle,
-                ),
-            )
-        )
+        core = _rectangle(center_point, core_width, core_height)
+        parts.append((f"pf_coil_{counter}", core))
+        parts.append((f"pf_coil_case_{counter}", _rectangle(center_point, width, height).cut(core).Faces()))
     return parts
 
 
-def _build_assembly(parts, cuts, colors, default_colors, plasma_parameters) -> Assembly:
+def _build_assembly(parts, cuts, colors, default_colors, plasma_parameters, rotation_angle) -> Assembly:
     """Adds the named parts to an Assembly.
 
+    The axisymmetric parts are given as 2D profiles in the XZ plane and are
+    revolved together, so neighbouring parts share their faces. The other
+    parts (the toroidal field coils) are given as solids.
+
     Args:
-        parts: a list of (name, solid) tuples.
+        parts: a list of (name, part) tuples, where a part is a 2D profile (a
+            face, or a list of faces) or a Workplane holding a solid.
         cuts: a dictionary mapping a part name to the names of the parts that
             are cut from it, used where the outlines from the figures overlap.
             The overlaps are listed explicitly because automatic detection
             with boolean operations is not reliable for the nearly touching
-            spline surfaces in these models.
+            spline surfaces in these models. Profiles are cut in 2D.
         colors: user colors keyed by part name.
         default_colors: colors keyed by part name used when no user color is
             given, other parts get a color based on their name.
         plasma_parameters: plasma shape attributes to set on the assembly.
+        rotation_angle: the angle in degrees the profiles are revolved by.
     """
-    solids = dict(parts)
-    assembly = Assembly()
-    for name, solid in parts:
+    profiles = {name: _faces(part) for name, part in parts if not isinstance(part, cq.Workplane)}
+    for name in profiles:
         for cutter_name in cuts.get(name, []):
-            # boolean operations can change the tolerances of their arguments
-            # in place, so a copy of the cutting part is used
-            cutter = solids[cutter_name].val().copy()
-            try:
-                solid = solid.cut(cutter)
-            except (Standard_Failure, Standard_ConstructionError):
-                # merging the faces of the result can fail for some spline
-                # surfaces, the cut is still valid without it
-                solid = solid.cut(cutter, clean=False)
-        solids[name] = solid
+            cutter = cq.Compound.makeCompound(profiles[cutter_name])
+            profiles[name] = cq.Compound.makeCompound(profiles[name]).cut(cutter).Faces()
+    revolved = revolve_cross_section(profiles, rotation_angle)
+    solids = {name: named_part(revolved[name], name) for name in profiles}
+
+    assembly = Assembly()
+    for name, part in parts:
+        if isinstance(part, cq.Workplane):
+            for cutter_name in cuts.get(name, []):
+                # boolean operations can change the tolerances of their arguments
+                # in place, so a copy of the cutting part is used
+                cutter = solids[cutter_name].val().copy()
+                try:
+                    part = part.cut(cutter)
+                except (Standard_Failure, Standard_ConstructionError):
+                    # merging the faces of the result can fail for some spline
+                    # surfaces, the cut is still valid without it
+                    part = part.cut(cutter, clean=False)
+            solids[name] = part
         default_color = default_colors.get(name)
         if default_color is None and name.startswith("pf_coil_case"):
             default_color = PF_COIL_CASE_COLOR
         color = (colors or {}).get(name, default_color) or resolve_assembly_color(name)
-        assembly.add(solid, name=name, color=cq.Color(*color))
+        assembly.add(solids[name], name=name, color=cq.Color(*color))
     for key, value in plasma_parameters.items():
         setattr(assembly, key, value)
     return assembly
@@ -239,22 +244,16 @@ def sparc_from_2020_paper(
     paper_minor_radius = 57.0
     minor_radius = paper_minor_radius - 6
 
-    plasma = plasma_simplified(
+    plasma = _plasma_profile(
         major_radius=major_radius,
         minor_radius=minor_radius,
         elongation=elongation,
         triangularity=triangularity,
-        rotation_angle=rotation_angle,
     )
 
     def rectangular_coils(prefix, center_points, widths, heights):
         return [
-            (
-                f"{prefix}_{counter}",
-                poloidal_field_coil(
-                    height=height, width=width, center_point=center_point, rotation_angle=rotation_angle
-                ),
-            )
+            (f"{prefix}_{counter}", _rectangle(center_point, width, height))
             for counter, (center_point, width, height) in enumerate(zip(center_points, widths, heights), 1)
         ]
 
@@ -270,7 +269,6 @@ def sparc_from_2020_paper(
         [32, 32, 50, 50, 43, 43, 48, 48],
         [40, 40, 30, 30, 28, 28, 37, 37],
         pf_coil_case_thickness,
-        rotation_angle,
     )
     divertor_coils = rectangular_coils(
         "divertor_coil", [(207, 144), (207, 125), (207, -144), (207, -125)], [15] * 4, [15] * 4
@@ -285,11 +283,11 @@ def sparc_from_2020_paper(
     # profile keeps the same winding direction
     efccu_upper = [[(r, -z) for r, z in reversed(coil)] for coil in efccu_lower]
     efccu_coils = [
-        (f"efccu_coil_{counter}", _revolve(_straight(points), rotation_angle=rotation_angle))
+        (f"efccu_coil_{counter}", _profile_face(_straight(points)))
         for counter, points in enumerate(efccu_lower + efccu_upper, 1)
     ]
 
-    antenna = _revolve(
+    antenna = _profile_face(
         [
             (263.28, 46.54, "straight"),
             (263.28, -46.54, "straight"),
@@ -297,11 +295,10 @@ def sparc_from_2020_paper(
             (243.88, 0.0, "spline"),
             (231.87, 46.54, "straight"),
         ],
-        rotation_angle=rotation_angle,
     )
 
     # the vacuum vessel is a shell between an outer and an inner wall
-    vessel_outer_wall = _revolve(
+    vessel_outer_wall = _profile_face(
         _straight(
             [
                 (117.32, 126.73),
@@ -320,9 +317,8 @@ def sparc_from_2020_paper(
                 (117.32, -126.73),
             ]
         ),
-        rotation_angle=rotation_angle,
     )
-    vessel_inner_wall = _revolve(
+    vessel_inner_wall = _profile_face(
         _straight(
             [
                 (123.79, 123.04),
@@ -343,11 +339,10 @@ def sparc_from_2020_paper(
                 (165.36, 162.67),
             ]
         ),
-        rotation_angle=rotation_angle,
     )
-    vessel = vessel_outer_wall.cut(vessel_inner_wall)
+    vessel = vessel_outer_wall.cut(vessel_inner_wall).Faces()
 
-    inner_vessel = _revolve(
+    inner_vessel = _profile_face(
         [
             (269.75, -46.54, "straight"),
             (231.87, -46.54, "spline"),
@@ -393,7 +388,6 @@ def sparc_from_2020_paper(
             (234.64, -111.98, "straight"),
             (269.75, -63.13, "straight"),
         ],
-        rotation_angle=rotation_angle,
     )
 
     tf_coils = toroidal_field_coil_princeton_d(
@@ -431,6 +425,7 @@ def sparc_from_2020_paper(
             "elongation": elongation,
             "triangularity": triangularity,
         },
+        rotation_angle,
     )
 
 
@@ -473,13 +468,12 @@ def iter_from_2020_paper(
     major_radius, minor_radius, elongation, triangularity = 620.0, 200.0, 1.7, 0.33
     vertical_displacement = 57.0
 
-    plasma = plasma_simplified(
+    plasma = _plasma_profile(
         major_radius=major_radius,
         minor_radius=minor_radius,
         elongation=elongation,
         triangularity=triangularity,
         vertical_displacement=vertical_displacement,
-        rotation_angle=rotation_angle,
     )
 
     blanket_parameters = {
@@ -494,12 +488,12 @@ def iter_from_2020_paper(
         "vertical_displacement": vertical_displacement,
         "num_points": 50,
     }
-    blanket = blanket_from_plasma(rotation_angle=rotation_angle, **blanket_parameters)
+    blanket = profile_face(blanket_from_plasma_points(**blanket_parameters))
 
     # outline of an ITER like divertor with inner and outer vertical targets
     # and a dome, generated with the ITERtypeDivertor class from earlier
     # paramak versions
-    divertor = _revolve(
+    divertor = _profile_face(
         [
             (392.71, -230.32, "circle"),
             (437.93, -269.98, "circle"),
@@ -517,7 +511,6 @@ def iter_from_2020_paper(
             (407.00, -376.77, "straight"),
             (396.79, -360.97, "straight"),
         ],
-        rotation_angle=rotation_angle,
     )
 
     # the inside of the vacuum vessel follows the outer surface of the blanket
@@ -530,9 +523,9 @@ def iter_from_2020_paper(
         (407.00, -376.77, "straight"),
         (396.79, -360.97, "straight"),
     ]
-    vessel_cavity = _revolve(blanket_outer_points + divertor_casing_points, rotation_angle=rotation_angle)
+    vessel_cavity = _profile_face(blanket_outer_points + divertor_casing_points)
 
-    vessel = _revolve(
+    vessel = _profile_face(
         _spline(
             [
                 (327.77, 36.5),
@@ -612,8 +605,7 @@ def iter_from_2020_paper(
                 (327.77, -67.19),
             ]
         ),
-        rotation_angle=rotation_angle,
-    ).cut(vessel_cavity)
+    ).cut(vessel_cavity).Faces()
 
     # outboard coils, given by their lower left and upper right corners
     pf_coil_corners = [
@@ -629,7 +621,6 @@ def iter_from_2020_paper(
         [upper[0] - lower[0] for lower, upper in pf_coil_corners],
         [upper[1] - lower[1] for lower, upper in pf_coil_corners],
         pf_coil_case_thickness,
-        rotation_angle,
     )
 
     # the central solenoid is made of 6 stacked modules
@@ -637,12 +628,7 @@ def iter_from_2020_paper(
     central_solenoid = [
         (
             f"central_solenoid_{counter}",
-            poloidal_field_coil(
-                height=200,
-                width=cs_outer - cs_inner,
-                center_point=((cs_inner + cs_outer) / 2, z_bottom + 100),
-                rotation_angle=rotation_angle,
-            ),
+            _rectangle(((cs_inner + cs_outer) / 2, z_bottom + 100), cs_outer - cs_inner, 200),
         )
         for counter, z_bottom in enumerate(range(-600, 600, 200), 1)
     ]
@@ -679,6 +665,7 @@ def iter_from_2020_paper(
             "elongation": elongation,
             "triangularity": triangularity,
         },
+        rotation_angle,
     )
 
 
@@ -724,12 +711,11 @@ def eu_demo_from_2015_paper(
     elongation = high_point[1] / minor_radius
     triangularity = (major_radius - high_point[0]) / minor_radius
 
-    plasma = plasma_simplified(
+    plasma = _plasma_profile(
         major_radius=major_radius,
         minor_radius=minor_radius,
         elongation=elongation,
         triangularity=triangularity,
-        rotation_angle=rotation_angle,
     )
 
     blanket_points = [
@@ -759,7 +745,7 @@ def eu_demo_from_2015_paper(
         (1082.09, -221.46, "spline"),
         (945.66, -418.46, "straight"),
     ]
-    blanket = _revolve(blanket_points, rotation_angle=rotation_angle)
+    blanket = _profile_face(blanket_points)
 
     divertor_points = _straight(
         [
@@ -790,7 +776,7 @@ def eu_demo_from_2015_paper(
             (584.53, -415.6),
         ]
     )
-    divertor = _revolve(divertor_points, rotation_angle=rotation_angle)
+    divertor = _profile_face(divertor_points)
 
     vessel_outer_points = _spline(
         [
@@ -856,7 +842,7 @@ def eu_demo_from_2015_paper(
     blanket_and_divertor = _single_face(_profile_face(blanket_points).fuse(_profile_face(divertor_points)).clean())
     cavity_face = cq.Face.makeFromWires(blanket_and_divertor.outerWire())
     vessel_face = _single_face(_profile_face(vessel_outer_points).cut(cavity_face).clean())
-    vessel = _revolve_face(vessel_face, rotation_angle)
+    vessel = vessel_face
 
     pf_coil_sizes = [204, 141, 102, 95, 79, 121]
     pf_coils = _pf_coils_with_cases(
@@ -864,7 +850,6 @@ def eu_demo_from_2015_paper(
         pf_coil_sizes,
         pf_coil_sizes,
         pf_coil_case_thickness,
-        rotation_angle,
     )
 
     central_solenoid_corners = [
@@ -877,10 +862,7 @@ def eu_demo_from_2015_paper(
     central_solenoid = [
         (
             f"central_solenoid_{counter}",
-            _revolve(
-                _straight([(r0, z0), (r1, z0), (r1, z1), (r0, z1)]),
-                rotation_angle=rotation_angle,
-            ),
+            _profile_face(_straight([(r0, z0), (r1, z0), (r1, z1), (r0, z1)])),
         )
         for counter, ((r0, z0), (r1, z1)) in enumerate(central_solenoid_corners, 1)
     ]
@@ -974,6 +956,7 @@ def eu_demo_from_2015_paper(
             "elongation": elongation,
             "triangularity": triangularity,
         },
+        rotation_angle,
     )
 
 
@@ -1274,7 +1257,7 @@ def arc_from_2026_paper(
     )
     if plasma_face.normalAt().y < 0:
         plasma_face = cq.Face(plasma_face.wrapped.Reversed())
-    plasma = _revolve_face(plasma_face, rotation_angle)
+    plasma = plasma_face
 
     # Coil cross-sections from the device_V3A.json filament grids, in cm. Each
     # filament stands for one cell of the grid, so a coil edge is half a grid
@@ -1290,12 +1273,7 @@ def arc_from_2026_paper(
     central_solenoid = [
         (
             f"central_solenoid_{index}",
-            poloidal_field_coil(
-                height=zmax - zmin,
-                width=rmax - rmin,
-                center_point=((rmin + rmax) / 2, (zmin + zmax) / 2),
-                rotation_angle=rotation_angle,
-            ),
+            _rectangle(((rmin + rmax) / 2, (zmin + zmax) / 2), rmax - rmin, zmax - zmin),
         )
         for index, (rmin, rmax, zmin, zmax) in enumerate(solenoid_bounds, 1)
     ]
@@ -1330,7 +1308,6 @@ def arc_from_2026_paper(
         [rmax - rmin + 2 * pf_coil_case_thickness for rmin, rmax, _, _ in pf_winding_bounds],
         [zmax - zmin + 2 * pf_coil_case_thickness for _, _, zmin, zmax in pf_winding_bounds],
         pf_coil_case_thickness,
-        rotation_angle,
     )
 
     # Tungsten first wall: device_V3A.json wall.description_2d[1].vessel.unit[0].
@@ -1406,7 +1383,7 @@ def arc_from_2026_paper(
     first_wall_outer_face = _profile_face(_straight([(100 * r, 100 * z) for r, z in first_wall_outer_m]))
     first_wall_inner_face = _profile_face(_straight([(100 * r, 100 * z) for r, z in first_wall_inner_m]))
     first_wall_section = _single_face(first_wall_outer_face.cut(first_wall_inner_face).clean())
-    tungsten_first_wall = _revolve_face(first_wall_section, rotation_angle)
+    tungsten_first_wall = first_wall_section
 
     # Inner/outer vessel walls: device_V3A.json wall.description_2d[1].vessel.unit[1:3].
     # Preserve supplied contours; coordinates below are metres, converted to cm.
@@ -1447,7 +1424,7 @@ def arc_from_2026_paper(
     ]
     inner_vessel_outer_face = _profile_face(_straight([(100 * r, 100 * z) for r, z in inner_vessel_outer_m]))
     inner_vessel_section = _single_face(inner_vessel_outer_face.cut(first_wall_outer_face).clean())
-    inner_vacuum_vessel = _revolve_face(inner_vessel_section, rotation_angle)
+    inner_vacuum_vessel = inner_vessel_section
 
     outer_vessel_inner_m = [
         (3.36, 0.0),
@@ -1520,9 +1497,9 @@ def arc_from_2026_paper(
     outer_vessel_inner_face = _profile_face(_straight([(100 * r, 100 * z) for r, z in outer_vessel_inner_m]))
     outer_vessel_outer_face = _profile_face(_straight([(100 * r, 100 * z) for r, z in outer_vessel_outer_m]))
     outer_vessel_section = _single_face(outer_vessel_outer_face.cut(outer_vessel_inner_face).clean())
-    outer_vacuum_vessel = _revolve_face(outer_vessel_section, rotation_angle)
+    outer_vacuum_vessel = outer_vessel_section
     flibe_first_wall_section = _single_face(outer_vessel_inner_face.cut(inner_vessel_outer_face).clean())
-    flibe_first_wall = _revolve_face(flibe_first_wall_section, rotation_angle)
+    flibe_first_wall = flibe_first_wall_section
 
     # Neutron shield: device_V3A.json wall.description_2d[3].vessel.unit[0].element[0].
     neutron_shield_m = [
@@ -1546,7 +1523,7 @@ def arc_from_2026_paper(
         (2.48, -1.35),
     ]
     neutron_shield_face = _profile_face(_straight([(100 * r, 100 * z) for r, z in neutron_shield_m]))
-    neutron_shield = _revolve_face(neutron_shield_face, rotation_angle)
+    neutron_shield = neutron_shield_face
 
     # Bulk FLiBe: tank interior from wall.description_2d[2].vessel.unit[0].
     blanket_tank_inner_m = [
@@ -1579,7 +1556,7 @@ def arc_from_2026_paper(
     flibe_blanket_section = _single_face(
         blanket_tank_inner_face.cut(outer_vessel_outer_face).cut(neutron_shield_face).clean()
     )
-    flibe_blanket = _revolve_face(flibe_blanket_section, rotation_angle)
+    flibe_blanket = flibe_blanket_section
 
     # Blanket tank wall: the shell between the two contours of
     # wall.description_2d[2].vessel.unit[0], about 2 cm thick.
@@ -1611,7 +1588,7 @@ def arc_from_2026_paper(
     ]
     blanket_tank_outer_face = _profile_face(_straight([(100 * r, 100 * z) for r, z in blanket_tank_outer_m]))
     outer_blanket_wall_section = _single_face(blanket_tank_outer_face.cut(blanket_tank_inner_face).clean())
-    outer_blanket_wall = _revolve_face(outer_blanket_wall_section, rotation_angle)
+    outer_blanket_wall = outer_blanket_wall_section
 
     # Toroidal field coils: the region between an outer and an inner
     # perimeter read off Figure 2, in metres, where each connection describes
@@ -1756,4 +1733,5 @@ def arc_from_2026_paper(
             elongation=elongation,
             triangularity=triangularity,
         ),
+        rotation_angle,
     )
