@@ -167,3 +167,23 @@ def revolve_cross_section(
     for name, solid in zip(owners, solids):
         result[name].append(cq.Solid(solid).moved(rotation))
     return result
+
+
+def named_part(solids, name, layer_name=None):
+    """Returns a Workplane holding the solids of a part, with the name and
+    layer_name attributes that paramak sets on the parts of a reactor."""
+    part = cq.Workplane("XY").add(solids[0] if len(solids) == 1 else cq.Compound.makeCompound(solids))
+    part.name = name
+    if layer_name is not None:
+        part.layer_name = layer_name
+    return part
+
+
+def moved_part(part, location):
+    """Moves a part by a location, keeping its name and layer_name. Moving
+    keeps the faces it shares with its neighbours, rotating would copy them."""
+    moved = cq.Workplane("XY").add([shape.moved(location) for shape in part.vals()])
+    for attribute in ("name", "layer_name"):
+        if hasattr(part, attribute):
+            setattr(moved, attribute, getattr(part, attribute))
+    return moved
