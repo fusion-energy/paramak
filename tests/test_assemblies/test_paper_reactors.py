@@ -126,7 +126,9 @@ def test_smaller_rotation_angle_gives_smaller_volumes(reactor_function):
     assert vessel_names
     for name in ["plasma", *vessel_names]:
         assert volumes_90[name] == pytest.approx(volumes_180[name] / 2, rel=5e-2)
-    assert sum(volumes_90.values()) < sum(volumes_180.values())
+    # every part, including the toroidal field coils, is clipped to the sector
+    for name in volumes_90:
+        assert volumes_90[name] < volumes_180[name], f"{name} is not smaller in a smaller sector"
 
 
 @pytest.mark.parametrize("reactor_function", PAPER_REACTORS, ids=lambda f: f.__name__)

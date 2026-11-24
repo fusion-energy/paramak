@@ -10,6 +10,7 @@ from OCP.GProp import GProp_GProps
 import paramak
 from paramak.assemblies.cross_section import profile_face, rectangle_face, revolve_cross_section
 
+from .test_imprint import REACTORS as IMPRINT_REACTORS
 from .test_imprint import (
     SPHERICAL_LAYERS,
     SPHERICAL_RADIAL_BUILD,
@@ -146,3 +147,24 @@ def test_spherical_tokamak_layers_share_faces(rotation_angle, rotation_start_ang
     for first, second in SPHERICAL_LAYERS:
         assert share_a_face(shapes[first], shapes[second]), f"{first} and {second} share no face"
     assert all(shape.isValid() for shape in shapes.values())
+
+
+@pytest.mark.parametrize("rotation_angle", [63, 360])
+@pytest.mark.parametrize("reactor", ["sparc", "iter", "eu_demo", "arc"])
+def test_paper_reactor_parts_share_faces(reactor, rotation_angle):
+    """The neighbouring axisymmetric parts share their faces before any
+    imprinting, the same pairs the imprint tests expect to share a face. The
+    toroidal field coils are solids made separately, so pairs with them are
+    left out."""
+    _, expected_pairs = IMPRINT_REACTORS[reactor]
+    function = {
+        "sparc": paramak.sparc_from_2020_paper,
+        "iter": paramak.iter_from_2020_paper,
+        "eu_demo": paramak.eu_demo_from_2015_paper,
+        "arc": paramak.arc_from_2026_paper,
+    }[reactor]
+    shapes = parts(function(rotation_angle=rotation_angle))
+    pairs = [pair for pair in expected_pairs if "toroidal_field_coil" not in pair]
+    assert pairs
+    for first, second in pairs:
+        assert share_a_face(shapes[first], shapes[second]), f"{first} and {second} share no face"
