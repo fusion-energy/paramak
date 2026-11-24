@@ -83,7 +83,7 @@ class Assembly(cq.Assembly):
 
         Naming convention:
           - Single-solid parts: name unchanged
-          - Multi-solid parts:  <original_name>_1, <original_name>_2, ... <original_name>_N
+          - Multi-solid parts: <original_name>_1, <original_name>_2, ... <original_name>_N
 
         Example:
           'add_extra_cut_shape_1' with 16 solids becomes:
@@ -94,13 +94,14 @@ class Assembly(cq.Assembly):
         for part in self:
             obj, full_path, loc, color = part
             leaf_name = full_path.split('/')[-1]
-            self._add_split_solids(new_assembly, obj, leaf_name, color, loc)
+            new_assembly.add_split_solids(obj, leaf_name, color, loc)
 
         self._copy_metadata(new_assembly)
         return new_assembly
 
-    @staticmethod
-    def _add_split_solids(assembly, obj, name, color, loc):
+    def add_split_solids(self, obj, name, color=None, loc=None):
+        """Adds an object directly if it has at most one solid, or adds each
+        solid with a numbered name if the object contains multiple solids."""
         if isinstance(obj, cq.Workplane):
             solids = obj.solids().vals()
             plane = obj.plane
@@ -108,19 +109,14 @@ class Assembly(cq.Assembly):
             solids = obj.Solids()
             plane = None
         else:
-            assembly.add(obj, name=name, color=color, loc=loc)
+            self.add(obj, name=name, color=color, loc=loc)
             return
 
         if len(solids) <= 1:
-            assembly.add(obj, name=name, color=color, loc=loc)
+            self.add(obj, name=name, color=color, loc=loc)
             return
 
         for idx, solid in enumerate(solids, start=1):
             split_name = f"{name}_{idx}"
             split_obj = cq.Workplane(plane).add(solid) if plane is not None else solid
-            assembly.add(split_obj, name=split_name, color=color, loc=loc)
-
-    def add_split_solids(self, obj, name, color=None, loc=None):
-        """Adds an object directly if it has at most one solid, or adds each
-        solid with a numbered name if the object contains multiple solids."""
-        self._add_split_solids(self, obj, name, color, loc)
+            self.add(split_obj, name=split_name, color=color, loc=loc)
