@@ -306,6 +306,53 @@ def blanket_from_plasma(
     if not (-1.0 <= triangularity <= 1.0):
         raise ValueError(f"triangularity must be between -1 and 1, got {triangularity}.")
 
+    points = blanket_from_plasma_points(
+        thickness=thickness,
+        start_angle=start_angle,
+        stop_angle=stop_angle,
+        minor_radius=minor_radius,
+        major_radius=major_radius,
+        triangularity=triangularity,
+        elongation=elongation,
+        vertical_displacement=vertical_displacement,
+        offset_from_plasma=offset_from_plasma,
+        num_points=num_points,
+        allow_overlapping_shape=allow_overlapping_shape,
+        connect_to_center=connect_to_center,
+    )
+
+    wire = create_wire_workplane_from_points(points=points, plane=plane, origin=origin, obj=obj)
+
+    try:
+        solid = wire.revolve(rotation_angle)
+    except (Standard_Failure, StdFail_NotDone) as e:
+        raise ValueError(
+            "blanket_from_plasma: could not revolve the profile, "
+            "the geometry is probably self-overlapping"
+        ) from e
+    solid = rotate_to_rotation_start_angle(solid, wire, rotation_start_angle)
+    solid.name = name
+    solid.color = color
+    return solid
+
+
+def blanket_from_plasma_points(
+    thickness,
+    start_angle: float,
+    stop_angle: float,
+    minor_radius: float,
+    major_radius: float,
+    triangularity: float,
+    elongation: float,
+    vertical_displacement: float = 0.0,
+    offset_from_plasma: float | typing.Iterable[float] = 0.0,
+    num_points: int = 200,
+    allow_overlapping_shape: bool = False,
+    connect_to_center: bool = False,
+) -> list:
+    """Returns the closed profile that blanket_from_plasma revolves, as
+    [R, Z, connection] points with the first point repeated at the end. The
+    arguments are the same as for blanket_from_plasma."""
     points = find_points(
         thickness=thickness,
         start_angle=start_angle,
@@ -321,17 +368,4 @@ def blanket_from_plasma(
         connect_to_center=connect_to_center,
     )
     points.append(points[0])
-
-    wire = create_wire_workplane_from_points(points=points, plane=plane, origin=origin, obj=obj)
-
-    try:
-        solid = wire.revolve(rotation_angle)
-    except (Standard_Failure, StdFail_NotDone) as e:
-        raise ValueError(
-            "blanket_from_plasma: could not revolve the profile, "
-            "the geometry is probably self-overlapping"
-        ) from e
-    solid = rotate_to_rotation_start_angle(solid, wire, rotation_start_angle)
-    solid.name = name
-    solid.color = color
-    return solid
+    return points
