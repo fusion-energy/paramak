@@ -15,7 +15,6 @@ from ..utils import (
     get_plasma_index,
     get_plasma_value,
     resolve_assembly_color,
-    rotate_about_z,
     sum_before_after_plasma,
     sum_up_to_gap_before_plasma,
     validate_build_lengths,
@@ -25,20 +24,20 @@ from ..utils import (
     validate_unique_assembly_names,
     validate_vertical_build_names,
 )
-from ..workplanes.blanket_from_plasma import blanket_from_plasma, offset_curve_coordinates
-from ..workplanes.center_column_shield_cylinder import center_column_shield_cylinder
-from ..workplanes.plasma_simplified import plasma_simplified
+from ..workplanes.blanket_from_plasma import blanket_from_plasma_points, offset_curve_coordinates
+from ..workplanes.plasma_simplified import plasma_simplified_points
 from .assembly import Assembly
+from .cross_section import moved_part, named_part, profile_face, rectangle_face, revolve_cross_section
 from .poloidal import (
     SegmentBuild,
-    check_not_empty,
     get_poloidal_segment_angles,
     cut_with_shapes,
     intersect_with_each_part,
     resolve_vertical_build,
     validate_segment_build,
 )
-from .toroidal import apply_toroidal_sectors, get_toroidal_build_sectors
+from .toroidal import apply_toroidal_sectors_to_layers, get_toroidal_build_sectors
+from .vacuum import VACUUM_NAME, cut_vacuum, vacuum_profile
 
 
 def get_spherical_layer_pairs(radial_build, vertical_build, layer_count=0):
@@ -141,41 +140,37 @@ def spherical_arc_length_table(offset, geometry):
     return path_positions, arc_lengths
 
 
-def create_spherical_layer(pair, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column):
-    """Builds the full (unsegmented) solid of a spherical tokamak layer."""
-    layer = blanket_from_plasma(
-        minor_radius=minor_radius,
-        major_radius=major_radius,
-        triangularity=triangularity,
-        elongation=elongation,
-        thickness=spherical_profile(*pair["thicknesses"]),
-        offset_from_plasma=spherical_profile(*pair["offsets"]),
-        start_angle=-90,
-        stop_angle=90,
-        rotation_angle=rotation_angle,
-        color=(0.5, 0.5, 0.5),
-        name=pair["name"],
-        allow_overlapping_shape=True,
-        connect_to_center=True,
+def spherical_layer_profile(pair, minor_radius, major_radius, triangularity, elongation, center_column):
+    """Returns the profile faces of the full (unsegmented) layer of a
+    spherical tokamak, closed towards the Z axis and cut back to the centre
+    column profile."""
+    face = profile_face(
+        blanket_from_plasma_points(
+            minor_radius=minor_radius,
+            major_radius=major_radius,
+            triangularity=triangularity,
+            elongation=elongation,
+            thickness=spherical_profile(*pair["thicknesses"]),
+            offset_from_plasma=spherical_profile(*pair["offsets"]),
+            start_angle=-90,
+            stop_angle=90,
+            allow_overlapping_shape=True,
+            connect_to_center=True,
+        )
     )
-    layer = layer.cut(center_column)
-    layer.name = pair["name"]
-    return layer
+    return face.cut(center_column).Faces()
 
 
-def create_spherical_poloidal_segments(pair, segment_positions, geometry, rotation_angle, center_column):
-    """Builds one solid per poloidal segment of a spherical tokamak layer by
-    cutting each segment out of the full layer, so the faces of the segments
-    are the faces of the full layer."""
+def spherical_poloidal_segment_profiles(pair, segment_positions, geometry, center_column):
+    """Returns the (name, profile faces) of each poloidal segment of a
+    spherical tokamak layer, each cut out of the profile of the full layer so
+    its edges are the edges of the full layer."""
     major_radius, minor_radius, triangularity, elongation, column_radius = geometry
-    layer = create_spherical_layer(
-        pair, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column
-    )
+    layer = spherical_layer_profile(pair, minor_radius, major_radius, triangularity, elongation, center_column)
 
     # a single segment covering the whole path is the full layer
     if len(segment_positions) == 1 and segment_positions[0][2] - segment_positions[0][1] >= 3.0 - 1e-9:
-        layer.name = f"{pair['name']}_{segment_positions[0][0]}"
-        return [layer]
+        return [(f"{pair['name']}_{segment_positions[0][0]}", layer)]
 
     offset = spherical_profile(*pair["offsets"])
     thickness = spherical_profile(*pair["thicknesses"])
@@ -188,7 +183,8 @@ def create_spherical_poloidal_segments(pair, segment_positions, geometry, rotati
     def outer_offset(theta):
         return offset(theta) + thickness(theta) + margin
 
-    solids = []
+    layer_compound = cq.Compound.makeCompound(layer)
+    profiles = []
     for segment_name, start, stop in segment_positions:
         path_positions = np.linspace(start, stop, max(10, math.ceil(400 * (stop - start) / 2)))
         inner_r, inner_z = spherical_path_coordinates(path_positions, inner_offset, geometry)
@@ -203,60 +199,55 @@ def create_spherical_poloidal_segments(pair, segment_positions, geometry, rotati
             inner_r[-1] = column_end
             outer_r[0] = column_end
         points = list(zip(np.maximum(np.concatenate([inner_r, outer_r]), 0.0), np.concatenate([inner_z, outer_z])))
-        cutting_region = cq.Workplane("XZ").polyline(points).close().revolve(360)
+        cutting_region = profile_face([(r, z, "straight") for r, z in points + points[:1]])
 
         name = f"{pair['name']}_{segment_name}"
-        solid = layer.intersect(cutting_region)
-        check_not_empty(solid, f"Poloidal segment {name}")
-        solid.name = name
-        solids.append(solid)
-    return solids
+        faces = layer_compound.intersect(cutting_region).Faces()
+        if not faces:
+            raise ValueError(
+                f"Poloidal segment {name} is empty, the gaps around it remove all of it. "
+                "Use smaller gaps or fewer segments."
+            )
+        profiles.append((name, faces))
+    return profiles
 
 
-def create_blanket_layers_after_plasma(
+def spherical_blanket_layer_profiles(
     radial_build,
     vertical_build,
     minor_radius,
     major_radius,
     triangularity,
     elongation,
-    rotation_angle,
     center_column,
     layer_count=0,
     poloidal_segment_positions=None,
-    toroidal_sectors=None,
-    toroidal_region_size=None,
 ):
+    """Returns (name, profile faces, layer name) for each solid layer after
+    the plasma, or for each of its poloidal segments. The layer name is the
+    radial layer the profile came from."""
     pairs = get_spherical_layer_pairs(radial_build, vertical_build, layer_count)
     if poloidal_segment_positions is None:
         poloidal_segment_positions = [None] * len(pairs)
-    if toroidal_sectors is None:
-        toroidal_sectors = [None] * len(pairs)
     geometry = (major_radius, minor_radius, triangularity, elongation, sum_up_to_gap_before_plasma(radial_build))
 
-    layers = []
-    for pair, segment_positions, sectors in zip(pairs, poloidal_segment_positions, toroidal_sectors):
+    profiles = []
+    for pair, segment_positions in zip(pairs, poloidal_segment_positions):
         if pair["type"] == LayerType.GAP:
             continue
         if segment_positions is not None:
-            pair_solids = create_spherical_poloidal_segments(
-                pair, segment_positions, geometry, rotation_angle, center_column
-            )
+            pair_profiles = spherical_poloidal_segment_profiles(pair, segment_positions, geometry, center_column)
         else:
-            pair_solids = [
-                create_spherical_layer(
-                    pair, minor_radius, major_radius, triangularity, elongation, rotation_angle, center_column
+            pair_profiles = [
+                (
+                    pair["name"],
+                    spherical_layer_profile(
+                        pair, minor_radius, major_radius, triangularity, elongation, center_column
+                    ),
                 )
             ]
-        if sectors is not None:
-            pair_solids = apply_toroidal_sectors(pair_solids, sectors, rotation_angle, toroidal_region_size)
-        # records the radial layer each piece came from, so all the pieces of a
-        # segmented layer are given the same color
-        for solid in pair_solids:
-            solid.layer_name = pair["name"]
-        layers.extend(pair_solids)
-
-    return layers
+        profiles.extend((name, faces, pair["name"]) for name, faces in pair_profiles)
+    return profiles
 
 
 def spherical_vertical_build_from_radial_build(radial_build, elongation):
@@ -342,8 +333,11 @@ def spherical_poloidal_arc_length(
     return float(arc_lengths[-1])
 
 
-def create_center_column_shield_cylinders(radial_build, vertical_build, rotation_angle):
-    cylinders = []
+def center_column_profiles(radial_build, vertical_build):
+    """Returns the (name, profile faces) of the centre column cylinders, the
+    solid layers before the gap next to the plasma. They reach from the
+    bottom to the top of the vertical build."""
+    profiles = []
     total_sum = 0
     layer_count = 0
 
@@ -359,22 +353,14 @@ def create_center_column_shield_cylinders(radial_build, vertical_build, rotation
         if item[0] == LayerType.GAP:
             total_sum += item[1]
             continue
-        
+
         layer_count += 1
         layer_name = get_layer_name(item, layer_count)
-
-        cylinder = center_column_shield_cylinder(
-            inner_radius=total_sum,
-            thickness=item[1],
-            name=layer_name,
-            rotation_angle=rotation_angle,
-            height=center_column_shield_height,
-            reference_point=("lower", -below),
-        )
-        cylinders.append(cylinder)
+        face = rectangle_face(total_sum, total_sum + item[1], -below, -below + center_column_shield_height)
+        profiles.append((layer_name, [face]))
         total_sum += item[1]
 
-    return cylinders
+    return profiles
 
 
 def spherical_tokamak_from_plasma(
@@ -577,32 +563,19 @@ def spherical_tokamak(
     major_radius, minor_radius, elongation = get_plasma_geometry(radial_build, vertical_build)
     blanket_rear_wall_end_height = sum([item[1] for item in vertical_build])
 
-    plasma = plasma_simplified(
-        major_radius=major_radius,
-        minor_radius=minor_radius,
-        elongation=elongation,
-        triangularity=triangularity,
-        rotation_angle=rotation_angle,
-    )
+    column_profiles = center_column_profiles(radial_build, vertical_build)
 
-    inner_radial_build = create_center_column_shield_cylinders(
-        radial_build=radial_build,
-        vertical_build=vertical_build,
-        rotation_angle=rotation_angle,
-    )
-
-    blanket_cutting_cylinder = center_column_shield_cylinder(
-        inner_radius=0,
-        thickness=sum_up_to_gap_before_plasma(radial_build),
-        rotation_angle=360,
-        height=2 * blanket_rear_wall_end_height,
+    # the blanket layers are closed towards the Z axis and cut back to the
+    # outer radius of the centre column
+    blanket_cutting_cylinder = rectangle_face(
+        0, sum_up_to_gap_before_plasma(radial_build), -blanket_rear_wall_end_height, blanket_rear_wall_end_height
     )
 
     # validated before the blanket layers are built so errors are raised quickly
     poloidal_segment_positions = None
     if poloidal_build is not None:
         poloidal_segment_positions = get_spherical_poloidal_build_segment_positions(
-            poloidal_build, radial_build, vertical_build, triangularity, layer_count=len(inner_radial_build)
+            poloidal_build, radial_build, vertical_build, triangularity, layer_count=len(column_profiles)
         )
     toroidal_sectors = None
     if toroidal_build is not None:
@@ -610,32 +583,82 @@ def spherical_tokamak(
             toroidal_build, get_spherical_layer_pairs(radial_build, vertical_build), radial_build, rotation_angle
         )
 
-    blanket_layers = create_blanket_layers_after_plasma(
+    layer_profiles = spherical_blanket_layer_profiles(
         radial_build=radial_build,
         vertical_build=vertical_build,
         minor_radius=minor_radius,
         major_radius=major_radius,
         triangularity=triangularity,
         elongation=elongation,
-        rotation_angle=rotation_angle,
         center_column=blanket_cutting_cylinder,
-        layer_count=len(inner_radial_build),
+        layer_count=len(column_profiles),
         poloidal_segment_positions=poloidal_segment_positions,
-        toroidal_sectors=toroidal_sectors,
-        toroidal_region_size=4 * max(sum(item[1] for item in radial_build), blanket_rear_wall_end_height),
+    )
+    plasma_profile = profile_face(
+        plasma_simplified_points(
+            major_radius=major_radius, minor_radius=minor_radius, elongation=elongation, triangularity=triangularity
+        )
     )
 
-    # the reactor is built from 0 degrees then rotated to rotation_start_angle,
+    # the vacuum fills the space between the plasma, the centre column and the
+    # first wall, the first solid layer after the plasma. The full first wall
+    # is used, so the vacuum stops at the plasma facing surface even where
+    # there are gaps between poloidal segments.
+    first_wall = next(
+        pair
+        for pair in get_spherical_layer_pairs(radial_build, vertical_build, len(column_profiles))
+        if pair["type"] == LayerType.SOLID
+    )
+    vacuum = vacuum_profile(
+        [plasma_profile],
+        [
+            *spherical_layer_profile(
+                first_wall, minor_radius, major_radius, triangularity, elongation, blanket_cutting_cylinder
+            ),
+            *(face for _, faces in column_profiles for face in faces),
+        ],
+    )
+
+    # the parts are made from one cross section so that neighbours share
+    # their faces, listed in the order that keeps any small overlap: the
+    # centre column, the blanket layers from the plasma outwards, the plasma
+    # and the vacuum
+    profiles = (
+        [faces for _, faces in column_profiles] + [faces for _, faces, _ in layer_profiles] + [[plasma_profile], vacuum]
+    )
+    solids = revolve_cross_section(dict(enumerate(profiles)), rotation_angle)
+    inner_radial_build = [named_part(solids[index], name) for index, (name, _) in enumerate(column_profiles)]
+    blanket_layers = [
+        named_part(solids[len(column_profiles) + index], name, layer_name)
+        for index, (name, _, layer_name) in enumerate(layer_profiles)
+    ]
+    plasma = named_part(solids[len(profiles) - 2], "plasma")
+    vacuum = named_part(solids[len(profiles) - 1], VACUUM_NAME)
+
+    if toroidal_sectors is not None:
+        blanket_layers = apply_toroidal_sectors_to_layers(
+            blanket_layers,
+            get_spherical_layer_pairs(radial_build, vertical_build, len(column_profiles)),
+            toroidal_sectors,
+            rotation_angle,
+            4 * max(sum(item[1] for item in radial_build), blanket_rear_wall_end_height),
+        )
+
+    # the reactor is built from 0 degrees then moved to rotation_start_angle,
     # before the extra shapes are applied as they are given in their final position
-    plasma = rotate_about_z(plasma, rotation_start_angle)
-    inner_radial_build = [rotate_about_z(entry, rotation_start_angle) for entry in inner_radial_build]
-    blanket_layers = [rotate_about_z(entry, rotation_start_angle) for entry in blanket_layers]
+    rotation = cq.Location(cq.Vector(0, 0, 0), cq.Vector(0, 0, 1), rotation_start_angle)
+    plasma = moved_part(plasma, rotation)
+    vacuum = moved_part(vacuum, rotation)
+    inner_radial_build = [moved_part(entry, rotation) for entry in inner_radial_build]
+    blanket_layers = [moved_part(entry, rotation) for entry in blanket_layers]
 
     cut_names, intersect_names, layer_names = get_assembly_names(
         extra_cut_shapes, extra_intersect_shapes, inner_radial_build, blanket_layers
     )
 
-    validate_unique_assembly_names([*cut_names, *intersect_names, *layer_names, "plasma"], "spherical_tokamak()")
+    validate_unique_assembly_names(
+        [*cut_names, *intersect_names, *layer_names, "plasma", VACUUM_NAME], "spherical_tokamak()"
+    )
 
     my_assembly = Assembly()
 
@@ -689,6 +712,10 @@ def spherical_tokamak(
     )
 
     my_assembly.add(plasma, name="plasma", color=cq.Color(*resolve_assembly_color("plasma", None, colors)))
+    # the extra cut shapes are added whole and can reach into the vacuum, the
+    # extra intersect shapes only take parts of the layers
+    vacuum = named_part(cut_vacuum(vacuum.vals(), extra_cut_shapes, plasma), VACUUM_NAME)
+    my_assembly.add(vacuum, name=VACUUM_NAME, color=cq.Color(*resolve_assembly_color(VACUUM_NAME, None, colors)))
 
     my_assembly.elongation = elongation
     my_assembly.triangularity = triangularity

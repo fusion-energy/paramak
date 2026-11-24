@@ -190,3 +190,26 @@ def apply_toroidal_sectors(solids, sectors, rotation_angle, size):
             piece.name = piece_name
             result.append(piece)
     return result
+
+
+def apply_toroidal_sectors_to_layers(layers, pairs, toroidal_sectors, rotation_angle, size):
+    """Splits the layers that have a toroidal_build entry into their sectors.
+
+    Args:
+        layers: the parts made from the layers after the plasma, each with a
+            layer_name attribute naming the layer pair it came from.
+        pairs: the layer pairs, in the order of toroidal_sectors.
+        toroidal_sectors: the sectors of each pair, or None for a pair that
+            is not split.
+    """
+    sectors_by_layer = {pair["name"]: sectors for pair, sectors in zip(pairs, toroidal_sectors)}
+    result = []
+    for layer in layers:
+        sectors = sectors_by_layer.get(layer.layer_name)
+        if sectors is None:
+            result.append(layer)
+            continue
+        for piece in apply_toroidal_sectors([layer], sectors, rotation_angle, size):
+            piece.layer_name = layer.layer_name
+            result.append(piece)
+    return result

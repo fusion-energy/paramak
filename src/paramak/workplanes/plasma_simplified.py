@@ -55,20 +55,14 @@ def plasma_simplified(
     if not (-1.0 <= triangularity <= 1.0):
         raise ValueError(f"triangularity must be between -1 and 1, got {triangularity}.")
 
-    # create array of angles theta
-    theta = np.linspace(0, 2 * np.pi, num=num_points, endpoint=False)
-
-    # parametric equations for plasma
-    def R(theta):
-        return major_radius + minor_radius * np.cos(theta + triangularity * np.sin(theta))
-
-    def Z(theta):
-        return elongation * minor_radius * np.sin(theta) + vertical_displacement
-
-    points = np.stack((R(theta), Z(theta)), axis=1).tolist()
-    points.append(points[0])
-    for point in points:
-        point.append("spline")
+    points = plasma_simplified_points(
+        elongation=elongation,
+        major_radius=major_radius,
+        minor_radius=minor_radius,
+        triangularity=triangularity,
+        vertical_displacement=vertical_displacement,
+        num_points=num_points,
+    )
 
     wire = create_wire_workplane_from_points(points=points, plane=plane, origin=origin, obj=obj)
 
@@ -83,3 +77,31 @@ def plasma_simplified(
     solid.name = name
     solid.color = color
     return solid
+
+
+def plasma_simplified_points(
+    elongation: float,
+    major_radius: float,
+    minor_radius: float,
+    triangularity: float,
+    vertical_displacement: float = 0.0,
+    num_points: int = 200,
+) -> list:
+    """Returns the closed profile of the plasma used by plasma_simplified, as
+    [R, Z, "spline"] points with the first point repeated at the end."""
+
+    # create array of angles theta
+    theta = np.linspace(0, 2 * np.pi, num=num_points, endpoint=False)
+
+    # parametric equations for plasma
+    def R(theta):
+        return major_radius + minor_radius * np.cos(theta + triangularity * np.sin(theta))
+
+    def Z(theta):
+        return elongation * minor_radius * np.sin(theta) + vertical_displacement
+
+    points = np.stack((R(theta), Z(theta)), axis=1).tolist()
+    points.append(points[0])
+    for point in points:
+        point.append("spline")
+    return points
