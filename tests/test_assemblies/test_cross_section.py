@@ -109,7 +109,14 @@ def test_tokamak_layers_share_faces(rotation_angle, rotation_start_angle):
             rotation_start_angle=rotation_start_angle,
         )
     )
-    for first, second in [("layer_1", "layer_2"), ("layer_3", "layer_4"), ("layer_4", "layer_5")]:
+    pairs = [
+        ("layer_1", "layer_2"),
+        ("layer_3", "layer_4"),
+        ("layer_4", "layer_5"),
+        ("plasma", "vacuum"),
+        ("layer_3", "vacuum"),
+    ]
+    for first, second in pairs:
         assert share_a_face(shapes[first], shapes[second]), f"{first} and {second} share no face"
     assert all(shape.isValid() for shape in shapes.values())
 
@@ -144,7 +151,8 @@ def test_spherical_tokamak_layers_share_faces(rotation_angle, rotation_start_ang
             rotation_start_angle=rotation_start_angle,
         )
     )
-    for first, second in SPHERICAL_LAYERS:
+    pairs = [*SPHERICAL_LAYERS, ("plasma", "vacuum"), ("layer_2", "vacuum"), ("layer_3", "vacuum")]
+    for first, second in pairs:
         assert share_a_face(shapes[first], shapes[second]), f"{first} and {second} share no face"
     assert all(shape.isValid() for shape in shapes.values())
 

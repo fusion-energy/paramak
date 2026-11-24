@@ -12,7 +12,7 @@ def test_tokamak_without_extra_inboard_layers():
         radial_build=[(L.GAP, 100), (L.SOLID, 20), (L.GAP, 10), (L.PLASMA, 200), (L.GAP, 10), (L.SOLID, 20)],
         rotation_angle=90,
     )
-    assert reactor.names() == ["layer_1", "plasma"]
+    assert reactor.names() == ["layer_1", "plasma", "vacuum"]
 
 
 def test_tokamak_without_extra_inboard_layers_and_intersect_shape():

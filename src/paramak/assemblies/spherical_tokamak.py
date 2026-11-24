@@ -37,6 +37,7 @@ from .poloidal import (
     validate_segment_build,
 )
 from .toroidal import apply_toroidal_sectors_to_layers, get_toroidal_build_sectors
+from .vacuum import VACUUM_NAME, cut_vacuum, vacuum_profile
 
 
 def get_spherical_layer_pairs(radial_build, vertical_build, layer_count=0):
@@ -597,17 +598,40 @@ def spherical_tokamak(
         )
     )
 
+    # the vacuum fills the space between the plasma, the centre column and the
+    # first wall, the first solid layer after the plasma. The full first wall
+    # is used, so the vacuum stops at the plasma facing surface even where
+    # there are gaps between poloidal segments.
+    first_wall = next(
+        pair
+        for pair in get_spherical_layer_pairs(radial_build, vertical_build, len(column_profiles))
+        if pair["type"] == LayerType.SOLID
+    )
+    vacuum = vacuum_profile(
+        [plasma_profile],
+        [
+            *spherical_layer_profile(
+                first_wall, minor_radius, major_radius, triangularity, elongation, blanket_cutting_cylinder
+            ),
+            *(face for _, faces in column_profiles for face in faces),
+        ],
+    )
+
     # the parts are made from one cross section so that neighbours share
     # their faces, listed in the order that keeps any small overlap: the
     # centre column, the blanket layers from the plasma outwards, the plasma
-    profiles = [faces for _, faces in column_profiles] + [faces for _, faces, _ in layer_profiles] + [[plasma_profile]]
+    # and the vacuum
+    profiles = (
+        [faces for _, faces in column_profiles] + [faces for _, faces, _ in layer_profiles] + [[plasma_profile], vacuum]
+    )
     solids = revolve_cross_section(dict(enumerate(profiles)), rotation_angle)
     inner_radial_build = [named_part(solids[index], name) for index, (name, _) in enumerate(column_profiles)]
     blanket_layers = [
         named_part(solids[len(column_profiles) + index], name, layer_name)
         for index, (name, _, layer_name) in enumerate(layer_profiles)
     ]
-    plasma = named_part(solids[len(profiles) - 1], "plasma")
+    plasma = named_part(solids[len(profiles) - 2], "plasma")
+    vacuum = named_part(solids[len(profiles) - 1], VACUUM_NAME)
 
     if toroidal_sectors is not None:
         blanket_layers = apply_toroidal_sectors_to_layers(
@@ -622,6 +646,7 @@ def spherical_tokamak(
     # before the extra shapes are applied as they are given in their final position
     rotation = cq.Location(cq.Vector(0, 0, 0), cq.Vector(0, 0, 1), rotation_start_angle)
     plasma = moved_part(plasma, rotation)
+    vacuum = moved_part(vacuum, rotation)
     inner_radial_build = [moved_part(entry, rotation) for entry in inner_radial_build]
     blanket_layers = [moved_part(entry, rotation) for entry in blanket_layers]
 
@@ -629,7 +654,9 @@ def spherical_tokamak(
         extra_cut_shapes, extra_intersect_shapes, inner_radial_build, blanket_layers
     )
 
-    validate_unique_assembly_names([*cut_names, *intersect_names, *layer_names, "plasma"], "spherical_tokamak()")
+    validate_unique_assembly_names(
+        [*cut_names, *intersect_names, *layer_names, "plasma", VACUUM_NAME], "spherical_tokamak()"
+    )
 
     my_assembly = Assembly()
 
@@ -680,6 +707,10 @@ def spherical_tokamak(
         my_assembly.add(entry, name=name, color=cq.Color(*color))
 
     my_assembly.add(plasma, name="plasma", color=cq.Color(*resolve_assembly_color("plasma", None, colors)))
+    # the extra cut shapes are added whole and can reach into the vacuum, the
+    # extra intersect shapes only take parts of the layers
+    vacuum = named_part(cut_vacuum(vacuum.vals(), extra_cut_shapes, plasma), VACUUM_NAME)
+    my_assembly.add(vacuum, name=VACUUM_NAME, color=cq.Color(*resolve_assembly_color(VACUUM_NAME, None, colors)))
 
     my_assembly.elongation = elongation
     my_assembly.triangularity = triangularity
