@@ -97,7 +97,7 @@ def spherical_tokamak_from_plasma(**kwargs):
     return paramak.spherical_tokamak_from_plasma(triangularity=0.55, **kwargs)
 
 
-def tokamak():
+def tokamak(**kwargs):
     return paramak.tokamak(
         radial_build=TOKAMAK_RADIAL_BUILD,
         vertical_build=[
@@ -113,6 +113,7 @@ def tokamak():
         ],
         triangularity=0.55,
         rotation_angle=180,
+        **kwargs,
     )
 
 
@@ -150,6 +151,25 @@ def with_pf_coils():
             )
         )
     return spherical_tokamak_from_plasma(rotation_angle=180, extra_cut_shapes=coils)
+
+
+def with_pf_coils_across_layers():
+    """PF coils in cases that sit inside the blanket and cross the boundaries
+    between its curved layers, so each coil is cut out of two layers and the
+    layers have to keep sharing the face between them around the cut"""
+    coils = []
+    # across layer_4/layer_5 at the outboard midplane (also cutting through
+    # the back of layer_5), across layer_4/layer_5 on the curved outboard
+    # shoulder, and across layer_3/layer_4 with the case reaching into the
+    # gap in front of the first wall
+    for center_point in [(800, 0), (733, 238), (595, 251)]:
+        coils.append(paramak.poloidal_field_coil(height=30, width=30, center_point=center_point, rotation_angle=180))
+        coils.append(
+            paramak.poloidal_field_coil_case(
+                coil_height=30, coil_width=30, casing_thickness=8, center_point=center_point, rotation_angle=180
+            )
+        )
+    return tokamak(extra_cut_shapes=coils)
 
 
 def with_tf_coils():
@@ -198,6 +218,14 @@ REACTORS = {
         SPHERICAL_LAYERS
         | {(f"poloidal_field_coil_{i}", f"poloidal_field_coil_case_{i + 1}") for i in (1, 3, 5, 7)}
         | {(layer, f"poloidal_field_coil_case_{i}") for layer in ("layer_4", "layer_5") for i in (4, 6)},
+    ),
+    "tokamak_pf_coils_across_layers": (
+        with_pf_coils_across_layers,
+        TOKAMAK_LAYERS
+        | {("layer_2", "layer_5"), ("layer_3", "poloidal_field_coil_case_6")}
+        | {(f"poloidal_field_coil_{i}", f"poloidal_field_coil_case_{i + 1}") for i in (1, 3, 5)}
+        | {(layer, f"poloidal_field_coil_case_{i}") for layer in ("layer_4", "layer_5") for i in (2, 4)}
+        | {("layer_4", "poloidal_field_coil_case_6")},
     ),
     # the coils sit clear of the blanket so they only need not to overlap
     "spherical_tf_coils": (with_tf_coils, SPHERICAL_LAYERS),
