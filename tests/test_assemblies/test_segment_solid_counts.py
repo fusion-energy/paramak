@@ -157,10 +157,18 @@ def test_divertor_is_split_into_one_solid_per_overlapped_segment():
 
     volumes_before = {child.name: child.toCompound().Volume() for child in without_divertor.children}
     parts_after = {child.name: child.toCompound() for child in with_divertor.children}
+
+    def volume_after(name):
+        return sum(
+            part.Volume()
+            for part_name, part in parts_after.items()
+            if part_name == name or (part_name.startswith(f"{name}_") and part_name[len(name) + 1 :].isdigit())
+        )
+
     cut_segments = [
         name
         for name, volume in volumes_before.items()
-        if "_module_" in name and parts_after[name].Volume() < volume * (1 - 1e-6)
+        if "_module_" in name and volume_after(name) < volume * (1 - 1e-6)
     ]
     divertor_solids = parts_after["extra_intersect_shapes_1"].Solids()
 
@@ -168,3 +176,17 @@ def test_divertor_is_split_into_one_solid_per_overlapped_segment():
     assert len(divertor_solids) == len(cut_segments)
     for solid in divertor_solids:
         assert solid.isValid()
+
+
+@pytest.mark.parametrize("reactor", ["tokamak", "spherical_tokamak"])
+def test_cut_layers_are_split_into_individually_named_parts(reactor):
+    function = getattr(paramak, f"{reactor}_from_plasma")
+    radial_build = TOKAMAK_RADIAL_BUILD if reactor == "tokamak" else SPHERICAL_RADIAL_BUILD
+    cutter = cq.Workplane("XY").box(2000, 2000, 2)
+
+    result = function(radial_build=radial_build, rotation_angle=90, extra_cut_shapes=[cutter])
+
+    layer_parts = [child for child in result.children if child.name.startswith("layer_")]
+    assert any(child.name.count("_") >= 2 for child in layer_parts)
+    for child in layer_parts:
+        assert len(child.toCompound().Solids()) == 1

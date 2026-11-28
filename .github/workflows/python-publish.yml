@@ -11,6 +11,8 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Check the docs version switcher lists this release
         run: |
           jq -e --arg v "$GITHUB_REF_NAME" 'any(.[]; .version == $v)' docs/version_switcher.json > /dev/null \

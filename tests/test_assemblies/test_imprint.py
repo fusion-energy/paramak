@@ -16,6 +16,7 @@ so its build has a 2 cm gap between the two, taken off the plasma.
 """
 
 import importlib
+import re
 from collections import defaultdict
 from pathlib import Path
 
@@ -315,11 +316,22 @@ def test_imprinting_adds_no_solids(imprinted):
 
 def test_neighbouring_parts_share_faces(imprinted):
     names, _solid_count, _shape, _origins, shared, expected_pairs = imprinted
-    # the expected pairs name real parts, so a renamed part fails here rather
-    # than passing without checking anything
-    assert {name for pair in expected_pairs for name in pair} <= set(names)
-    missing = {tuple(sorted(pair)) for pair in expected_pairs} - shared
-    assert missing == set(), f"parts that should touch but share no face: {sorted(missing)}"
+
+    def matching_parts(name):
+        if name in names:
+            return {name}
+        return {part for part in names if re.fullmatch(rf"{re.escape(name)}_\d+", part)}
+
+    missing = []
+    for first, second in expected_pairs:
+        first_parts = matching_parts(first)
+        second_parts = matching_parts(second)
+        if not first_parts or not second_parts:
+            missing.append((first, second, "expected part name not found"))
+        elif not any(tuple(sorted((a, b))) in shared for a in first_parts for b in second_parts):
+            missing.append((first, second, "no split parts share a face"))
+
+    assert missing == [], f"parts that should touch but do not: {missing}"
 
 
 def test_tokamak_from_plasma_blanket_clears_centre_column():
