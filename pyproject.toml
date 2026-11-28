@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=72.1.0", "setuptools_scm[toml]>=8.1.0"]
+requires = ["setuptools>=77.0.0", "setuptools_scm[toml]>=8.1.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -9,13 +9,13 @@ description = "Create 3D fusion reactor CAD models based on input parameters"
 readme = "README.md"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 authors = [
   { name="The Paramak Development Team" },
 ]
-license = {file = "LICENSE"}
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
 keywords = ["python", "geometry", "reactor", "model", "cad", "fusion", "parametric", "dagmc", "openmc"]
 dependencies = [
